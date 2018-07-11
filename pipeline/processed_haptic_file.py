@@ -12,7 +12,7 @@ from . import commit_or_rollback, db
 RUNTIME_ENV = os.environ.get('RUNTIME_ENV','')
 
 if RUNTIME_ENV == 'LAMBDA':
-    from db import Client, Fuse, Device, IndustrialAthlete, Warehouse
+    from database_models.pipeline import Client, Fuse, Device, IndustrialAthlete, Warehouse
     from config import Config
 else:
     from pipeline.db import Client, Fuse, Device, IndustrialAthlete, Warehouse
