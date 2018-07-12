@@ -4,8 +4,8 @@ from sqlalchemy import ForeignKey
 
 from . import db
 
-class DataEvents(db.Model):
-    __tablename__ = 'data_events'
+class EngagementStats(db.Model):
+    __tablename__ = 'engagement_stats'
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
 
