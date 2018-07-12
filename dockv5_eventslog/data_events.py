@@ -19,9 +19,9 @@ class DataEvents(db.Model):
     filename = db.Column(db.String(100), nullable=True, default=None)
     dockID = db.Column(db.String(45), nullable=True, default=None)
     warehouseID = db.Column(db.String(45), nullable=True, default=None)
-    athleteID = db.Column(db.Integer, nullable=True, default=None)
-    clientID = db.Column(db.Integer, nullable=True, default=None)
-    port = db.Column(db.String(45), nullable=True, default=None)
+    athleteID = db.Column(db.String(45), nullable=True, default=None)
+    clientID = db.Column(db.String(45), nullable=True, default=None)
+    port = db.Column(db.Integer(10), nullable=True, default=None)
     sessionID = db.Column(db.String(45), nullable=True, default=None)
 
     def as_dict(self):
