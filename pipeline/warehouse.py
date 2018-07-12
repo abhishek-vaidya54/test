@@ -39,6 +39,8 @@ class Warehouse(db.Model):
     algo_version = db.Column(db.Integer, nullable=True)
     display_names = db.Column(db.Boolean, nullable=False)
 
+    utc_op_day_start = db.Column(db.String(45), nullable=False)
+
     def as_dict(self):
         return {
             "id": self.id,
