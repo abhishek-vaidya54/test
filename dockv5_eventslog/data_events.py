@@ -9,26 +9,26 @@ class DataEvents(db.Model):
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
 
-    timestamp = db.Column(db.DateTime, nullable=True)
-    type = db.Column(db.String(45), nullable=True)
-    sensorID = db.Column(db.String(45), nullable=True)
-    firmware_version = db.Column(db.String(45), nullable=True)
-    datarecord_count = db.Column(db.Integer(20), nullable=True)
-    db_inserted_at = db.Column(db.DateTime, nullable=True)
-    assignment_time = db.Column(db.Integer(20), nullable=True)
-    filename = db.Column(db.String(100), nullable=True)
-    dockID = db.Column(db.String(45), nullable=True)
-    warehouseID = db.Column(db.String(45), nullable=True)
-    athleteID = db.Column(db.Integer, nullable=True)
-    clientID = db.Column(db.Integer, nullable=True)
-    port = db.Column(db.String(45), nullable=True)
-    sessionID = db.Column(db.String(45), nullable=True)
+    timestamp = db.Column(db.DateTime, nullable=True, default=None)
+    event_type = db.Column(db.String(45), nullable=True, default=None)
+    sensorID = db.Column(db.String(45), nullable=True, default=None)
+    firmware_version = db.Column(db.String(45), nullable=True, default=None)
+    datarecord_count = db.Column(db.Integer(20), nullable=True, default=None)
+    db_inserted_at = db.Column(db.DateTime, nullable=True, default=None)
+    assignment_time = db.Column(db.Integer(20), nullable=True, default=None)
+    filename = db.Column(db.String(100), nullable=True, default=None)
+    dockID = db.Column(db.String(45), nullable=True, default=None)
+    warehouseID = db.Column(db.String(45), nullable=True, default=None)
+    athleteID = db.Column(db.Integer, nullable=True, default=None)
+    clientID = db.Column(db.Integer, nullable=True, default=None)
+    port = db.Column(db.String(45), nullable=True, default=None)
+    sessionID = db.Column(db.String(45), nullable=True, default=None)
 
     def as_dict(self):
         return {
             "id": self.id,
             "timestamp": self.timestamp,
-            "type": self.type,
+            "type": self.event_type,
             "sensorID": self.sensorID,
             "firmware_version": self.firmware_version,
             "datarecord_count": self.datarecord_count,
@@ -44,4 +44,4 @@ class DataEvents(db.Model):
         }
 
     def __repr__(self):
-        return 'dock %s for client %s' % (self.dock_id, self.client_id)
+        return 'event type: %s' % (self.event_type)
