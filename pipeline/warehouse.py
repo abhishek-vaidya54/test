@@ -41,6 +41,9 @@ class Warehouse(db.Model):
 
     utc_op_day_start = db.Column(db.String(45), nullable=False)
 
+    week_start = db.Column(db.String(45), nullable=False)
+
+
     def as_dict(self):
         return {
             "id": self.id,
