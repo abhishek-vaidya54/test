@@ -17,8 +17,8 @@ depends_on = None
 
 
 def upgrade():
-    op.add_column('warehouse', sa.Column('standard_score', sa.Float, nullable=True, server_default=70))
+    op.add_column('job_function', sa.Column('standard_score', sa.Float, nullable=True, default=70.0))
 
 
 def downgrade():
-    op.drop_column('warehouse', 'standard_score')
+    op.drop_column('job_function', 'standard_score')
