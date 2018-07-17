@@ -11,14 +11,21 @@ from sqlalchemy.ext.hybrid import hybrid_property
 
 from . import commit_or_rollback, db
 
-RUNTIME_ENV = os.environ.get('RUNTIME_ENV','')
+DEPLOYMENT_STAGE = os.environ.get('STAGE','')
 
-if RUNTIME_ENV == 'LAMBDA':
-    from database_models.pipeline import Client, IndustrialAthlete, Warehouse
-    from config import Config
+from config_DEV import Config as ConfigDev
+from config_PROD import Config as ConfigProd
+
+Config = None
+
+if DEPLOYMENT_STAGE == 'PROD':
+  Config = ConfigProd
 else:
-    from pipeline.db import Client, IndustrialAthlete, Warehouse
-    from pipeline.config import Config
+  Config = ConfigDev
+
+
+from database_models.pipeline import Client, IndustrialAthlete, Warehouse
+
 
 
 COMPLETE = 'COMPLETE'

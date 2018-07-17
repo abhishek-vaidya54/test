@@ -9,13 +9,7 @@ from sqlalchemy.schema import Index
 
 from . import commit_or_rollback, db
 
-
-RUNTIME_ENV = os.environ.get('RUNTIME_ENV','')
-
-if RUNTIME_ENV == 'LAMBDA':
-    from utilities import util
-else:
-    from pipeline.utilities import util
+from utilities import util
 
 
 class Risk(db.Model):
