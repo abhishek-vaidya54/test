@@ -8,15 +8,17 @@ from sqlalchemy.types import DateTime
 from sqlalchemy.exc import DBAPIError
 from sqlalchemy_wrapper import SQLAlchemy
 
-from influxdb import InfluxDBClient
+DEPLOYMENT_STAGE = os.environ.get('DEPLOYMENT_STAGE','')
 
-RUNTIME_ENV = os.environ.get('RUNTIME_ENV','')
+from config_DEV import Config as ConfigDev
+from config_PROD import Config as ConfigProd
 
-if RUNTIME_ENV == 'LAMBDA':
-    from config import Config
+Config = None
+
+if DEPLOYMENT_STAGE == 'PROD':
+  Config = ConfigProd
 else:
-    from pipeline.config import Config
-    from pipeline.server.constant_data import COLOR_CHOICES
+  Config = ConfigDev
 
 
 db = SQLAlchemy(Config.DB_URL)
@@ -44,31 +46,3 @@ from .shifts import Shifts
 from .job_function import JobFunction
 from .compliance_tracker import EmailSchedule
 from .activity import Activity
-
-
-def get_color_choices(model, warehouse_id, selected_color=None):
-    used_colors = db.session.query(model.color.label('color')).filter(
-        model.warehouse_id == warehouse_id,
-    ).filter(model.color != None).distinct()
-    used_colors = [used_color.color for used_color in used_colors]
-    colors = deepcopy(COLOR_CHOICES)
-    for index, color in enumerate(colors):
-        if color[0] in used_colors and selected_color != color[0]:
-            del colors[index]
-    return colors
-
-
-def get_influx_client():
-    influxdb_client = InfluxDBClient(
-    host=Config.INFLUXDB_HOST,
-    port=Config.INFLUXDB_PORT,
-    username=Config.INFLUXDB_USERNAME,
-    password=Config.INFLUXDB_PASSWORD,
-    database=Config.INFLUXDB_DATABASE,
-    ssl=Config.INFLUXDB_SSL,
-    verify_ssl=True,
-    timeout=1
-    )
-
-
-    return influxdb_client

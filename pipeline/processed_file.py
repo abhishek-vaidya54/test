@@ -11,7 +11,7 @@ from sqlalchemy.ext.hybrid import hybrid_property
 
 from . import commit_or_rollback, db
 
-DEPLOYMENT_STAGE = os.environ.get('STAGE','')
+DEPLOYMENT_STAGE = os.environ.get('DEPLOYMENT_STAGE','')
 
 from config_DEV import Config as ConfigDev
 from config_PROD import Config as ConfigProd
