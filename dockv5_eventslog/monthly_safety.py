@@ -2,7 +2,7 @@ import datetime
 from . import db
 
 
-class JobFunction(db.Model):
+class MonthlySafety(db.Model):
     __tablename__ = 'monthly_safety'
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
