@@ -1,0 +1,12 @@
+FROM mysql:5.7
+LABEL maintainer="Luke Lombardi luke@strongarmtech.com"
+
+ENV MYSQL_ROOT_PASSWORD=tests
+
+COPY docker-entrypoint.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+
+COPY ./init-scripts/ /usr/local/bin/docker-entrypoint-initdb.d/
+RUN chmod -R +x /usr/local/bin/docker-entrypoint-initdb.d
+
+EXPOSE 3306
