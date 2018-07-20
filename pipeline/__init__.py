@@ -21,7 +21,7 @@ else:
   Config = ConfigDev
 
 
-db = SQLAlchemy(Config.DB_URL)
+db = SQLAlchemy(Config.DB_URL, pool_recycle=1200)
 UTC_TIMEZONE = 'UTC'
 
 def commit_or_rollback(session):
