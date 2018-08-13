@@ -1,9 +1,17 @@
 
 from __future__ import with_statement
+
 import os
+import json
+
 from alembic import context
 from sqlalchemy import engine_from_config, pool, create_engine
 from logging.config import fileConfig
+from pygit2 import Repository
+from os.path import expanduser
+
+
+branch = Repository('../').head.shorthand  # 'master'
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -24,12 +32,38 @@ target_metadata = None
 # my_important_option = config.get_main_option("my_important_option")
 # ... etc.
 
+API_NAME = 'DOCKV5'
+
+def load_env():
+  home = expanduser("~")
+  with open(home + '/sa_config.json', 'r') as f_in:
+    sa_creds = json.load(f_in)
+  
+  return sa_creds
+
 def get_url():
+    sa_creds = load_env()
+    creds = sa_creds[API_NAME]
+
+    username = ''
+    if(branch == 'master'):
+        creds = creds['PROD']
+        username = creds['username']
+        password = creds['password']
+        hostname = creds['hostname']
+        database = creds['database']
+    else:
+        creds = creds['DEV']
+        username = creds['username']
+        password = creds['password']
+        hostname = creds['hostname']
+        database = creds['database']
+
     return "mysql+pymysql://%s:%s@%s/%s" % (
-        os.getenv("DB_USER", "dockv5"),
-        os.getenv("DB_PASSWORD", "7zjYfezyUkUaEpSY"),
-        os.getenv("DB_HOST", "dockv5.cij1ovqtmj95.us-east-1.rds.amazonaws.com"),
-        os.getenv("DB_NAME", "dockv5"),
+        os.getenv("DB_USER", username),
+        os.getenv("DB_PASSWORD", password),
+        os.getenv("DB_HOST", hostname),
+        os.getenv("DB_NAME", database)
     )
 
 def run_migrations_offline():

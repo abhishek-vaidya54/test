@@ -43,6 +43,9 @@ class JobFunction(db.Model):
         onupdate=datetime.datetime.utcnow,
         nullable=False
     )
+
+    standard_score = db.Column(db.Float)
+
     
     def as_dict(self):
         return {
