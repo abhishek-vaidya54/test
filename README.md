@@ -9,3 +9,6 @@ To generate a new migration script
 
 To run the migration script (run in dev branch for staging db before running in master branch for prod db)
 `alembic upgrade head`
+
+To undo the migration by one version
+`alembic downgrade -1`
