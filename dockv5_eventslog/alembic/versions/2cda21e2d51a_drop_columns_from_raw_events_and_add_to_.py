@@ -19,8 +19,8 @@ depends_on = None
 def upgrade():
     # add a bunch of columns to keepalive table to track new info
     op.add_column('keepalive_events', sa.Column('dockIMEI', sa.Unicode(length=45), nullable=True))
-    op.add_column('keepalive_events', sa.Column('enum_ports', sa.Integer(), nullable=True))
-    op.add_column('keepalive_events', sa.Column('occupied_ports', sa.Integer(), nullable=True))
+    op.add_column('keepalive_events', sa.Column('enum_ports', sa.Unicode(length=100), nullable=True))
+    op.add_column('keepalive_events', sa.Column('occupied_ports', sa.Unicode(length=100), nullable=True))
     op.add_column('keepalive_events', sa.Column('local_sensor_fw', sa.Integer(), nullable=True))
     op.add_column('keepalive_events', sa.Column('app_version', sa.Unicode(length=45), nullable=True))
 
