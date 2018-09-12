@@ -87,8 +87,11 @@ class ProcessedFile(db.Model):
     athlete_id = db.Column(db.Integer)
     client_id = db.Column(db.Integer)
     warehouse_id = db.Column(db.Integer)
-    device_id = db.Column(db.Text)
-    settings = db.Column(db.Text)
+    sensor_id = db.Column(db.Text)
+    setting_id = db.Column(db.Integer)
+    job_function_id = db.Column(db.Integer)
+    group_id = db.Column(db.Integer)
+    session_id = db.Column(db.Text)
 
     __table_args__ = (
         db.UniqueConstraint('name', 'version'),
@@ -109,16 +112,20 @@ def get(name, version=Config.ALGO_PROCESSING_VERSION):
     ).scalar()
 
 
-def create(name, athlete_data, device_id, status, version=Config.ALGO_PROCESSING_VERSION):
+def create(name, athlete_data, file_params, status, version=Config.ALGO_PROCESSING_VERSION):
     pf = ProcessedFile(
         name=name, version=version,
         athlete_id=athlete_data.id,
         client_id=athlete_data.client_id,
         warehouse_id=athlete_data.warehouse_id,
-        device_id=device_id,
-        settings=athlete_data.settings,
+        job_function_id=athlete_data.job_function.id,
+        sensor_id=file_params['sensor_id'],
+        group_id=athlete_data.group_id,
+        setting_id=int(file_params['setting_id']),
+        session_id=file_params['session_id'],
         status=status
     )
+
     db.session.add(pf)
     commit_or_rollback(db.session)
     return pf
