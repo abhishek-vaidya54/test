@@ -114,8 +114,9 @@ class IndustrialAthlete(db.Model):
         nullable=False
     )
 
-    settings = db.Column(db.Text)
-    
+    setting_id = db.Column(db.Integer)
+    group_id = db.Column(db.Integer)
+
     def as_dict(self):
         return {
         "id": self.id,
