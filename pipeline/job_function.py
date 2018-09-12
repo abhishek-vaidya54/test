@@ -44,7 +44,7 @@ class JobFunction(db.Model):
         nullable=False
     )
 
-    # standard_score = db.Column(db.Float)
+    standard_score = db.Column(db.Float)
 
     
     def as_dict(self):
