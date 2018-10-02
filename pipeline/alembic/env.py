@@ -10,6 +10,7 @@ from logging.config import fileConfig
 from pygit2 import Repository
 from os.path import expanduser
 
+import hvac
 
 branch = Repository('../').head.shorthand  # 'master'
 
@@ -23,7 +24,7 @@ fileConfig(config.config_file_name)
 
 # add your model's MetaData object here
 # for 'autogenerate' support
-# from myapp import mymodel
+# from .. import *
 # target_metadata = mymodel.Base.metadata
 target_metadata = None
 
@@ -32,18 +33,23 @@ target_metadata = None
 # my_important_option = config.get_main_option("my_important_option")
 # ... etc.
 
-API_NAME = 'DOCKV5_API'
+VAULT_TOKEN = os.environ.get('VAULT_TOKEN', '')
 
-def load_env():
-  home = expanduser("~")
-  with open(home + '/sa_config.json', 'r') as f_in:
-    sa_creds = json.load(f_in)
+# TODO: fix verify SSL error (and remove verify=False flag)
+def get_vault_config(configName):
+  config = None
+  client = hvac.Client(url='https://vault.strongarmtech.io:8200', token=VAULT_TOKEN,  verify=False)
+
+  # Read the database secret
+  secret = client.read('secret/database/' + configName)
+  if secret:
+      config = json.loads(secret['data']['value'])
   
-  return sa_creds
+  return config
+
 
 def get_url():
-    sa_creds = load_env()
-    creds = sa_creds[API_NAME]
+    creds = get_vault_config('pipeline')
 
     username = ''
     if(branch == 'master'):

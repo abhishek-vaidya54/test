@@ -38,11 +38,10 @@ class convert_tz(GenericFunction):
 from .client import (
     Client
 )
-from .industrial_athlete import IndustrialAthlete, Tag, Group, groups
+from .industrial_athlete import IndustrialAthlete
 from .warehouse import Warehouse
 from .processed_file import ProcessedFile
 from .risk import Risk
 from .shifts import Shifts
 from .job_function import JobFunction
-from .compliance_tracker import EmailSchedule
 from .activity import Activity

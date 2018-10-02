@@ -8,32 +8,6 @@ from sqlalchemy.orm import object_session
 from . import commit_or_rollback, db
 
 
-
-
-tags = db.Table(
-    'tags',
-    db.Column('tag_id', db.Integer, db.ForeignKey('tag.id')),
-    db.Column(
-        'industrial_athlete_id',
-        db.Integer,
-        db.ForeignKey('industrial_athlete.id')
-    ),
-    db.UniqueConstraint('tag_id', 'industrial_athlete_id',)
-)
-
-
-groups = db.Table(
-    'groups',
-    db.Column('group_id', db.Integer, db.ForeignKey('athlete_group.id')),
-    db.Column(
-        'industrial_athlete_id',
-        db.Integer,
-        db.ForeignKey('industrial_athlete.id')
-    ),
-    db.UniqueConstraint('group_id', 'industrial_athlete_id',)
-)
-
-
 class IndustrialAthlete(db.Model):
     __tablename__ = 'industrial_athlete'
 
@@ -59,19 +33,15 @@ class IndustrialAthlete(db.Model):
         secondary=tags,
         backref=db.backref('athletes')
     )
-    athlete_groups = db.relationship(
-        'Group',
-        secondary=groups,
-        backref=db.backref('athletes')
-    )
+
     hire_date = db.Column(
-        db.Date,
+        db.DateTime,
         default=datetime.date.today(),
         nullable=True
     )
 
     termination_date = db.Column(
-        db.Date,
+        db.DateTime,
         nullable=True
     )
 
@@ -114,8 +84,9 @@ class IndustrialAthlete(db.Model):
         nullable=False
     )
 
-    setting_id = db.Column(db.Integer)
-    group_id = db.Column(db.Integer)
+    settings = db.Column(db.Text)
+    # setting_id = db.Column(db.Integer)
+    # group_id = db.Column(db.Integer)
 
     def as_dict(self):
         return {
@@ -140,62 +111,3 @@ def get(athlete_id):
     return db.session.query(IndustrialAthlete).filter(
         IndustrialAthlete.id == athlete_id,
     ).scalar()
-
-
-
-class Tag(db.Model):
-    __tablename__ = 'tag'
-
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    name = db.Column(db.Unicode(255), nullable=False, unique=True)
-
-    def __repr__(self):
-        return self.name
-
-
-class Group(db.Model):
-    __tablename__ = 'athlete_group'
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    name = db.Column(db.Unicode(255), nullable=False)
-    group_administrator = db.Column(db.String(255), nullable=False)
-    description = description = db.Column(db.Text(), nullable=True)
-    client_id = db.Column(db.Integer, ForeignKey('client.id'), nullable=False)
-    client = db.relationship(
-        'Client',
-        foreign_keys=client_id,
-        backref='groups'
-    )
-    warehouse_id = db.Column(
-        db.Integer,
-        ForeignKey('warehouse.id'),
-        nullable=True
-    )
-    warehouse = db.relationship(
-        'Warehouse',
-        foreign_keys=warehouse_id,
-        backref='groups'
-    )
-
-    db_created_at = db.Column(
-        db.DateTime,
-        default=datetime.datetime.utcnow,
-        nullable=False
-    )
-    db_modified_at = db.Column(
-        db.DateTime,
-        default=datetime.datetime.utcnow,
-        onupdate=datetime.datetime.utcnow,
-        nullable=False
-    )
-
-    def as_dict(self):
-        return {
-        "id": self.id,
-        "warehouse_id": self.warehouse_id,
-        "name": self.name,
-    }
-
-    def __repr__(self):
-        return self.name
-
-    db.UniqueConstraint('name', 'warehouse_id', name='name')
