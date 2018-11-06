@@ -15,5 +15,10 @@ services:
         - ./docker/provision/mysql/init:/docker-entrypoint-initdb.d
       ports:
         - "3306:3306"
-      network_mode: "bridge"
       container_name: database_container
+      networks:
+      - databasemodels_default
+
+networks:
+  databasemodels_default:
+    external: true
