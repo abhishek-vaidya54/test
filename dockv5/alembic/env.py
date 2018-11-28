@@ -63,7 +63,6 @@ def get_url():
         password = creds['password']
         hostname = creds['hostname']
         database = creds['db']
-
     return "mysql+pymysql://%s:%s@%s/%s" % (
         os.getenv("DB_USER", username),
         os.getenv("DB_PASSWORD", password),
