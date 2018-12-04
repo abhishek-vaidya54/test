@@ -92,7 +92,6 @@ class ProcessedFile(db.Model):
     group_id = db.Column(db.Integer)
     session_id = db.Column(db.Text)
     stl_write_status = db.Column(db.Text)
-    stl_error = db.Column(db.Text)
 
     __table_args__ = (
         db.UniqueConstraint('name', 'version'),
@@ -200,7 +199,6 @@ def needs_processing(name, version=Config.ALGO_PROCESSING_VERSION):
 def update_stl_write_status(pf, status, commit=True, err_message=None):
     now = datetime.datetime.utcnow()
     pf.stl_write_status = status
-    pf.stl_error = err_message
     pf.db_modified_at = now
 
     if commit:
