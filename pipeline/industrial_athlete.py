@@ -29,13 +29,13 @@ class IndustrialAthlete(db.Model):
     prior_back_injuries = db.Column(db.String(255), nullable=True)
 
     hire_date = db.Column(
-        db.Date,
+        db.DateTime,
         default=datetime.date.today(),
         nullable=True
     )
 
     termination_date = db.Column(
-        db.Date,
+        db.DateTime,
         nullable=True
     )
 
@@ -78,8 +78,9 @@ class IndustrialAthlete(db.Model):
         nullable=False
     )
 
-    setting_id = db.Column(db.Integer)
-    group_id = db.Column(db.Integer)
+    settings = db.Column(db.Text)
+    # setting_id = db.Column(db.Integer)
+    # group_id = db.Column(db.Integer)
 
     def as_dict(self):
         return {
@@ -104,14 +105,3 @@ def get(athlete_id):
     return db.session.query(IndustrialAthlete).filter(
         IndustrialAthlete.id == athlete_id,
     ).scalar()
-
-
-
-class Tag(db.Model):
-    __tablename__ = 'tag'
-
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    name = db.Column(db.Unicode(255), nullable=False, unique=True)
-
-    def __repr__(self):
-        return self.name

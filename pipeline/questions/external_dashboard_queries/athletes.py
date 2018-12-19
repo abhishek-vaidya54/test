@@ -236,8 +236,6 @@ def individual_athletes_data(client_id, range_start=None, range_end=None, wareho
     athlete_details_query = db.db.session.query(db.IndustrialAthlete).options(
         joinedload(db.IndustrialAthlete.job_function),
         joinedload(db.IndustrialAthlete.shift),
-        subqueryload(db.IndustrialAthlete.athlete_groups),
-        subqueryload(db.IndustrialAthlete.campaigns)
     ).join(
         db.Client, db.IndustrialAthlete.client_id == db.Client.id
     ).join(
@@ -262,8 +260,6 @@ def individual_athletes_data(client_id, range_start=None, range_end=None, wareho
             "shift": get_rel_name(athlete_detail.shift),
             "job_function": get_rel_name(athlete_detail.job_function),
             "hire_date": athlete_detail.hire_date,
-            "athlete_groups": get_group_name_list(athlete_detail),
-            "campaigns": get_campaigns(athlete_detail.campaigns)
         } for athlete_detail in athlete_details_query
     }
 
@@ -278,8 +274,6 @@ def individual_athletes_data(client_id, range_start=None, range_end=None, wareho
             "warehouse": athlete_details.get(athlete.id, {}).get("warehouse"),
             "shift": athlete_details.get(athlete.id, {}).get("shift"),
             "job_function": athlete_details.get(athlete.id, {}).get("job_function"),
-            "athlete_groups": athlete_details.get(athlete.id, {}).get("athlete_groups"),
-            "campaigns": athlete_details.get(athlete.id, {}).get("campaigns"),
             "scores": [],
             "last_score": {}
         }
@@ -328,7 +322,6 @@ def individual_athletes_data(client_id, range_start=None, range_end=None, wareho
                     "warehouse": athlete["warehouse"],
                     "shift": athlete["shift"],
                     "job_function": athlete["job_function"],
-                    "athlete_groups": athlete["athlete_groups"],
                     "last_score": {},
                     "scores": [],
                     "campaigns": athlete["campaigns"],
@@ -468,12 +461,7 @@ def list_athletes(client_guid, query_str=None, is_active=None, hire_date_filter=
     query = apply_athletes_list_filters(query, query_str, is_active, hire_date_filter, job_function_filter, shift_filter, group_filter)
 
     if sort_by is not None and sort_dir is not None and sort_by != "" and sort_dir != "":
-        if sort_by == "group_id":
-            query = query.join(
-                db.groups, db.IndustrialAthlete.id == db.groups.c.industrial_athlete_id
-            ).join(db.Group, db.Group.id == db.groups.c.group_id 
-            ).order_by('athlete_group.name' + ' ' + sort_dir) 
-        elif sort_by == "shift_id": 
+        if sort_by == "shift_id": 
             query = query.join( 
                 db.Shifts, db.Shifts.id == db.IndustrialAthlete.shift_id 
             ).order_by('shifts.name'+ ' ' + sort_dir) 
@@ -511,12 +499,6 @@ def list_athletes(client_guid, query_str=None, is_active=None, hire_date_filter=
 
         if row.job_function is not None:
             athlete["job_function"] = row.job_function.name
-
-        if row.athlete_groups is not None:
-            athlete["groups"] = []
-
-            for group in row.athlete_groups:
-                athlete["groups"].append(group.name)
 
         athletes.append(athlete)
 
@@ -574,11 +556,6 @@ def apply_athletes_list_filters(query, query_str=None, is_active=None, hire_date
             db.Shifts, db.Shifts.id == db.IndustrialAthlete.shift_id
         ).filter(db.Shifts.name.in_(shift_filter.split(",")))
 
-    if group_filter is not None and group_filter != "":
-        query = query.join(
-           db.groups, db.IndustrialAthlete.id == db.groups.c.industrial_athlete_id
-       ).filter(db.Group.name.in_(group_filter.split(",")))
-
     return query
 def group_count(client_guid, warehouse_id, query_str=None):
 
@@ -631,13 +608,6 @@ def group_count(client_guid, warehouse_id, query_str=None):
     return query.scalar()
 
 def count_group_athletes(groupid, type, warehouse_id):
-    if type == "athlete_group":
-        query = db.db.session.query(sa.func.count("*")).select_from(db.groups)
-        query = query.join(db.IndustrialAthlete, db.IndustrialAthlete.id == db.groups.c.industrial_athlete_id)
-        query = query.filter(db.groups.c.group_id==groupid)
-        query = apply_warehouse_filter(query, warehouse_id)
-
-        return query.scalar()
     if type == "job_function":
         query = db.db.session.query(sa.func.count("*")).select_from(db.IndustrialAthlete)
         query = query.filter(db.IndustrialAthlete.job_function_id==groupid)
@@ -652,85 +622,6 @@ def count_group_athletes(groupid, type, warehouse_id):
         query = apply_warehouse_filter(query, warehouse_id)
 
         return query.scalar()
-
-def list_groups(client_guid, query_str=None, sort_by=None, sort_dir=None, offset=None, limit=None, warehouse_id=None):
-    params = dict()
-
-    shift_query = """select  shifts.id,shifts.name,'shift' as type, shifts.db_created_at, shifts.db_modified_at, shifts.group_administrator as "Manager" from shifts           
-     join warehouse ON warehouse.id = shifts.warehouse_id
-     join client ON client.id = warehouse.client_id where client.guid=:clientid
-    """
-
-    if warehouse_id is not None:
-        shift_query = shift_query + " and shifts.warehouse_id=:warehouseId"
-
-    if query_str is not None and query_str != "":
-        shift_query += " and shifts.name like :query_str"
-
-    job_function_query = """union 
-     select  job_function.id,job_function.name,'job_function' as type, job_function.db_created_at, job_function.db_modified_at,job_function.group_administrator as "Manager" from job_function
-     join warehouse ON warehouse.id = job_function.warehouse_id
-     join client ON client.id = warehouse.client_id where client.guid=:clientid
-    """
-
-    if warehouse_id is not None:
-        job_function_query = job_function_query + " and job_function.warehouse_id=:warehouseId"
-
-    if query_str is not None and query_str != "":
-        job_function_query += " and job_function.name like :query_str"
-
-    group_query = """union
-     select  athlete_group.id,athlete_group.name ,'athlete_group' as type, athlete_group.db_created_at, athlete_group.db_modified_at,athlete_group.group_administrator as "Manager" from athlete_group
-     join warehouse ON warehouse.id = athlete_group.warehouse_id
-     join client ON client.id = warehouse.client_id where client.guid=:clientid
-    """
-
-    if warehouse_id is not None:
-        group_query = group_query + " and athlete_group.warehouse_id=:warehouseId"
-
-    if query_str is not None and query_str != "":
-        group_query += " and athlete_group.name like :query_str"
-
-    query = text(shift_query + " " + job_function_query + " " + group_query + " order by :sort_by :sort_dir limit :limit OFFSET :offset")
-
-    params["clientid"] = client_guid
-    params["warehouseId"] = warehouse_id
-
-    if sort_by is not None and sort_dir is not None and sort_by != "" and sort_dir != "" :
-        params["sort_by"]=sort_by
-        params["sort_dir"]=sort_dir
-    else:
-        params["sort_by"]='id'
-        params["sort_dir"]='asc'
-    if offset is not None and limit is not None:
-        params["offset"]=offset
-        params["limit"]=limit
-    else:
-        params["offset"]=0
-        params["limit"]=50
-    if query_str is not None and query_str != "":
-        params["query_str"]= "%" + query_str + "%"
-    else:
-        params["query_str"]=""
-    query = db.db.session.execute(query,params)
-    data = [row for row in  query.fetchall()]
-    groups = []
-
-    for row in data:
-        group = {
-            "id": row.id,
-            "name": row.name,
-            "type": row.type,
-            "created_at": row.db_created_at,
-            "modified_at": row.db_modified_at,
-            "athlete_count": count_group_athletes(row.id, row.type, warehouse_id),
-            "group manager": row.Manager
-            
-        }
-
-        groups.append(group)
-    count = group_count(client_guid, warehouse_id, query_str)
-    return {'total':count,"rows":groups}
 
 def get_shift(id, warehouse_id):
     query = db.db.session.query(db.Shifts).filter(
@@ -870,7 +761,6 @@ def get_athlete(client_guid, id):
     athlete = query.one()
     data = dict()
     data["athlete"] = athlete
-    data["groups"] = athlete.athlete_groups
     data["campaigns"] = athlete.campaigns
     data["shift"] = athlete.shift
     data["jobFunction"] = athlete.job_function
@@ -1026,11 +916,6 @@ def get_campaigns(campaigns):
             camps.append(campaign)
     return camps
 
-def get_group_name_list(athlete):
-    names = []
-    for group in athlete.athlete_groups:
-        names.append(group.name)
-    return names
 
 def has_group_data_in_table(group_list, table):
     return (
@@ -1049,34 +934,6 @@ def rankings(cid, range_start, range_end, warehouse_id, group_list=None):
     range_start, range_end = get_date_range(cid, range_start, range_end)
     athletes = []
 
-    if group_list is not None and len(group_list) > 0:
-        groups = db.db.session.query(db.Group).filter(
-            sa.func.lower(db.Group.name).in_(set(group_list))
-        )
-        groups = apply_warehouse_filter(groups, warehouse_id, column=db.Group.warehouse_id)
-        group_ids = [group.id for group in groups]
-        data = db.db.session.query(db.IndustrialAthlete.id)
-        data = apply_warehouse_filter_athletes(data, warehouse_id)
-
-        if has_group_data_in_table(group_list, db.Shifts):
-            data = join_filter_by_group(data, group_list, db.Shifts)
-
-        if has_group_data_in_table(group_list, db.JobFunction):
-            data = join_filter_by_group(data, group_list, db.JobFunction)
-
-        for athlete in data:
-            athletes.append(athlete.id)
-
-        athlete_groups = db.db.session.query(
-            db.groups.c.industrial_athlete_id
-        )
-
-        if group_ids and len(group_ids) > 0:
-            athlete_groups = athlete_groups.filter(db.groups.c.group_id.in_(group_ids))
-            if athletes and len(athletes) > 0:
-                athlete_groups = athlete_groups.filter(db.groups.c.industrial_athlete_id.in_(athletes))
-                athletes = [athlete.industrial_athlete_id for athlete in athlete_groups]
-
     query = get_athlete_query(
         client_id=cid,
         range_start=range_start,
@@ -1090,7 +947,6 @@ def rankings(cid, range_start, range_end, warehouse_id, group_list=None):
     athlete_details_query = db.db.session.query(db.IndustrialAthlete).options(
         joinedload(db.IndustrialAthlete.shift),
         joinedload(db.IndustrialAthlete.job_function),
-        subqueryload(db.IndustrialAthlete.athlete_groups)
     ).filter(db.IndustrialAthlete.client_id == cid)
 
     if athletes is not None and len(athletes) > 0:
@@ -1120,7 +976,6 @@ def rankings(cid, range_start, range_end, warehouse_id, group_list=None):
     for athlete in data:
         default = {
             'id': athlete.id,
-            "groups": athlete_details.get(athlete.id, {}).get("groups"),
             "shift": athlete_details.get(athlete.id, {}).get("shift"),
             "job_function": athlete_details.get(athlete.id, {}).get("job_function"),
             "scores": [],
@@ -1153,7 +1008,6 @@ def rankings(cid, range_start, range_end, warehouse_id, group_list=None):
                 athlete_id,
                 {
                     'id': athlete['id'],
-                    "groups": athlete['groups'],
                     "shift": athlete["shift"],
                     "job_function": athlete["job_function"],
                     "scores": []
@@ -1735,37 +1589,6 @@ def create_job_functions(request, user_id, client_id, warehouse_id):
     except IntegrityError as e:
         return {"success":False,'error':e.message}
 
-def create_groups(request, user_id, client_id, warehouse_id):
-    data = json.loads(request.data)
-    if not data:
-        return {'message': 'No input data provided'}
-    if check_duplicate_group(warehouse_id,data.get('name')):
-        return {'message':'A group already exists with same name'}
-    group = db.Group(name = data.get('name'), 
-                    group_administrator = data.get('group_administrator'),
-                    description = data.get('description'),
-                    warehouse_id = warehouse_id,client_id=client_id)
-    try:
-        db.db.session.add(group)
-        db.db.session.commit()
-        db.db.session.flush()
-
-        Activity.save_activity(user_id, client_id, 'athlete_group', group.id, 'CREATED')
-
-        return {"success":True, 'id':group.id}
-
-    except SQLAlchemyError as e:
-        return {"success":False,'error':e.message}
-
-    except OperationalError as e : 
-        return {"success":False,'error':e.message}
-
-    except DataError as e : 
-        return {"success":False,'error':e.message}
-
-    except IntegrityError as e:
-        return {"success":False,'error':e.message}
-
 
 def create_athlete(request, user_id, client_id, warehouse_id):
     data = json.loads(request.data)
@@ -1846,11 +1669,7 @@ def update_athlete(id, request, user_id, client_id, warehouse_id):
         athlete.schedule = schedule
         db.db.session.merge(athlete)
         db.db.session.commit()
-        # deleteing old group asscoiated records
-        if athlete.athlete_groups:
-            for group in athlete.athlete_groups:
-                athlete.athlete_groups.remove(group)
-            db.db.session.commit()
+
         # adding new records
         if data.get('groups'): 
             for group in data.get('groups'):
