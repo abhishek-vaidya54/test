@@ -35,7 +35,6 @@ PROCESSING = 'PROCESSING'
 REPROCESS = 'REPROCESS'
 UNKNOWN_ATHLETE = 'UNKNOWN ATHLETE'  # todo - update all values to UNKNOWN_TBD
 
-
 class ProcessedFile(db.Model):
     __tablename__ = 'processed_file'
 
@@ -92,6 +91,7 @@ class ProcessedFile(db.Model):
     job_function_id = db.Column(db.Integer)
     group_id = db.Column(db.Integer)
     session_id = db.Column(db.Text)
+    stl_write_status = db.Column(db.Text)
 
     __table_args__ = (
         db.UniqueConstraint('name', 'version'),
@@ -123,7 +123,8 @@ def create(name, athlete_data, file_params, status, version=Config.ALGO_PROCESSI
         group_id=athlete_data.group_id,
         setting_id=int(file_params['setting_id']),
         session_id=file_params['session_id'],
-        status=status
+        status=status,
+
     )
 
     db.session.add(pf)
@@ -193,3 +194,12 @@ def needs_processing(name, version=Config.ALGO_PROCESSING_VERSION):
         ).count()
     )
     return not processing_complete_or_recently_attempted
+
+
+def update_stl_write_status(pf, status, commit=True, err_message=None):
+    now = datetime.datetime.utcnow()
+    pf.stl_write_status = status
+    pf.db_modified_at = now
+
+    if commit:
+        commit_or_rollback(db.session)
