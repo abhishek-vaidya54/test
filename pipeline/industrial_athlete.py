@@ -28,12 +28,6 @@ class IndustrialAthlete(db.Model):
     height = db.Column(db.Integer, nullable=True)
     prior_back_injuries = db.Column(db.String(255), nullable=True)
 
-    tags = db.relationship(
-        'Tag',
-        secondary=tags,
-        backref=db.backref('athletes')
-    )
-
     hire_date = db.Column(
         db.DateTime,
         default=datetime.date.today(),
