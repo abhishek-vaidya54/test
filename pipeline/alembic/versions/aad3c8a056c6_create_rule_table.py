@@ -20,6 +20,7 @@ def upgrade():
 	op.create_table('rule',
         sa.Column('id', sa.Integer(), nullable=False),
         sa.Column('name', sa.String(length=255), nullable=False),
+        sa.Column('action', sa.String(length=255), nullable=False),
         sa.Column('enabled', sa.Boolean(), nullable=False, server_default='1'),
 				sa.Column('deleted', sa.Boolean(), nullable=False, server_default='0'),
         sa.Column('db_created_at', sa.DateTime,
