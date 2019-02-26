@@ -19,7 +19,7 @@ depends_on = None
 def upgrade():
 		op.create_table('condition',
         sa.Column('id', sa.Integer(), nullable=False),
-        sa.Column('field', sa.String(length=255), nullable=False),
+        sa.Column('path', sa.String(length=255), nullable=False),
         sa.Column('operator', sa.String(length=255), nullable=False),
         sa.Column('value', sa.String(length=255), nullable=False),
         sa.Column('rule_id', sa.Integer(), nullable=False),
