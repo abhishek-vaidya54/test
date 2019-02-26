@@ -48,11 +48,27 @@ def get_vault_config(configName):
   return config
 
 def get_url():
+    creds = get_vault_config('pipeline')
+
+    username = ''
+    if(branch == 'master'):
+        creds = creds['PROD']
+        username = creds['username']
+        password = creds['password']
+        hostname = creds['hostname']
+        database = creds['db']
+    else:
+        creds = creds['DEV']
+        username = creds['username']
+        password = creds['password']
+        hostname = creds['hostname']
+        database = creds['db']
+
     return "mysql+pymysql://%s:%s@%s/%s" % (
-        os.getenv("DB_USER", "root"),
-        os.getenv("DB_PASSWORD", "password"),
-        os.getenv("DB_HOST", "localhost"),
-        os.getenv("DB_NAME", "pipeline")
+        os.getenv("DB_USER", username),
+        os.getenv("DB_PASSWORD", password),
+        os.getenv("DB_HOST", hostname),
+        os.getenv("DB_NAME", database)
     )
 
 def run_migrations_offline():
