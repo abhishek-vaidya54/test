@@ -21,15 +21,7 @@ class Client(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     prefix = db.Column(db.String(255), nullable=False)
     name = db.Column(db.String(255), nullable=False, unique=True)
-    guid = db.Column(
-        db.String(32),
-        nullable=False,
-        default=lambda: uuid.uuid4().hex)
     enable_processing = db.Column(db.Boolean, nullable=False, server_default=true())
-    account_lock_timeout = db.Column(INTEGER(unsigned=True))
-    dynamic_shift = db.Column(db.Boolean, nullable=False, server_default=false())
-    client_regex_code = db.Column(db.String(255), nullable=True)
-    
     db_created_at = db.Column(
         db.DateTime,
         default=datetime.datetime.utcnow,
@@ -42,13 +34,11 @@ class Client(db.Model):
         nullable=False
     )
 
-    algo_version = db.Column(db.Integer, nullable=True)
 
     def as_dict(self):
         return {
             'prefix': getattr(self, 'prefix'),
             'name': getattr(self, 'name'),
-            'guid': getattr(self, 'guid'),
         }
 
     def __repr__(self):
