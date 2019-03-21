@@ -1,7 +1,7 @@
 """adding two columns to warehouse, update/show engagement
 
 Revision ID: acfc7b5ba512
-Revises: 32a4cb053b94
+Revises: 393a95e87672
 Create Date: 2018-08-22 17:10:29.610823
 
 """
@@ -11,7 +11,7 @@ import sqlalchemy as sa
 
 # revision identifiers, used by Alembic.
 revision = 'acfc7b5ba512'
-down_revision = '32a4cb053b94'
+down_revision = '393a95e87672'
 branch_labels = None
 depends_on = None
 
