@@ -17,10 +17,10 @@ depends_on = None
 
 
 def upgrade():
-		op.add_column('rule', sa.Column('program_id', sa.Integer(), nullable=True))
+    op.add_column('rule', sa.Column('program_id', sa.Integer(), nullable=True))
     pass
 
 
 def downgrade():
-		op.drop_column('rule', 'program_id')
+    op.drop_column('rule', 'program_id')
     pass
