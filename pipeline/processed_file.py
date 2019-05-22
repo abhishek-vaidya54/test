@@ -112,20 +112,35 @@ def get(name, version=Config.ALGO_PROCESSING_VERSION):
     ).scalar()
 
 
-def create(name, athlete_data, file_params, status, version=Config.ALGO_PROCESSING_VERSION):
-    pf = ProcessedFile(
-        name=name, version=version,
-        athlete_id=athlete_data.id,
-        client_id=athlete_data.client_id,
-        warehouse_id=athlete_data.warehouse_id,
-        job_function_id=athlete_data.job_function.id,
-        sensor_id=file_params['sensor_id'],
-        group_id=athlete_data.group_id,
-        setting_id=int(file_params['setting_id']),
-        session_id=file_params['session_id'],
-        status=status,
+def create(name, athlete_data=None, file_params=None, status=PROCESSING, version=Config.ALGO_PROCESSING_VERSION):
+    pf = None
 
-    )
+    if athlete_data is not None:
+      pf = ProcessedFile(
+          name=name, version=version,
+          athlete_id=athlete_data.id,
+          client_id=athlete_data.client_id,
+          warehouse_id=athlete_data.warehouse_id,
+          job_function_id=athlete_data.job_function.id,
+          sensor_id=file_params['sensor_id'],
+          group_id=athlete_data.group_id,
+          setting_id=int(file_params['setting_id']),
+          session_id=file_params['session_id'],
+          status=status,
+      )
+    else:
+      pf = ProcessedFile(
+          name=name, version=version,
+          athlete_id=0,
+          client_id=0,
+          warehouse_id=0,
+          job_function_id=0,
+          sensor_id=file_params['sensor_id'],
+          group_id=athlete_data.group_id,
+          setting_id=int(file_params['setting_id']),
+          session_id=file_params['session_id'],
+          status=status,
+      )
 
     db.session.add(pf)
     commit_or_rollback(db.session)
