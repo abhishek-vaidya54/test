@@ -136,7 +136,7 @@ def create(name, athlete_data=None, file_params=None, status=PROCESSING, version
           warehouse_id=0,
           job_function_id=0,
           sensor_id=file_params['sensor_id'],
-          group_id=athlete_data.group_id,
+          group_id=0,
           setting_id=int(file_params['setting_id']),
           session_id=file_params['session_id'],
           status=status,
