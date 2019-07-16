@@ -19,7 +19,7 @@ depends_on = None
 def upgrade():
     # Set NULL all hire_date = "0000-00-00 00:00:00", prevented adding foreign keys
     op.execute("""
-        UPDATE pipeline.industrial_athlete SET hire_date = NULL
+        UPDATE industrial_athlete SET hire_date = NULL
         WHERE CAST(hire_date AS CHAR(20)) = "0000-00-00 00:00:00";
     """)
     # Add foreign key constraint from industrial_athlete.client_id to client.id
