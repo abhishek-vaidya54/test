@@ -195,6 +195,22 @@ def upgrade():
     op.drop_column('warehouse', 'hide_judgement')
 
 def downgrade():
+
     op.add_column('warehouse', sa.Column('show_engagement', TINYINT, default=0))
     op.add_column('warehouse', sa.Column('hide_judgement', TINYINT, default=0))
-    pass
+
+    bind = op.get_bind()
+    session = orm.Session(bind=bind)
+
+    # Copy show_engagement and hide_judgement from settings blob to columns
+    for warehouse in session.query(Warehouse):
+        setting = session.query(Settings).\
+            filter(Settings.target_type == 'warehouse', Settings.target_id == warehouse.id).\
+            order_by(Settings.db_created_at.desc()).\
+            first()
+        if setting:
+            value = setting.value
+            warehouse.show_engagement = 1 if value.get(u'showEngagement', True) else 0
+            warehouse.hide_judgement = 0 if value.get(u'showSafetyJudgement', True) else 1
+
+    session.commit()
