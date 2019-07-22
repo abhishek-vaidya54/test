@@ -10,11 +10,7 @@ import sqlalchemy as sa
 from sqlalchemy import orm
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.dialects.mysql import TINYINT
-import json
 import datetime
-
-import pprint
-pp = pprint.PrettyPrinter()
 
 Base = declarative_base()
 
@@ -82,7 +78,7 @@ def upgrade():
         u'showSafetyScoreModal': False
     }
 
-    def convert_value_from_string(value):
+    def convert_value_from_string(value, defaults=default_value):
         copyValue = value.copy()
         for key in copyValue:
             v = copyValue[key]
@@ -96,6 +92,8 @@ def upgrade():
                         copyValue[key] = int(v)
                     except ValueError:
                         pass
+        for key in default:
+            copyValue[key] = copyValue.get(key, default[key])
         return copyValue
 
     new_settings_entries = []
@@ -210,7 +208,7 @@ def downgrade():
             first()
         if setting:
             value = setting.value
-            warehouse.show_engagement = 1 if value.get(u'showEngagement', True) else 0
+            warehouse.show_engagement = 1 if value.get(u'showEngagement', False) else 0
             warehouse.hide_judgement = 0 if value.get(u'showSafetyJudgement', True) else 1
 
     session.commit()
