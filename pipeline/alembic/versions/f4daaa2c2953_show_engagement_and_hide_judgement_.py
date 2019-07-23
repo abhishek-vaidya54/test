@@ -153,13 +153,11 @@ def upgrade():
                 show_engagements[warehouse.show_engagement == 1].append(warehouse)
                 hide_judgements[warehouse.hide_judgement == 1].append(warehouse)
             if len(show_engagements[True]) > 0 and len(show_engagements[False]) > 0:
-                continue
                 # Warehouses don't have the same settings for show_engagement
                 raise Exception(
                     "Group {} spans warehouses {} that don't have the same show_engagement setting".\
                         format(group.id, warehouses.keys()))
             if len(hide_judgements[True]) > 0 and len(hide_judgements[False]) > 0:
-                continue
                 # Warehouses don't have the same settings for hide_judgement
                 raise Exception(
                     "Group {} spans warehouses {} that don't have the same hide_judgement setting".\
