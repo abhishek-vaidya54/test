@@ -92,8 +92,8 @@ def upgrade():
                         copyValue[key] = int(v)
                     except ValueError:
                         pass
-        for key in default:
-            copyValue[key] = copyValue.get(key, default[key])
+        for key in defaults:
+            copyValue[key] = copyValue.get(key, defaults[key])
         return copyValue
 
     new_settings_entries = []
