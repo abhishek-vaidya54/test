@@ -143,8 +143,10 @@ def upgrade():
         warehouses = {}
         for athlete in session.query(IndustrialAthlete).filter(IndustrialAthlete.group_id == group.id):
             if athlete.warehouse_id not in warehouses:
-                warehouses[athlete.warehouse_id] = session.query(Warehouse).\
-                    filter(Warehouse.id == athlete.warehouse_id).one()
+                warehouses[athlete.warehouse_id] = \
+                    session.query(Warehouse).\
+                    filter(Warehouse.id == athlete.warehouse_id).\
+                    one()
         if len(warehouses) == 0:
             # No warehouses to copy columns from.  Skip
             continue
@@ -154,21 +156,21 @@ def upgrade():
             hide_judgements =   {True: [], False: []}
             for warehouse_id in warehouses:
                 warehouse = warehouses[warehouse_id]
-                show_engagements[warehouse.show_engagement == 1].append(warehouse)
-                hide_judgements[warehouse.hide_judgement == 1].append(warehouse)
-            if len(show_engagements[True]) > 0 and len(show_engagements[False]) > 0:
-                # Warehouses don't have the same settings for show_engagement
+                show_engagements[warehouse.show_engagement].append(warehouse)
+                hide_judgements[warehouse.hide_judgement].append(warehouse)
+            if len(show_engagements[0]) > 0 and len(show_engagements[1]) > 0:
+                # Not all warehouses in group have the same settings for show_engagement
                 raise Exception(
                     "Group {} spans warehouses {} that don't have the same show_engagement setting".\
                         format(group.id, warehouses.keys()))
-            if len(hide_judgements[True]) > 0 and len(hide_judgements[False]) > 0:
-                # Warehouses don't have the same settings for hide_judgement
+            if len(hide_judgements[0]) > 0 and len(hide_judgements[1]) > 0:
+                # Not all warehouses in group have the same settings for hide_judgement
                 raise Exception(
                     "Group {} spans warehouses {} that don't have the same hide_judgement setting".\
                         format(group.id, warehouses.keys()))
             # Warehouses here share the same setting for both columns
-            show_engagement = True if len(show_engagements[True]) > 0 else False
-            show_safety_judgement = False if len(hide_judgements[True]) > 0 else True
+            show_engagement = True if len(show_engagements[1]) > 0 else False
+            show_safety_judgement = False if len(hide_judgements[1]) > 0 else True
         else:
             # Only 1 warehouse in the group, safe to copy over columns
             warehouse = warehouses.values()[0]
