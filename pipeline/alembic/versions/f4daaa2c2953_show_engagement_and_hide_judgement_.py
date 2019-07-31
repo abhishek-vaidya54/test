@@ -76,7 +76,7 @@ def upgrade():
         u'hapticSagAngleThreshold': 0,
         u'hapticSingleBendWindow': 0,
         u'showBaselineModal': False,
-        u'showEngagement': False,
+        u'showEngagement': True,
         u'showHapticModal': False,
         u'showSafetyJudgement': True,
         u'showSafetyScoreModal': False
