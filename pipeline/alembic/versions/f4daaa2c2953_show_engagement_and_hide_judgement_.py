@@ -67,7 +67,7 @@ def upgrade():
     default_value = {
         u'athleteEnabled': False,
         u'enagementEnabled': False,
-        u'eulaVersion': 0,
+        u'eulaVersion': None,
         u'hapticBendNumber': 0,
         u'hapticBendPercentile': 0,
         u'hapticEnabled': False,
@@ -102,43 +102,8 @@ def upgrade():
 
     new_settings_entries = []
 
-    for warehouse in session.query(Warehouse):
-        setting = session.query(Settings).\
-            filter(Settings.target_type == 'warehouse', Settings.target_id == warehouse.id).\
-            order_by(Settings.db_created_at.desc()).\
-            first()
-        if setting:
-            value = setting.value
-        else:
-            value = default_value
-        value[u'showEngagement'] = warehouse.show_engagement == 1
-        value[u'showSafetyJudgement'] = warehouse.hide_judgement == 0
-        value = convert_value_from_string(value)
-        new_settings_entries.append(Settings(
-            target_type = 'warehouse',
-            target_id = warehouse.id,
-            value = value
-        ))
-    
-    for athlete in session.query(IndustrialAthlete):
-        if athlete.setting_id:
-            setting = session.query(Settings).\
-                filter(Settings.id == athlete.setting_id).\
-                one()
-            value = setting.value
-            warehouse = session.query(Warehouse).\
-                filter(Warehouse.id == athlete.warehouse_id).\
-                one_or_none()
-            if warehouse:
-                value[u'showEngagement'] = warehouse.show_engagement == 1
-                value[u'showSafetyJudgement'] = warehouse.hide_judgement == 0
-                value = convert_value_from_string(value)
-                new_settings_entries.append(Settings(
-                    target_type = 'athlete',
-                    target_id = athlete.id,
-                    value = value
-                ))
-
+    # Process groups first in case not all warehouses in group have the same
+    # settings and the error can be raised before further processing
     for group in session.query(Groups):
         warehouses = {}
         for athlete in session.query(IndustrialAthlete).filter(IndustrialAthlete.group_id == group.id):
@@ -187,6 +152,48 @@ def upgrade():
         new_settings_entries.append(Settings(
             target_type = 'group',
             target_id = group.id,
+            value = value
+        ))
+
+    # Athlete entries differ as the industrial_athlete.setting_id must be updated
+    # Don't add them to new_settings_entries and add them within the loop
+    for athlete in session.query(IndustrialAthlete):
+        if athlete.setting_id:
+            setting = session.query(Settings).\
+                filter(Settings.id == athlete.setting_id).\
+                one()
+            value = setting.value
+            warehouse = session.query(Warehouse).\
+                filter(Warehouse.id == athlete.warehouse_id).\
+                one_or_none()
+            if warehouse:
+                value[u'showEngagement'] = warehouse.show_engagement == 1
+                value[u'showSafetyJudgement'] = warehouse.hide_judgement == 0
+                value = convert_value_from_string(value)
+                athlete_settings = Settings(
+                    target_type = 'industrial_athlete',
+                    target_id = athlete.id,
+                    value = value
+                ))
+                session.add(athlete_settings)
+                athlete.setting_id = athlete_settings.id
+
+    # Now process the warehouses
+    for warehouse in session.query(Warehouse):
+        setting = session.query(Settings).\
+            filter(Settings.target_type == 'warehouse', Settings.target_id == warehouse.id).\
+            order_by(Settings.db_created_at.desc()).\
+            first()
+        if setting:
+            value = setting.value
+        else:
+            value = default_value
+        value[u'showEngagement'] = warehouse.show_engagement == 1
+        value[u'showSafetyJudgement'] = warehouse.hide_judgement == 0
+        value = convert_value_from_string(value)
+        new_settings_entries.append(Settings(
+            target_type = 'warehouse',
+            target_id = warehouse.id,
             value = value
         ))
 
