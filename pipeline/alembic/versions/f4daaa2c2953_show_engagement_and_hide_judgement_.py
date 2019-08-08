@@ -45,6 +45,12 @@ class IndustrialAthlete(Base):
     group_id = sa.Column(sa.Integer, sa.ForeignKey('groups.id'))
     setting_id = sa.Column(sa.Integer, sa.ForeignKey('settings.id'))
     warehouse_id = sa.Column(sa.Integer, sa.ForeignKey('warehouse.id'), nullable=True)
+    db_modified_at = sa.Column(
+        sa.DateTime,
+        default=datetime.datetime.utcnow,
+        onupdate=datetime.datetime.utcnow,
+        nullable=False
+    )
 
 class Settings(Base):
     __tablename__ = 'settings'
@@ -174,8 +180,9 @@ def upgrade():
                     target_type = 'industrial_athlete',
                     target_id = athlete.id,
                     value = value
-                ))
+                )
                 session.add(athlete_settings)
+                session.flush()
                 athlete.setting_id = athlete_settings.id
 
     # Now process the warehouses
