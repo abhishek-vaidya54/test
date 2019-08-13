@@ -151,7 +151,10 @@ def upgrade():
             filter(Settings.target_type == 'group', Settings.target_id == group.id).\
             order_by(Settings.db_created_at.desc()).\
             first()
-        value = setting.value
+        if setting:
+            value = setting.value
+        else:
+            value = default_value
         value[u'showEngagement'] = show_engagement
         value[u'showSafetyJudgement'] = show_safety_judgement
         value = convert_value_from_string(value)
