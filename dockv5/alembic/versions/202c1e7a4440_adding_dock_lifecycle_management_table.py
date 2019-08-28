@@ -6,6 +6,7 @@ Create Date: 2019-08-26 10:59:43.920463
 
 """
 from alembic import op
+from sqlalchemy import text
 import sqlalchemy as sa
 import datetime
 
@@ -21,11 +22,11 @@ def upgrade():
     # Generating Dock Lifecycle Management Phase Table
     op.create_table("dock_phase",
     sa.Column("id",sa.Integer(),nullable=False),
-    sa.Column("dock_id",sa.Integer(),nullable=False),
-    sa.Column("timestamp",sa.DateTime,default=datetime.datetime.utcnow,nullable=False),
-    sa.Column("phase",sa.Enum("PREP","INFIELD","DEMO","MAINTENANCE","UNUSED","RETIRED"),default="PREP",nullable=False),
+    sa.Column("config_id",sa.Integer(),nullable=False),
+    sa.Column("timestamp",sa.DateTime,server_default=text("CURRENT_TIMESTAMP()")),
+    sa.Column("phase",sa.Enum("PREP","INFIELD","DEMO","MAINTENANCE","UNUSED","RETIRED"),server_default="PREP"),
     sa.PrimaryKeyConstraint('id'),
-    sa.ForeignKeyConstraint(['dock_id'],['config.id'], )
+    sa.ForeignKeyConstraint(['config_id'],['config.id'], )
     )
 
 
