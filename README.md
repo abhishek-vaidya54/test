@@ -1,5 +1,6 @@
 # database-models
-
+[Database Model Wiki
+Page](https://github.com/strongarm-tech/database_models/wiki)
 ## setup
 copy .envrc.sample in this directory to .envrc and set the vault token
 (vault token should be created from database vault policy)
