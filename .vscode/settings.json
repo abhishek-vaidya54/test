@@ -1,4 +1,15 @@
 {
   "python.pythonPath": "${workspaceFolder}/venv/bin/python",
-  "git.ignoreLimitWarning": true
+  "git.ignoreLimitWarning": true,
+  "saveAndRun":{
+    "commands":[
+      {
+        "match":".py", 
+        "cmd":"clear && echo 'Running dockv5 pytest...' && python3 -m pytest ${workspaceFolder}/dockv5/tests/",
+        "silent": false
+      }
+    ]
+  }
+  
 }
+
