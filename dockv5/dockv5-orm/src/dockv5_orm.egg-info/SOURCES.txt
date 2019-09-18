@@ -1,0 +1,9 @@
+setup.py
+src/dockv5_orm/__init__.py
+src/dockv5_orm/config.py
+src/dockv5_orm/config_factories.py
+src/dockv5_orm.egg-info/PKG-INFO
+src/dockv5_orm.egg-info/SOURCES.txt
+src/dockv5_orm.egg-info/dependency_links.txt
+src/dockv5_orm.egg-info/requires.txt
+src/dockv5_orm.egg-info/top_level.txt
