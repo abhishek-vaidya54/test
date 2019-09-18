@@ -1,62 +1,70 @@
+# Standard Library Imports
 import datetime
 
-from sqlalchemy import ForeignKey, and_, or_
-from . import db
+# Third Party Imports
+from sqlalchemy import ForeignKey, Column, String, Integer, DateTime, Float, Text,Boolean,PrimaryKeyConstraint
+from sqlalchemy.orm import relationship
 
+# Local Application Imports
+from database_models.pipeline.base import Base
 
-class JobFunction(db.Model):
+class JobFunction(Base):
     __tablename__ = 'job_function'
 
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    # Table Columns
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    warehouse_id = Column(Integer,ForeignKey('warehouse.id'),nullable=False)
+    name = Column(String(255), nullable=False)
+    max_package_mass = Column(Float, default=6.6)
+    group_administrator = Column(String(255), nullable=False)
+    max_package_weight = Column(Integer, nullable=True)
+    min_package_weight = Column(Integer, nullable=True)
+    avg_package_weight = Column(Integer, nullable=True)
+    lbd_indicence = Column(Boolean, nullable=True, default=False)
+    lbd_indicence_rate = Column(Integer, nullable=True )
+    description = Column(Text, nullable=True)
+    color = Column(String(255), nullable=True)
+    db_created_at = Column(DateTime,default=datetime.datetime.utcnow,nullable=False)
+    db_modified_at = Column(DateTime,default=datetime.datetime.utcnow,onupdate=datetime.datetime.utcnow,nullable=False)
+    standard_score = Column(Float)
+    min_safety_score = Column(Float,nullable=True)
+    max_safety_score = Column(Float,nullable=True)
+    first_quarter_safety_score = Column(Float,nullable=True)
+    median_safety_score = Column(Float,nullable=True)
+    third_quarter_safety_score = Column(Float,nullable=True)
 
-    warehouse_id = db.Column(
-        db.Integer,
-        ForeignKey('warehouse.id'),
-        nullable=False
-    )
-    warehouse = db.relationship(
-        'Warehouse',
-        foreign_keys=warehouse_id,
-        backref='job_functions'
-    )
+    # Table Constraints
+    PrimaryKeyConstraint('id')
     
-    name = db.Column(db.String(255), nullable=False)
-    max_package_mass = db.Column(db.FLOAT(), default=6.6)
-    group_administrator = db.Column(db.String(255), nullable=False)
-    max_package_weight = db.Column(db.Integer, nullable=True)
-    min_package_weight = db.Column(db.Integer, nullable=True)
-    avg_package_weight = db.Column(db.Integer, nullable=True)
-    lbd_indicence = db.Column(db.Boolean, nullable=True, default=False)
-    lbd_indicence_rate = db.Column(db.Integer(), nullable=True )
-    description = db.Column(db.Text(), nullable=True)
-
-    color = db.Column(db.String(255), nullable=True)
-
-    db_created_at = db.Column(
-        db.DateTime,
-        default=datetime.datetime.utcnow,
-        nullable=False
-    )
-    db_modified_at = db.Column(
-        db.DateTime,
-        default=datetime.datetime.utcnow,
-        onupdate=datetime.datetime.utcnow,
-        nullable=False
-    )
-
-    standard_score = db.Column(db.Float)
-
+    # Table Relationships
+    industrial_athletes = relationship('IndustrialAthlete',backref='jub_function')
     
     def as_dict(self):
         return {
         "id": self.id,
         "warehouse_id": self.warehouse_id,
         "name": self.name,
-    }
-    # __table_args__ = (db.UniqueConstraint('warehouse_id', 'color'), )
+        'max_package+mass':self.max_package_mass,
+        'group_administrator':self.group_administrator,
+        'max_package_weight':self.max_package_weight,
+        'min_package_weight':self.min_package_weight,
+        'avg_package_weight':self.avg_package_weight,
+        'lbd_indicence': self.lbd_indicence,
+        'lbd_indicence_rate':self.lbd_indicence_rate,
+        'description':self.description,
+        'color':self.color,
+        'db_created_at':self.db_created_at,
+        'db_modified_at':self.db_modified_at,
+        'standard_score':self.standard_score,
+        'min_safety_score':self.min_safety_score,
+        'max_safety_score':self.max_safety_score,
+        'first_quarter_safety_score':self.first_quarter_safety_score,
+        'median_safety_score':self.median_safety_score,
+        'third_quarter_safety_score':self.third_quarter_safety_score
+        }
 
     def __repr__(self):
-        return self.name
+        return str(self.as_dict())
 
 
 def get(job_function_id):

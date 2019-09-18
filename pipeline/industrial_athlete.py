@@ -1,85 +1,46 @@
+# Standard Library Imports
 import datetime
 import os
 import json
 
-from sqlalchemy import ForeignKey, and_, or_, event
-from sqlalchemy.orm import backref
-from sqlalchemy.orm import object_session
-from . import commit_or_rollback, db
+# Third Party Imports
+from sqlalchemy import ForeignKey, Column, String, Integer, DateTime
+from sqlalchemy.orm import backref, relationship
 
 
-class IndustrialAthlete(db.Model):
+# Local Application Imports
+from database_models.pipeline.base import Base
+
+class IndustrialAthlete(Base):
     __tablename__ = 'industrial_athlete'
 
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    # Table Columns
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    client_id = Column(Integer, ForeignKey('client.id'), nullable=False)
+    gender = Column(String(1), nullable=False)
+    first_name = Column(String(255), nullable=False)
+    last_name = Column(String(255), nullable=False)
+    external_id = Column(String(255), nullable=False)
+    schedule = Column(String(255), nullable=True)
+    weight = Column(Integer, nullable=True)
+    height = Column(Integer, nullable=True)
+    prior_back_injuries = Column(String(255), nullable=True)
+    hire_date = Column(DateTime, default=datetime.date.today(),nullable=True)
+    termination_date = Column(DateTime,nullable=True)
+    warehouse_id = Column(Integer,ForeignKey('warehouse.id'),nullable=True)
+    shift_id = Column(Integer, ForeignKey('shifts.id'), nullable=True)
+    job_function_id = Column(Integer,ForeignKey('job_function.id'),nullable=True)
+    db_created_at = Column(DateTime, default=datetime.datetime.utcnow,nullable=False)
+    db_modified_at = Column(DateTime,default=datetime.datetime.utcnow,onupdate=datetime.datetime.utcnow,nullable=False)
+    setting_id = Column(Integer)
+    group_id = Column(Integer)
 
-    client_id = db.Column(db.Integer, ForeignKey('client.id'), nullable=False)
-    client = db.relationship(
-        'Client',
-        foreign_keys=client_id,
-        backref='athletes'
-    )
-    gender = db.Column(db.String(1), nullable=False)
-    first_name = db.Column(db.String(255), nullable=False)
-    last_name = db.Column(db.String(255), nullable=False)
-    external_id = db.Column(db.String(255), nullable=False)
-    schedule = db.Column(db.String(255), nullable=True)
-    weight = db.Column(db.Integer, nullable=True)
-    height = db.Column(db.Integer, nullable=True)
-    prior_back_injuries = db.Column(db.String(255), nullable=True)
-
-    hire_date = db.Column(
-        db.DateTime,
-        default=datetime.date.today(),
-        nullable=True
-    )
-
-    termination_date = db.Column(
-        db.DateTime,
-        nullable=True
-    )
-
-    warehouse_id = db.Column(
-        db.Integer,
-        ForeignKey('warehouse.id'),
-        nullable=True
-    )
-    warehouse = db.relationship(
-        'Warehouse',
-        foreign_keys=warehouse_id,
-        backref='athletes'
-    )
-    shift_id = db.Column(db.Integer, ForeignKey('shifts.id'), nullable=True)
-    shift = db.relationship(
-        'Shifts',
-        foreign_keys=shift_id,
-        backref='athletes'
-    )
-    job_function_id = db.Column(
-        db.Integer,
-        ForeignKey('job_function.id'),
-        nullable=True
-    )
-    job_function = db.relationship(
-        'JobFunction',
-        foreign_keys=job_function_id,
-        backref='athletes'
-    )
-
-    db_created_at = db.Column(
-        db.DateTime,
-        default=datetime.datetime.utcnow,
-        nullable=False
-    )
-    db_modified_at = db.Column(
-        db.DateTime,
-        default=datetime.datetime.utcnow,
-        onupdate=datetime.datetime.utcnow,
-        nullable=False
-    )
-
-    setting_id = db.Column(db.Integer)
-    group_id = db.Column(db.Integer)
+    # Table Relationships
+    # warehouse = db.relationship('Warehouse',foreign_keys=warehouse_id,backref='industrial_athlete')
+    # shift = db.relationship('Shifts',foreign_keys=shift_id, backref='industrial_athlete')
+    # job_function = db.relationship('JobFunction',foreign_keys=job_function_id,backref='industrial_athlete')
+    # client = db.relationship('Client',foreign_keys=client_id,backref='industrial_athlete')
+    
 
     def as_dict(self):
         return {
@@ -97,7 +58,11 @@ class IndustrialAthlete(db.Model):
 
 
     def __repr__(self):
-        return '%s@%s' % (self.id, self.client.id)
+        return str(self.as_dict())
+    
+    def __len__(self):
+        return len(self.as_dict())
+    
 
 
 def get(athlete_id):

@@ -1,48 +1,64 @@
+# Standard Library Imports
 import datetime
 import json
 import logging
 import uuid
 import re
 
-from sqlalchemy import ForeignKey, true, false
-from sqlalchemy_utils import EmailType, PasswordType
-from sqlalchemy.dialects.mysql import INTEGER
+# Third Party imports
+from sqlalchemy import (ForeignKey, true, 
+                        Column, Integer, String, 
+                        DateTime, PrimaryKeyConstraint, 
+                        UniqueConstraint, Boolean)
+from sqlalchemy.orm import relationship
 
-from itsdangerous import TimedJSONWebSignatureSerializer
-from flask import current_app
-from . import db
+# Local Application Import
+from database_models.pipeline.base import Base
 
-logger = logging.getLogger(__name__)
-
-
-class Client(db.Model):
+class Client(Base):
     __tablename__ = 'client'
 
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    prefix = db.Column(db.String(255), nullable=False)
-    name = db.Column(db.String(255), nullable=False, unique=True)
-    enable_processing = db.Column(db.Boolean, nullable=False, server_default=true())
-    db_created_at = db.Column(
-        db.DateTime,
-        default=datetime.datetime.utcnow,
-        nullable=False
-    )
-    db_modified_at = db.Column(
-        db.DateTime,
-        default=datetime.datetime.utcnow,
-        onupdate=datetime.datetime.utcnow,
-        nullable=False
-    )
+    # Table Columns
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    name = Column(String(255), nullable=False, unique=True)
+    db_created_at = Column(DateTime,default=datetime.datetime.utcnow,nullable=False)
+    db_modified_at = Column(DateTime,default=datetime.datetime.utcnow,onupdate=datetime.datetime.utcnow,nullable=False)
+    prefix = Column(String(255), nullable=False)
+    guid = Column(String(32),nullable=False)
+    domain = Column(String(255),nullable=True)
+    enable_processing = Column(Boolean, nullable=False, server_default=true())
+    account_lock_timeout = Column(Integer,nullable=True)
+    dynamic_shift = Column(Boolean,nullable=False)
+    client_regex_code = Column(String(255),nullable=True)
+    algo_version = Column(Integer,nullable=True)
+
+    # Table Constraints
+    PrimaryKeyConstraint('id')
+    UniqueConstraint('domain','name')
+
+    # Table Relationships
+    industrial_athletes = relationship('IndustrialAthlete',backref='client')
+    warehouses = relationship('Warehouse',backref='client')
 
 
     def as_dict(self):
         return {
-            'prefix': getattr(self, 'prefix'),
-            'name': getattr(self, 'name'),
+            'id':self.id,
+            'name':self.name,
+            'db_created_at':self.db_created_at,
+            'db_modified_at':self.db_modified_at,
+            'prefix':self.prefix,
+            'guid':self.guid,
+            'domain':self.domain,
+            'enable_processing':self.enable_processing,
+            'account_lock_timeout':self.account_lock_timeout,
+            'dynamic_shift':self.dynamic_shift,
+            'client_regex_code':self.client_regex_code,
+            'algo_version':self.algo_version
         }
 
     def __repr__(self):
-        return self.name
+        return str(self.as_dict())
 
 
 def get_all():
