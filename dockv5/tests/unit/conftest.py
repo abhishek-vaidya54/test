@@ -2,7 +2,7 @@ import os
 import pytest
 from sqlalchemy import create_engine, insert
 from sqlalchemy.orm import sessionmaker
-from dock_v5_orm.config_factories import ConfigFactory, DockPhaseFactory
+from dockv5_orm.config_factories import ConfigFactory, DockPhaseFactory
 
 @pytest.fixture(scope='session')
 def env_variables():

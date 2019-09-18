@@ -12,8 +12,8 @@ Description:
 
 import pytest
 
-from dock_v5_orm.config import Config, DockPhase
-from dock_v5_orm.config_factories import ConfigFactory, DockPhaseFactory
+from dockv5_orm.config import Config, DockPhase
+from dockv5_orm.config_factories import ConfigFactory, DockPhaseFactory
 
 
 

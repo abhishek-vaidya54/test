@@ -6,7 +6,7 @@ import string
 import datetime
 
 
-from dock_v5_orm.config import Config, DockPhase
+from dockv5_orm.config import Config, DockPhase
 
 
 
