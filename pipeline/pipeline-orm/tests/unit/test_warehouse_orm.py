@@ -61,5 +61,7 @@ def test_warehouse_client_relationship(session):
     client = session.query(Client).filter_by(id=32).first()
     warehouse = client.warehouses[0]
     assert warehouse == session.query(Warehouse).filter_by(id=warehouse.id).first()
-
+    warehouse = session.query(Warehouse).first()
+    client = warehouse.client
+    assert client.id != None
 

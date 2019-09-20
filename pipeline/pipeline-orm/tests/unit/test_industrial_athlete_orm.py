@@ -88,6 +88,9 @@ def test_industrial_athlete_client_relationship(session):
     client = session.query(Client).filter_by(id=32).first()
     athlete = client.industrial_athletes[0]
     assert athlete == session.query(IndustrialAthlete).filter_by(id=athlete.id).first()
+    athlete = session.query(IndustrialAthlete).first()
+    client = athlete.client
+    assert client.id != None
 
 @pytest.mark.relationships
 def test_industrial_athlete_warehouse_relationship(session):
@@ -96,6 +99,9 @@ def test_industrial_athlete_warehouse_relationship(session):
     warehouse = session.query(Warehouse).filter_by(id=44).first()
     athlete = warehouse.industrial_athletes[0]
     assert athlete == session.query(IndustrialAthlete).filter_by(id=athlete.id).first()
+    athlete = session.query(IndustrialAthlete).first()
+    warehouse = athlete.warehouse
+    assert warehouse.id != None
 
 @pytest.mark.relationships
 def test_industrial_athlete_job_function_relationship(session):
@@ -104,6 +110,9 @@ def test_industrial_athlete_job_function_relationship(session):
     job_function = session.query(JobFunction).filter_by(id=252).first()
     athlete = job_function.industrial_athletes[0]
     assert athlete == session.query(IndustrialAthlete).filter_by(id=athlete.id).first()
+    athlete = session.query(IndustrialAthlete).first()
+    job_function = athlete.job_function
+    assert job_function.id != None
 
 @pytest.mark.relationships
 def test_industrial_athlete_shifts_relationship(session):
@@ -112,6 +121,9 @@ def test_industrial_athlete_shifts_relationship(session):
     shifts = session.query(Shifts).filter_by(id=92).first()
     athlete = shifts.industrial_athletes[0]
     assert athlete == session.query(IndustrialAthlete).filter_by(id=athlete.id).first()
+    athlete = session.query(IndustrialAthlete).first()
+    shifts = athlete.shifts
+    assert shifts.id != None
 
 @pytest.mark.insert_test
 def test_industrial_athlete_insert_new_row(session,industrial_athlete_factory):

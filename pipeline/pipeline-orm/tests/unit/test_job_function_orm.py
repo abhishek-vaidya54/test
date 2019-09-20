@@ -33,4 +33,7 @@ def test_jobfunction_warehouse_relationship(session):
     warehouse = session.query(Warehouse).filter_by(id=44).first()
     job_function = warehouse.job_functions[0]
     assert job_function == session.query(JobFunction).filter_by(id=job_function.id).first()
+    job_function = session.query(JobFunction).first()
+    warehouse = job_function.warehouse
+    assert warehouse.id != None
 

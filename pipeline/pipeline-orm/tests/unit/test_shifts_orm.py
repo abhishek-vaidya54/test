@@ -47,3 +47,6 @@ def test_shifts_warehouse_relationship(session):
     warehouse = session.query(Warehouse).filter_by(id=44).first()
     shifts = warehouse.shifts[0]
     assert shifts == session.query(Shifts).filter_by(id=shifts.id).first()
+    shifts = session.query(Shifts).first()
+    warehouse = shifts.warehouse
+    assert warehouse.id != None

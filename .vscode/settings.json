@@ -5,7 +5,7 @@
     "commands": [
       {
         "match":".py",
-        "cmd": "clear && pwd && python3 -m pytest -m 'insert_test' ${workspaceFolder}/pipeline/pipeline-orm/tests"
+        "cmd": "clear && pwd && python3 -m pytest --randomly-seed=1234 ${workspaceFolder}/pipeline/pipeline-orm/tests"
       }
     ]
   }
