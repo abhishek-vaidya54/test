@@ -1,4 +1,12 @@
 {
   "python.pythonPath": "${workspaceFolder}/venv/bin/python",
-  "git.ignoreLimitWarning": true
+  "git.ignoreLimitWarning": true,
+  "saveAndRun":{
+    "commands": [
+      {
+        "match":".py",
+        "cmd": "clear && pwd && python3 -m pytest -m 'not insert_test' ${workspaceFolder}/pipeline/pipeline-orm/tests"
+      }
+    ]
+  }
 }

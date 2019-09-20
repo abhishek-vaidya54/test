@@ -3,10 +3,10 @@ import datetime
 
 # Third Party Imports
 from sqlalchemy import ForeignKey, Column, Integer, DateTime, Text, Time, String
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, validates
 
 # Local Application Import
-from database_models.pipeline.base import Base
+from pipeline_orm.base import Base
 
 class Shifts(Base):
     __tablename__ = 'shifts'
@@ -25,6 +25,41 @@ class Shifts(Base):
 
     #Table Relationships
     industrial_athletes = relationship('IndustrialAthlete',backref='shifts')
+
+    @validates('warehouse_id')
+    def validate_warehouse_id(self,key,warehouse_id):
+        if warehouse_id == None:
+            raise Exception('warehouse_id cannot be Null')
+        else:
+            return warehouse_id
+    
+    @validates('name')
+    def validate_name(self,key,name):
+        if name == None:
+            raise Exception('name cannot be Null')
+        else:
+            return name
+    
+    @validates('shift_start')
+    def validate_shift_start(self,key,shift_start):
+        if shift_start == None:
+            raise Exception('shift_start cannot be Null')
+        else:
+            return shift_start
+    
+    @validates('shift_end')
+    def validate_shift_end(self,key,shift_end):
+        if shift_end == None:
+            raise Exception('shift_end cannot be Null')
+        else:
+            return shift_end
+    
+    @validates('group_administrator')
+    def validate_group_administrator(self,key,group_administrator):
+        if group_administrator == None:
+            raise Exception("group_administrator cannot be Null")
+        else:
+            return group_administrator
 
     def as_dict(self):
         return {
