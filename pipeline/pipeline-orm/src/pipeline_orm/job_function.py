@@ -37,8 +37,9 @@ class JobFunction(Base):
     PrimaryKeyConstraint('id')
     
     # Table Relationships
-    industrial_athletes = relationship('IndustrialAthlete',backref='jub_function')
-    
+    industrial_athletes = relationship('IndustrialAthlete',back_populates='job_function')
+    warehouse = relationship('Warehouse',back_populates='job_functions',uselist=False)
+
     @validates('warehouse_id')
     def validate_warehouse_id(self,key,warehouse_id):
         if warehouse_id == None:

@@ -37,9 +37,10 @@ class Warehouse(Base):
     PrimaryKeyConstraint('id')
 
     # Table relationships
-    industrial_athletes = relationship("IndustrialAthlete", backref='warehouse')
-    job_functions = relationship('JobFunction',backref='warehouse')
-    shifts = relationship('Shifts',backref='warehouse')
+    client = relationship('Client',back_populates='warehouses',uselist=False)
+    industrial_athletes = relationship("IndustrialAthlete", back_populates='warehouse')
+    job_functions = relationship('JobFunction',back_populates='warehouse')
+    shifts = relationship('Shifts',back_populates='warehouse')
     
     @validates('client_id')
     def validate_client_id(self,key,client_id):

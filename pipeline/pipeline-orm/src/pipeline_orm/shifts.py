@@ -24,7 +24,8 @@ class Shifts(Base):
     db_modified_at = Column(DateTime,default=datetime.datetime.utcnow,onupdate=datetime.datetime.utcnow,nullable=False)
 
     #Table Relationships
-    industrial_athletes = relationship('IndustrialAthlete',backref='shifts')
+    industrial_athletes = relationship('IndustrialAthlete',back_populates='shifts')
+    warehouse = relationship('Warehouse',back_populates='shifts',uselist=False)
 
     @validates('warehouse_id')
     def validate_warehouse_id(self,key,warehouse_id):

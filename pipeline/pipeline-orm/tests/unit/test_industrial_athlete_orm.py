@@ -116,12 +116,15 @@ def test_industrial_athlete_shifts_relationship(session):
 @pytest.mark.insert_test
 def test_industrial_athlete_insert_new_row(session,industrial_athlete_factory):
     ia_factory = industrial_athlete_factory
-    current_count = session.query(IndustrialAthlete).first()
-    industrial_athlete = IndustrialAthlete(gender=ia_factory.gender,
+    current_count = session.query(IndustrialAthlete).count()
+    industrial_athlete = IndustrialAthlete(client_id=ia_factory.client_id,
+                                            gender=ia_factory.gender,
                                             first_name=ia_factory.first_name,
                                             last_name=ia_factory.last_name,
                                             external_id=ia_factory.external_id)
     session.add(industrial_athlete)
     session.commit()
-    assert current_count != session.query(IndustrialAthlete).count()
+    industrial_athlete = session.query(IndustrialAthlete).filter_by(client_id=99).order_by(IndustrialAthlete.id.desc()).first()
+    assert current_count+1 == session.query(IndustrialAthlete).count()
+    assert industrial_athlete.id != None
 

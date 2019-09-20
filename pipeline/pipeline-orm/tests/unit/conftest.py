@@ -7,7 +7,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
 # Local Application Import
-from pipeline_orm.factories import IndustrialAthleteFactory
+from pipeline_orm.factories import IndustrialAthleteFactory, ClientFactory
 
 def pytest_configure(config):
     ''' Adds custom test makers'''
@@ -38,6 +38,7 @@ def session(connection):
     ''' Database Session created from db connection fixture'''
     Session = sessionmaker(bind=connection)
     session = Session()
+    ClientFactory._meta.sqlalchemy_session = session
     IndustrialAthleteFactory._meta.sqlalchemy_session = session
     yield session
     session.close()

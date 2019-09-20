@@ -5,7 +5,7 @@ import json
 
 # Third Party Imports
 from sqlalchemy import ForeignKey, Column, String, Integer, DateTime
-from sqlalchemy.orm import validates
+from sqlalchemy.orm import relationship, validates
 
 
 # Local Application Imports
@@ -34,6 +34,12 @@ class IndustrialAthlete(Base):
     db_modified_at = Column(DateTime,default=datetime.datetime.utcnow,onupdate=datetime.datetime.utcnow,nullable=False)
     setting_id = Column(Integer,nullable=True)
     group_id = Column(Integer,nullable=True)
+
+    # Table Relationships
+    client = relationship('Client', back_populates='industrial_athletes',uselist=False)
+    warehouse = relationship('Warehouse',back_populates='industrial_athletes',uselist=False)
+    shifts = relationship('Shifts',back_populates='industrial_athletes',uselist=False)
+    job_function = relationship('JobFunction',back_populates='industrial_athletes',uselist=False)
 
     @validates('client_id')
     def validate_client_id(self,key,client_id):
@@ -75,6 +81,8 @@ class IndustrialAthlete(Base):
     def validate_warehouse_id(self,key,warehouse_id):
         if warehouse_id == None:
             raise Exception('warehouse_id cannot be Null')
+        elif not isinstance(warehouse_id,int):
+            raise Exception('warehouse_id has to be an Integer')
         else:
             return warehouse_id
     
