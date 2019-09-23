@@ -1,0 +1,4 @@
+sqlalchemy
+factory-boy
+pymysql
+pytest

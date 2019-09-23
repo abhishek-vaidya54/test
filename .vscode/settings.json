@@ -2,14 +2,12 @@
   "python.pythonPath": "${workspaceFolder}/venv/bin/python",
   "git.ignoreLimitWarning": true,
   "saveAndRun":{
-    "commands":[
+    "commands": [
       {
-        "match":".py", 
-        "cmd":"clear && echo 'Running dockv5 pytest...' && python3 -m pytest ${workspaceFolder}/dockv5/tests/",
-        "silent": false
+        "match":".py",
+        "cmd": "clear && pwd && python3 -m pytest --randomly-seed=1234 ${workspaceFolder}/pipeline/pipeline-orm/tests"
       }
     ]
   }
-  
 }
 
