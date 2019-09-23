@@ -8,7 +8,7 @@ Create Date: 2019-09-12 14:15:06.996667
 from alembic import op
 import sqlalchemy as sa
 
-
+#adding columns to config table
 # revision identifiers, used by Alembic.
 revision = '38886a28cf02'
 down_revision = '202c1e7a4440'
