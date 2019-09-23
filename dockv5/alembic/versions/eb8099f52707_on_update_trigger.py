@@ -8,6 +8,7 @@ Create Date: 2019-09-12 15:00:59.780075
 from alembic import op
 import sqlalchemy as sa
 
+#updating trigger
 
 # revision identifiers, used by Alembic.
 revision = 'eb8099f52707'
