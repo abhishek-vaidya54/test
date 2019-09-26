@@ -139,4 +139,6 @@ def test_industrial_athlete_insert_new_row(session,industrial_athlete_factory):
     industrial_athlete = session.query(IndustrialAthlete).filter_by(client_id=99).order_by(IndustrialAthlete.id.desc()).first()
     assert current_count+1 == session.query(IndustrialAthlete).count()
     assert industrial_athlete.id != None
+    assert industrial_athlete.first_name ==session.query(IndustrialAthlete).filter_by(first_name=ia_factory.first_name).first().first_name
+
 

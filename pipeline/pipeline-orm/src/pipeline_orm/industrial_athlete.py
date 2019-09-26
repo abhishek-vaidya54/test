@@ -34,6 +34,8 @@ class IndustrialAthlete(Base):
     db_modified_at = Column(DateTime,default=datetime.datetime.utcnow,onupdate=datetime.datetime.utcnow,nullable=False)
     setting_id = Column(Integer,nullable=True)
     group_id = Column(Integer,nullable=True)
+    something = Column(String(45),nullable=False)
+
 
     # Table Relationships
     client = relationship('Client', back_populates='industrial_athletes',uselist=False)
