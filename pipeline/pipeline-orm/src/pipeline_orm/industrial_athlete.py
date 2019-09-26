@@ -81,8 +81,6 @@ class IndustrialAthlete(Base):
     def validate_warehouse_id(self,key,warehouse_id):
         if warehouse_id == None:
             raise Exception('warehouse_id cannot be Null')
-        elif not isinstance(warehouse_id,int):
-            raise Exception('warehouse_id has to be an Integer')
         else:
             return warehouse_id
     
