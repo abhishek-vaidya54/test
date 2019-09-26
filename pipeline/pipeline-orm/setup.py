@@ -6,7 +6,7 @@ setup(
     packages= find_packages('src'),
     package_dir={'':'src'},
     install_requires=[
-        'sqlalchemy','factory-boy','pymysql','pytest','pytest-randomly','uuid','smalluuid'
+        'sqlalchemy','pymysql'
     ]
 )
 
