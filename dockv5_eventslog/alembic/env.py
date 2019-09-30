@@ -33,12 +33,13 @@ target_metadata = None
 # my_important_option = config.get_main_option("my_important_option")
 # ... etc.
 
+VAULT_ADDR = os.environ.get('VAULT_ADDR', '')
 VAULT_TOKEN = os.environ.get('VAULT_TOKEN', '')
 
 # TODO: fix verify SSL error (and remove verify=False flag)
 def get_vault_config(configName):
   config = None
-  client = hvac.Client(url='https://vault.strongarmtech.io:8200', token=VAULT_TOKEN,  verify=False)
+  client = hvac.Client(url=VAULT_ADDR, token=VAULT_TOKEN,  verify=False)
 
   # Read the database secret
   secret = client.read('secret/database/' + configName)

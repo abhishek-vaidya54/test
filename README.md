@@ -1,8 +1,13 @@
 # database-models
 
-To build docker container 
+## setup
+copy .envrc.sample in this directory to .envrc and set the vault token
+(vault token should be created from database vault policy)
+
+To build docker container to run mysql locally and test changes locally
 `./docker/start_database_server`
 
+## using alembic
 
 To generate a new migration script
 `alembic revision -m 'name'`
