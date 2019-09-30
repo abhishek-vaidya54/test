@@ -79,12 +79,4 @@ class Shifts(Base):
     def __repr__(self):
         return str(self.as_dict())
 
-    # __table_args__ = (db.UniqueConstraint('warehouse_id', 'color'), )
-    def is_match(self, time, warehouse_id = None):
-        within_range = self.shift_start < time and self.shift_end > time
-        if warehouse_id:
-            check_warehouse = self.warehouse_id == warehouse_id
-            return within_range and check_warehouse
-        else:
-            return within_range
 

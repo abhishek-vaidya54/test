@@ -95,14 +95,5 @@ class Client(Base):
         return str(self.as_dict())
 
 
-def get_all():
-    return db.session.query(Client).filter(Client.enable_processing == True).all()
-
-
-def get(client_id):
-    return db.session.query(Client).filter(
-        Client.id == client_id,
-    ).scalar()
-
 
 
