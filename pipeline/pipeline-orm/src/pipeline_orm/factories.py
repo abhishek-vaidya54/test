@@ -44,8 +44,7 @@ class ClientFactory(factory.alchemy.SQLAlchemyModelFactory):
         sqlalchemy_session_persistence = 'commit'
 
 class WarehouseFactory(factory.alchemy.SQLAlchemyModelFactory):
-    ''' Warehouse Factory: creates a fake warehouse with its relationships if the relationships are not None
-        ie: Warehouse.build(job_functions=4,shifts=4)'''
+    ''' Warehouse Factory: creates a fake warehouse with its relationships if the relationships are not None'''
     id = factory.Sequence(lambda n: n+1)
     client_id = factory.SubFactory(ClientFactory)
     name = factory.Faker('first_name')
@@ -99,7 +98,7 @@ class WarehouseFactory(factory.alchemy.SQLAlchemyModelFactory):
         sqlalchemy_session_persistence = 'commit'
 
 class ShiftsFactory(factory.alchemy.SQLAlchemyModelFactory):
-
+    ''' Shift Factory: creates a fake shift as well as any of its relationships'''
     id = factory.Sequence(lambda n: n+1)
     warehouse_id = factory.SubFactory(WarehouseFactory)
     name = factory.fuzzy.FuzzyChoice(['Shift 1','Shift 2','Shift 3'])

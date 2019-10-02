@@ -21,23 +21,24 @@ def pytest_configure(config):
 def env():
     ''' Grab environment variables'''
     variables = {}
-    variables['CONNECTION'] = os.environ.get('CONNECTION_STRING',0)
+    variables['CONNECTION'] = os.environ.get('PIPELINE_CONNECTION_STRING',0)
     if variables['CONNECTION']:
         return variables['CONNECTION']
     else:
         raise Exception('Please make sure Environment variables are set: export CONNECTION_STRING="db://username:password@host/database"')
 
 @pytest.fixture(scope='module')
-def connection(env):
+def engine(env):
     ''' Database engine created using the environment variable fixture'''
     engine = create_engine(env)
-    connection = engine.connect()
-    yield connection
-    connection.close()
+    return engine
+
 
 @pytest.fixture(scope='module')
-def session(connection):
+def session(engine):
     ''' Database Session created from db connection fixture'''
+    connection = engine.connect()
+    transaction = connection.begin()
     Session = sessionmaker(bind=connection)
     session = Session()
     ClientFactory._meta.sqlalchemy_session = session
@@ -47,14 +48,32 @@ def session(connection):
     IndustrialAthleteFactory._meta.sqlalchemy_session = session
     yield session
     session.close()
+    transaction.rollback()
+    connection.close()
+
 
 @pytest.fixture(scope='function')
 def industrial_athlete_factory():
     ''' Builds an IndustrialAthlete From the Factory'''
     return IndustrialAthleteFactory.build()
 
-@pytest.fixture(scope='module', params=[2,6,5])
+@pytest.fixture(scope='function')
+def job_function_factory():
+    ''' Builds a JobFunction From the Factory'''
+    return JobFunctionFactory.build()
+
+@pytest.fixture(scope='function')
+def shift_factory():
+    ''' Builds a Shift From the Factory'''
+    return ShiftsFactory.build()
+
+@pytest.fixture(scope='function')
+def warehouse_factory():
+    ''' Builds a Warehouse From the Factory'''
+    return WarehouseFactory.build()
+
+@pytest.fixture(scope='function')
 def client_factory(request):
     ''' Builds clients from the Factories module'''
-    return ClientFactory.build_batch(size=request.param)
+    return ClientFactory.build()
 

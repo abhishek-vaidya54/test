@@ -115,17 +115,3 @@ class DockPhase(Base):
     
     def __repr__(self):
         return str(self.as_dict())
-
-
-if __name__=="__main__":
-    import os
-    from sqlalchemy import create_engine
-    from sqlalchemy.orm import sessionmaker
-
-    connection_string = os.environ.get("CONNECTION_STRING")
-    engine = create_engine(connection_string)
-    Session = sessionmaker(bind=engine)
-    session = Session()
-    q = session.query(Config).first()
-    for dock_phase in q.dock_phases:
-        print(dock_phase)
