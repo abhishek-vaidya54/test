@@ -21,7 +21,7 @@ def pytest_configure(config):
 def env():
     ''' Grab environment variables'''
     variables = {}
-    variables['CONNECTION'] = os.environ.get('CONNECTION_STRING',0)
+    variables['CONNECTION'] = os.environ.get('PIPELINE_CONNECTION_STRING',0)
     if variables['CONNECTION']:
         return variables['CONNECTION']
     else:

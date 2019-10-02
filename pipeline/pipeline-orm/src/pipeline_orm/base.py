@@ -6,7 +6,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 
-connection_string = os.environ.get('CONNECTION_STRING',0)
+connection_string = os.environ.get('PIPELINE_CONNECTION_STRING',0)
 
 def get_connection_string(connection_string):
     if connection_string:
