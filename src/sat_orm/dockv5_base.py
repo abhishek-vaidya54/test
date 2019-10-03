@@ -12,7 +12,7 @@ def get_connection_string(connection_string):
     if connection_string:
         return connection_string
     else:
-        raise Exception('DOCKV%_CONNECTION_STRING environment variable cannot be null')
+        raise Exception('DOCKV5_CONNECTION_STRING environment variable cannot be null')
 
 engine = create_engine(get_connection_string(connection_string))
 connection = engine.connect()
