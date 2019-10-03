@@ -1,0 +1,11 @@
+[run]
+branch = True 
+
+omit = 
+      */.local/*
+      /usr/*
+      */tests/*
+      */__init__.py
+
+include = 
+        *.py

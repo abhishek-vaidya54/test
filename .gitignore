@@ -4,3 +4,6 @@ venv
 .envrc
 .direnv
 .coverage
+.pytest_cache
+src/sat_orm/__pycache__/
+
