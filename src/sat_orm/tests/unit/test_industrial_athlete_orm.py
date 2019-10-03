@@ -19,11 +19,11 @@ Description:
 import pytest
 
 # Local Application Imports
-from pipeline_orm.pipeline import Client
-from pipeline_orm.pipeline import Warehouse
-from pipeline_orm.pipeline import JobFunction
-from pipeline_orm.pipeline import Shifts
-from pipeline_orm.pipeline import IndustrialAthlete
+from sat_orm.pipeline import Client
+from sat_orm.pipeline import Warehouse
+from sat_orm.pipeline import JobFunction
+from sat_orm.pipeline import Shifts
+from sat_orm.pipeline import IndustrialAthlete
 
 @pytest.mark.input_validation
 def test_industrial_athlete_validate_client_id():

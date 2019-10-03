@@ -4,7 +4,7 @@
 import pytest
 
 # Local Application Imports
-from pipeline_orm.pipeline import *
+from sat_orm.pipeline import *
 
 @pytest.mark.test_factories
 def test_industrial_athlete_factory_relationships(industrial_athlete_factory):

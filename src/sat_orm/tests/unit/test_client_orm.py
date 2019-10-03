@@ -2,7 +2,7 @@
 import pytest
 
 # Local Application Import
-from pipeline_orm.pipeline import Client
+from sat_orm.pipeline import Client
 
 @pytest.mark.input_validation
 def test_client_validate_name():

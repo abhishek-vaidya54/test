@@ -2,8 +2,8 @@
 import pytest
 
 # Local Application Imports
-from pipeline_orm.pipeline import Warehouse
-from pipeline_orm.pipeline import JobFunction
+from sat_orm.pipeline import Warehouse
+from sat_orm.pipeline import JobFunction
 
 @pytest.mark.input_validation
 def test_job_function_validate_warehouse_id():

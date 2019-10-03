@@ -2,8 +2,8 @@
 import pytest
 
 # Local Application Import
-from pipeline_orm.pipeline import Warehouse
-from pipeline_orm.pipeline import Shifts
+from sat_orm.pipeline import Warehouse
+from sat_orm.pipeline import Shifts
 
 @pytest.mark.input_validation
 def test_shifts_validate_warehouse_id():

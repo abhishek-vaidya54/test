@@ -7,7 +7,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
 # Local Application Import
-from pipeline_orm.factories import *
+from sat_orm.pipeline_factories import *
 
 def pytest_configure(config):
     ''' Adds custom test makers'''

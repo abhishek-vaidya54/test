@@ -2,8 +2,8 @@
 import pytest
 
 # Local Application Imports
-from pipeline_orm.pipeline import Client 
-from pipeline_orm.pipeline import Warehouse
+from sat_orm.pipeline import Client 
+from sat_orm.pipeline import Warehouse
 
 @pytest.mark.input_validation
 def test_warehouse_validate_client_id():
