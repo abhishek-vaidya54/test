@@ -6,7 +6,7 @@ from sqlalchemy import ForeignKey, Column, Integer, DateTime, Text, Time, String
 from sqlalchemy.orm import relationship, validates
 
 # Local Application Import
-from pipeline_orm.base import Base
+from sat_orm.pipeline_base import Base
 
 class Shifts(Base):
     __tablename__ = 'shifts'

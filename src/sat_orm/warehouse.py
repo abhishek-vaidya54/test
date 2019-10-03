@@ -6,7 +6,7 @@ from sqlalchemy import ForeignKey,PrimaryKeyConstraint, UniqueConstraint, Column
 from sqlalchemy.orm import relationship, validates
 
 # Local Application Import 
-from pipeline_orm.base import Base
+from sat_orm.pipeline_base import Base
 
 class Warehouse(Base):
     __tablename__ = 'warehouse'

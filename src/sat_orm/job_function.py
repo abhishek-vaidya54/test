@@ -6,7 +6,7 @@ from sqlalchemy import ForeignKey, Column, String, Integer, DateTime, Float, Tex
 from sqlalchemy.orm import relationship, validates
 
 # Local Application Imports
-from pipeline_orm.base import Base
+from sat_orm.pipeline_base import Base
 
 class JobFunction(Base):
     __tablename__ = 'job_function'

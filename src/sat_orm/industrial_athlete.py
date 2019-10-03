@@ -9,7 +9,7 @@ from sqlalchemy.orm import relationship, validates
 
 
 # Local Application Imports
-from pipeline_orm.base import Base
+from sat_orm.pipeline_base import Base
 
 class IndustrialAthlete(Base):
     __tablename__ = 'industrial_athlete'

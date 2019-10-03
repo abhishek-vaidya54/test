@@ -16,7 +16,7 @@ import uuid
 from smalluuid import SmallUUID
 
 # Local Application Import
-from pipeline_orm.pipeline import *
+from sat_orm.pipeline import Client, IndustrialAthlete, JobFunction, Warehouse, Shifts
 
 class ClientFactory(factory.alchemy.SQLAlchemyModelFactory):
     ''' Client Factory: creates a fake client with its relationships'''
