@@ -16,7 +16,7 @@ Description:
 '''
 import pytest
 
-from dockv5_orm.config import Config
+from sat_orm.config import Config
 
 def test_insert_into_config_table(session,config_factory):
     config_factory = config_factory
