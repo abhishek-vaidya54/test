@@ -14,7 +14,7 @@ import pytest
 
 from sat_orm.config import Config
 from sat_orm.dock_phase import DockPhase
-from dockv5_orm.dockv5_factories import ConfigFactory, DockPhaseFactory
+from sat_orm.dockv5_factories import ConfigFactory, DockPhaseFactory
 
 
 
