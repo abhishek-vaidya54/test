@@ -1,6 +1,7 @@
 import pytest
 import datetime
-from dockv5_orm.config import Config
+from sat_orm.config import Config
+from sat_orm.dock_phase import DockPhase
 
 
 def test_fake_data_type_in_ConfigFactory(config_factory):
