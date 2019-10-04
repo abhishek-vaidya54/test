@@ -22,6 +22,27 @@ class EngagementStats(Base):
     days_worn_haptic_enable = Column(Integer,nullable=False,default='0')
     days_worn_haptic_disable = Column(Integer,nullable=False,default='0')
 
+    @validates('athlete_id')
+    def validate_athlete_id(self,key,athlete_id):
+        if athlete_id == None:
+            raise Exception('athlete_id cannot be Null')
+        else:
+            return athlete_id
+    
+    @validates('days_worn_haptic_enable')
+    def validate_days_worn_haptic_enable(self,key,days_worn_haptic_enable):
+        if days_worn_haptic_enable == None:
+            raise Exception('days_worn_haptic_enable cannot be Null')
+        else:
+            return days_worn_haptic_enable
+    
+    @validates('days_worn_haptic_disable')
+    def validate_days_worn_haptic_disable(self,key,days_worn_haptic_disable):
+        if days_worn_haptic_disable == None:
+            raise Exception('days_worn_haptic_disable cannot be Null')
+        else:
+            return days_worn_haptic_disable
+    
     def as_dict(self):
         return {
             "id": self.id,

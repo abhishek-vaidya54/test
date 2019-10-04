@@ -16,6 +16,27 @@ class AppcrashLog(Base):
     log = Column(String(5000), nullable=False)
     dockID = Column(String(12), nullable=False)
 
+    @validates('timestamp')
+    def validate_timestamp(self, key, timestamp):
+        if timestamp == None:
+            raise Exception('timestamp cannot be Null')
+        else:
+            return timestamp
+    
+    @validates('log')
+    def validate_log(self,key,log):
+        if log == None:
+            raise Exception('log cannot be Null')
+        else:
+            return log
+        
+    @validates('dockID')
+    def validate_dockID(self,key,dockID):
+        if dockID == None:
+            raise Exception('dockID cannot be Null')
+        else:
+            return dockID
+    
     def as_dict(self):
         return {
             "id": self.id,
