@@ -5,7 +5,7 @@ import os
 import pytest
 
 # Local Application Imports
-from sat_orm import pipeline_base
+from sat_orm.pipeline_orm import pipeline_base
 
 
 @pytest.mark.orm_base
