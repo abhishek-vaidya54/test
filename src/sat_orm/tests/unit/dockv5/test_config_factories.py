@@ -1,8 +1,6 @@
 import pytest
 import datetime
-from sat_orm.config import Config
-from sat_orm.dock_phase import DockPhase
-
+from sat_orm.dockv5 import Config, DockPhase
 
 def test_fake_data_type_in_ConfigFactory(config_factory):
     ''' Checks to see if the fake data types are correct in config factory'''
