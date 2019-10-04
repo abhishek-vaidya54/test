@@ -25,7 +25,7 @@ class DataEvents(Base):
     warehouseID = Column(String(45), nullable=True, default=None)
     athleteID = Column(String(45), nullable=True, default=None)
     clientID = Column(String(45), nullable=True, default=None)
-    port = Column(Integer(10), nullable=True, default=None)
+    port = Column(Integer, nullable=True, default=None)
     sessionID = Column(String(45), nullable=True, default=None)
 
     def as_dict(self):
