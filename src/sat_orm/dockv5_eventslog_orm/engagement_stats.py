@@ -12,9 +12,9 @@ class EngagementStats(Base):
     __tablename__ = 'engagement_stats'
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    athlete_id = Column(Integer(11), unique=True, nullable=False)
-    total_days_worn = Column(Integer(11), nullable=True, default='0')
-    total_hours_worn = Column(Integer(11), nullable=True, default='0')
+    athlete_id = Column(Integer, unique=True, nullable=False)
+    total_days_worn = Column(Integer, nullable=True, default='0')
+    total_hours_worn = Column(Integer, nullable=True, default='0')
     last_checkin = Column(DateTime, nullable=True, default=None)
     last_checkout = Column(DateTime, nullable=True, default=None)
     db_created_at = Column(DateTime, nullable=True, default=None)

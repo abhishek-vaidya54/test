@@ -12,7 +12,7 @@ class MonthlySafety(Base):
     __tablename__ = 'monthly_safety'
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    athlete_id = Column(Integer(), nullable=False)
+    athlete_id = Column(Integer, nullable=False)
     latest_safety_score = Column(Float, default=0.0)
     monthly_score = Column(Float, nullable=False, default=0.0)
     db_created_at = Column(DateTime,default=datetime.datetime.utcnow,nullable=False)
