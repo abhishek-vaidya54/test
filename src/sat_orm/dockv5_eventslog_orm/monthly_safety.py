@@ -18,7 +18,20 @@ class MonthlySafety(Base):
     db_created_at = Column(DateTime,default=datetime.datetime.utcnow,nullable=False)
     db_modified_at = Column(DateTime, default=datetime.datetime.utcnow,onupdate=datetime.datetime.utcnow,nullable=False)
 
-
+    @validates('athlete_id')
+    def validate_athlete_id(self,key,athlete_id):
+        if athlete_id == None:
+            raise Exception('athlete_id cannot be Null')
+        else:
+            return athlete_id
+    
+    @validates('monthly_score')
+    def validate_monthly_score(self,key,monthly_score):
+        if monthly_score == None:
+            raise Exception('monthly_score cannot be Null')
+        else:
+            return monthly_score
+    
     def as_dict(self):
         return {
             "id": self.id,

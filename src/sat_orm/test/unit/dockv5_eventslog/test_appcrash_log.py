@@ -27,7 +27,6 @@ def test_appcrash_log_validate_dockID():
         assert AppcrashLog(dockID=None)
     assert 'cannot be Null' in str(exc_info.value)
 
-
 @pytest.mark.test_as_dict
 def test_appcrash_log_as_dict():
     ''' Checks to see if as_dict returns a dictionary'''

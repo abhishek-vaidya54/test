@@ -26,6 +26,13 @@ class KeepaliveEvents(Base):
     local_sensor_fw = Column(Integer,nullable=True, default=None)
     app_version = Column(String(45),nullable=True, default=None)
 
+    @validates('timestamp')
+    def validate_timestamp(self,key,timestamp):
+        if timestamp == None:
+            raise Exception('timestamp cannot be Null')
+        else:
+            return timestamp
+
     def as_dict(self):
         return {
             "id": self.id,

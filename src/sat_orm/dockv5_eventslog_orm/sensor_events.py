@@ -12,7 +12,7 @@ class SensorEvents(Base):
     __tablename__='sensor_events'
 
     id = Column(Integer,primary_key=True,autoincrement=True)
-    timestamp = Column(DateTime,default=datetime.datetime.now(),nullable=False)
+    timestamp = Column(DateTime,nullable=False)
     type = Column(String(45),nullable=True)
     dockID = Column(String(45),nullable=True)
     clientID = Column(String(45),nullable=True)
@@ -27,6 +27,13 @@ class SensorEvents(Base):
     sessionID = Column(String(45), nullable=True)
     datapage_count = Column(Integer,nullable=True)
 
+    @validates('timestamp')
+    def validate_timestamp(self,key,timestamp):
+        if timestamp == None:
+            raise Exception('timestamp cannot be Null')
+        else:
+            return timestamp
+    
     def as_dict(self):
         return {
             'id':self.id,

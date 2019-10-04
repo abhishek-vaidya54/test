@@ -12,7 +12,7 @@ class SurveyEvents(Base):
     __tablename__='survey_events'
     
     id = Column(Integer,primary_key=True,autoincrement=True)
-    timestamp = Column(DateTime, default=datetime.datetime.now(),nullable=False)
+    timestamp = Column(DateTime,nullable=False)
     type = Column(String(45),nullable=True)
     athleteID = Column(String(45),nullable=True)
     content_id = Column(String(45),nullable=True)
@@ -21,6 +21,13 @@ class SurveyEvents(Base):
     firmware_version = Column(String(45),nullable=True)
     clientID = Column(String(50),nullable=True)
     warehouseID = Column(String(50),nullable=True)
+
+    @validates('timestamp')
+    def validate_timestamp(self,key,timestamp):
+        if timestamp == None:
+            raise Exception('timestamp cannot be Null')
+        else:
+            return timestamp
 
     def as_dict(self):
         return {
