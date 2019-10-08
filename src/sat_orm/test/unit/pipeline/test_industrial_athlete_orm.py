@@ -81,6 +81,18 @@ def test_industrial_athlete_validate_job_function_id():
         assert IndustrialAthlete(job_function_id=None)
     assert 'cannot be Null' in str(exc_info.value)
 
+@pytest.mark.test_return_type
+def test_industrial_athlete_as_dict_returns_dictionary():
+    ''' Checks the return value of as_dict is a dictionary'''
+    industrial_athlete = IndustrialAthlete()
+    assert isinstance(industrial_athlete.as_dict(),dict)
+
+@pytest.mark.test_return_type
+def test_industrial_athlete___repr___returns_string():
+    ''' Checks the return value of __repr is a string'''
+    industrial_athlete = IndustrialAthlete()
+    assert isinstance(industrial_athlete.__repr__(),str)
+
 @pytest.mark.relationships
 def test_industrial_athlete_client_relationship(session):
     ''' Test to see if relationship works correctly'''

@@ -18,3 +18,9 @@ def test_keepalive_events_as_dict():
     ''' Checks to see if as_dict returns a dictionary'''
     keepalive_events = KeepaliveEvents()
     assert isinstance(keepalive_events.as_dict(),dict) 
+
+@pytest.mark.test_return_type
+def test_keepalive_events___repr___returns_string():
+    ''' Checks the return value of __repr is a string'''
+    keepalive_events = KeepaliveEvents()
+    assert isinstance(keepalive_events.__repr__(),str)

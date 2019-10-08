@@ -7,7 +7,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
 # Local Application Import
-from sat_orm.pipeline_factories import *
+from sat_orm.dockv5_eventslog_factories import *
 
 def pytest_configure(config):
     ''' Adds custom test makers'''
@@ -22,7 +22,7 @@ def pytest_configure(config):
 def env():
     ''' Grab environment variables'''
     variables = {}
-    variables['CONNECTION'] = os.environ.get('PIPELINE_CONNECTION_STRING',0)
+    variables['CONNECTION'] = os.environ.get('DOCKV5_EVENTSLOG_CONNECTION_STRING',0)
     if variables['CONNECTION']:
         return variables['CONNECTION']
     else:
@@ -52,29 +52,4 @@ def session(engine):
     transaction.rollback()
     connection.close()
 
-
-@pytest.fixture(scope='function')
-def industrial_athlete_factory():
-    ''' Builds an IndustrialAthlete From the Factory'''
-    return IndustrialAthleteFactory.build()
-
-@pytest.fixture(scope='function')
-def job_function_factory():
-    ''' Builds a JobFunction From the Factory'''
-    return JobFunctionFactory.build()
-
-@pytest.fixture(scope='function')
-def shift_factory():
-    ''' Builds a Shift From the Factory'''
-    return ShiftsFactory.build()
-
-@pytest.fixture(scope='function')
-def warehouse_factory():
-    ''' Builds a Warehouse From the Factory'''
-    return WarehouseFactory.build()
-
-@pytest.fixture(scope='function')
-def client_factory(request):
-    ''' Builds clients from the Factories module'''
-    return ClientFactory.build()
 

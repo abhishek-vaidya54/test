@@ -31,13 +31,13 @@ def test_dock_phase_deployment_stage_is_not_none():
     assert 'cannot be Null' in str(exc_info.value)
 
 @pytest.mark.test_return_type
-def test_config_as_dict_returns_dictionary():
+def test_dock_phase_as_dict_returns_dictionary():
     ''' Checks the return value of as_dict is a dictionary'''
     dock_phase = DockPhase()
     assert isinstance(dock_phase.as_dict(),dict)
 
 @pytest.mark.test_return_type
-def test_config___repr___returns_string():
+def test_dock_phase___repr___returns_string():
     ''' Checks the return value of __repr is a string'''
     dock_phase = DockPhase()
     assert isinstance(dock_phase.__repr__(),str)

@@ -25,3 +25,9 @@ def test_monthly_safety_as_dict():
     ''' Checks to see if as_dict returns a dictionary'''
     monthly_safety = MonthlySafety()
     assert isinstance(monthly_safety.as_dict(),dict) 
+
+@pytest.mark.test_return_type
+def test_monthly_safety___repr___returns_string():
+    ''' Checks the return value of __repr is a string'''
+    monthly_safety = MonthlySafety()
+    assert isinstance(monthly_safety.__repr__(),str)

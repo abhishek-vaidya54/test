@@ -54,6 +54,18 @@ def test_warehouse_validate_hide_judgement():
         assert Warehouse(hide_judgement=None)
     assert 'cannot be Null' in str(exc_info.value)
 
+@pytest.mark.test_return_type
+def test_warehouse_as_dict_returns_dictionary():
+    ''' Checks the return value of as_dict is a dictionary'''
+    warehouse = Warehouse()
+    assert isinstance(warehouse.as_dict(),dict)
+
+@pytest.mark.test_return_type
+def test_warehouse___repr___returns_string():
+    ''' Checks the return value of __repr is a string'''
+    warehouse = Warehouse()
+    assert isinstance(warehouse.__repr__(),str)
+
 @pytest.mark.relationships
 def test_warehouse_client_relationship(session):
     ''' Test to see if client relationship works with warehouse client_id foreign key'''

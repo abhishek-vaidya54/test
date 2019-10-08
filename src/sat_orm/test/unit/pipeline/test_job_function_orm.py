@@ -26,6 +26,18 @@ def test_job_function_validate_group_administrator():
         assert JobFunction(group_administrator=None)
     assert 'cannot be Null' in str(exc_info.value)
 
+@pytest.mark.test_return_type
+def test_job_function_as_dict_returns_dictionary():
+    ''' Checks the return value of as_dict is a dictionary'''
+    job_function = JobFunction()
+    assert isinstance(job_function.as_dict(),dict)
+
+@pytest.mark.test_return_type
+def test_job_function___repr___returns_string():
+    ''' Checks the return value of __repr is a string'''
+    job_function = JobFunction()
+    assert isinstance(job_function.__repr__(),str)
+
 @pytest.mark.relationships
 def test_jobfunction_warehouse_relationship(session):
     ''' Test to see if warehouse relationship works with JobFunction warehouse_id foreign key'''

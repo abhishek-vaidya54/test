@@ -18,3 +18,9 @@ def test_survey_events_as_dict():
     ''' Checks to see if as_dict returns a dictionary'''
     survey_events = SurveyEvents()
     assert isinstance(survey_events.as_dict(),dict)
+
+@pytest.mark.test_return_type
+def test_survey_events___repr___returns_string():
+    ''' Checks the return value of __repr is a string'''
+    survey_events = SurveyEvents()
+    assert isinstance(survey_events.__repr__(),str)

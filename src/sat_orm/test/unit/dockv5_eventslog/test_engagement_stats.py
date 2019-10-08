@@ -33,3 +33,9 @@ def test_engagement_stats_as_dict():
     ''' Checks to see if as_dict returns a dictionary'''
     engagement_stats = EngagementStats()
     assert isinstance(engagement_stats.as_dict(),dict) 
+
+@pytest.mark.test_return_type
+def test_engagement_stats___repr___returns_string():
+    ''' Checks the return value of __repr is a string'''
+    engagement_stats = EngagementStats()
+    assert isinstance(engagement_stats.__repr__(),str)

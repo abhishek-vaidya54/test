@@ -18,3 +18,9 @@ def test_sensor_events_as_dict():
     ''' Checks to see if as_dict returns a dictionary'''
     sensor_events = SensorEvents()
     assert isinstance(sensor_events.as_dict(),dict)
+
+@pytest.mark.test_return_type
+def test_sensor_events___repr___returns_string():
+    ''' Checks the return value of __repr is a string'''
+    sensor_events = SensorEvents()
+    assert isinstance(sensor_events.__repr__(),str)

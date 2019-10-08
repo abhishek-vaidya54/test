@@ -4,6 +4,15 @@ from sqlalchemy import create_engine, insert
 from sqlalchemy.orm import sessionmaker
 from sat_orm.dockv5_factories import ConfigFactory, DockPhaseFactory
 
+def pytest_configure(config):
+    ''' Adds custom test makers'''
+    config.addinivalue_line('markers','input_validation: mark test to run only database validations')
+    config.addinivalue_line('markers','relationships: mark tests to run only database foreign key relationships')
+    config.addinivalue_line('markers','test_inserts: mark tests to run only database insert actions')
+    config.addinivalue_line('markers','orm_base: mark tests to run only sqlalchemy base module test')
+    config.addinivalue_line('markers','test_factories: mark tests to run only factories')
+    config.addinivalue_line('markers','test_return_type: mark tests to run only orm function return types')
+
 @pytest.fixture(scope='session')
 def env_variables():
     '''Grabbing enviromental variables '''
