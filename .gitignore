@@ -5,5 +5,7 @@ venv
 .direnv
 .coverage
 .pytest_cache
-src/sat_orm/__pycache__/
+__pycache__
+htmlcov
+*.zip
 

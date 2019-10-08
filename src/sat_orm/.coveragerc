@@ -4,7 +4,7 @@ branch = True
 omit = 
       */.local/*
       /usr/*
-      */tests/*
+      */test/*
       */__init__.py
 
 include = 
