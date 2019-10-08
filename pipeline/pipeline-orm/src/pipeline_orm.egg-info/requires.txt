@@ -1,7 +1,0 @@
-sqlalchemy
-factory-boy
-pymysql
-pytest
-pytest-randomly
-uuid
-smalluuid
