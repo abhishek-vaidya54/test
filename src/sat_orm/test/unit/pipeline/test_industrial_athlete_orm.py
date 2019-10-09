@@ -1,10 +1,19 @@
 '''
-Contributor: Vincent Turnier
-Date Edited: September 18th, 2019
-Note:
-    Please checkout the wiki for more information on SAT database ORM's
+LICENSE:
+    This file is subject to the terms and conditions defined in
+    file 'LICENSE.txt', which is part of this source code package.
+ 
+CONTRIBUTORS: 
+            Vincent Turnier
+CLASSIFICATION: 
+            Sensitive
 
-Description:
+LINKS:
+    - Please checkout the wiki for more information on SAT database ORM's:
+    - https://github.com/strongarm-tech/database_models/wiki/Object-Relational-Mapper
+    - https://github.com/strongarm-tech/database_models/wiki/Database-Testing
+
+DESCRIPTION:
     The following will test the industrial athlete ORM model:
     1 - inputs
     2 - factory build
