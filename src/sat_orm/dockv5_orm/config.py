@@ -47,7 +47,7 @@ class Config(Base):
     dock_id = Column(String(45))
     client_id = Column(Integer)
     warehouse_id = Column(Integer)
-    deployment_stage = Column(String(45))
+    deployment_stage = Column(String(45),default="DEV")
 
     # Relationships 
     dock_phases = relationship('DockPhase',order_by='DockPhase.timestamp.desc()',back_populates='config')
