@@ -93,7 +93,6 @@ class Config(Base):
             "client_id": self.client_id,
             "warehouse_id": self.warehouse_id,
             "deployment_stage": self.deployment_stage,
-            "dock_phases":self.dock_phases
         }
 
     def __repr__(self):
