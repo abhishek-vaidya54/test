@@ -42,16 +42,21 @@ from sat_orm.dockv5_orm.dockv5_base import Base
 class Config(Base):
     __tablename__ = 'config'
 
-    # Table Inputs
+    # Columns
     id = Column(Integer, primary_key=True, autoincrement=True)
-    dock_id = Column(String(45))
-    client_id = Column(Integer)
-    warehouse_id = Column(Integer)
-    deployment_stage = Column(String(45),default="DEV")
+    dock_id = Column(String(45),nullable=True, unique=True)
+    dock_imei = Column(String(45),nullable=True)
+    client_id = Column(Integer,nullable=True)
+    warehouse_id = Column(Integer,nullable=True)
+    deployment_stage = Column(String(45),default="DEV",nullable=True)
+    barcode_regex = Column(String(45),nullable=True)
+    firware_version = Column(Integer,nullable=True)
+    description = Column(String(500),nullable=True)
 
     # Relationships 
     dock_phase = relationship('DockPhase',order_by='DockPhase.timestamp.desc()',back_populates='config',uselist=False)
     dock_phases = relationship('DockPhase',order_by='DockPhase.timestamp.desc()',back_populates='configs')
+
     @validates('client_id')
     def validate_client_id(self,key,client_id):
         if client_id == None:
@@ -93,6 +98,9 @@ class Config(Base):
             "client_id": self.client_id,
             "warehouse_id": self.warehouse_id,
             "deployment_stage": self.deployment_stage,
+            "barcode_regex":self.barcode_regex,
+            "firmware_version":self.firmware_version,
+            "description":self.description
         }
 
     def __repr__(self):
