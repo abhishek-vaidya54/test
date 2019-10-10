@@ -50,7 +50,8 @@ class Config(Base):
     deployment_stage = Column(String(45),default="DEV")
 
     # Relationships 
-    dock_phase = relationship('DockPhase',order_by='DockPhase.timestamp.desc()',back_populates='config',uselist=False)
+    dock_phase = relationship('DockPhase',order_by='DockPhase.timestamp.desc()',back_populates='_config',uselist=False)
+    dock_phases = relationship('DockPhase',order_by='DockPhase.timestamp.desc()',back_populates='config')
 
     @validates('client_id')
     def validate_client_id(self,key,client_id):
