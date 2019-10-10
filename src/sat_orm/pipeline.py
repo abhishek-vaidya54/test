@@ -1,4 +1,4 @@
-from sat_orm.pipeline_orm.pipeline_base import Base, session
+from sat_orm.pipeline_orm.pipeline_base import Base, session, connection
 
 from sat_orm.pipeline_orm.client import Client
 from sat_orm.pipeline_orm.warehouse import Warehouse

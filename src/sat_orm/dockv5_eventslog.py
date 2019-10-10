@@ -1,4 +1,4 @@
-from sat_orm.dockv5_eventslog_orm.dockv5_eventslog_base import Base, session
+from sat_orm.dockv5_eventslog_orm.dockv5_eventslog_base import Base, session, connection
 
 from sat_orm.dockv5_eventslog_orm.data_events import DataEvents
 from sat_orm.dockv5_eventslog_orm.appcrash_log import AppcrashLog
