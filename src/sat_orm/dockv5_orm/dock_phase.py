@@ -50,7 +50,7 @@ class DockPhase(Base):
     phase = Column(Enum('PREP','DEMO','INFIELD','MAINTENANCE','UNUSED','RETIRED'),nullable=False,default='PREP')
     deployment_stage = Column(String(20), nullable=False)
 
-    config = relationship('Config',back_populates='dock_phases')
+    config = relationship('Config',back_populates='dock_phase')
 
     @validates('dock_id')
     def validate_dock_id(self,key,dock_id):
