@@ -50,7 +50,7 @@ class Config(Base):
     warehouse_id = Column(Integer,nullable=True)
     deployment_stage = Column(String(45),default="DEV",nullable=True)
     barcode_regex = Column(String(45),nullable=True)
-    firware_version = Column(Integer,nullable=True)
+    firmware_version = Column(Integer,nullable=True)
     description = Column(String(500),nullable=True)
 
     # Relationships 
