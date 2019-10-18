@@ -120,7 +120,8 @@ class Config(Base):
         else:
             config = model(dock_id=data.get('dock_id',None),client_id=data.get('client_id',None),warehouse_id=data.get('warehouse_id',None),
                             deployment_stage=data.get('deployment_stage','dev'),barcode_regex=data.get('barcode_regex',None),
-                            firmware_version=data.get('firmware_version',None),description=data.get('description',None))
+                            firmware_version=data.get('firmware_version',None),description=data.get('description',None),
+                            dock_imei=data.get('dock_imei',None))
             session.add(config)
         
 
