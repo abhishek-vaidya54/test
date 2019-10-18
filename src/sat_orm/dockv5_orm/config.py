@@ -107,7 +107,7 @@ class Config(Base):
     def __repr__(self):
         return str(self.as_dict())
     
-    def insert_or_update():
+    def insert_or_update(self):
         insert_stmt = insert(self.__tablename__).\
                         values(dock_id=self.dock_id,client_id=self.client_id,
                         warehouse_id=self.warehouse_id,deployment_stage=self.deployment_stage,
