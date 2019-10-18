@@ -35,6 +35,7 @@ import datetime
 # Third Party Imports
 from sqlalchemy.orm import relationship, validates
 from sqlalchemy import Column, Integer, String, ForeignKey, DateTime, Enum, desc
+from sqlalchemy.dialects.mysql import insert
 
 # Local Application Imports
 from sat_orm.dockv5_orm.dockv5_base import Base
@@ -105,5 +106,24 @@ class Config(Base):
 
     def __repr__(self):
         return str(self.as_dict())
+    
+    def insert_or_update():
+        insert_stmt = insert(self.__tablename__).\
+                        values(dock_id=self.dock_id,client_id=self.client_id,
+                        warehouse_id=self.warehouse_id,deployment_stage=self.deployment_stage,
+                        barcode_regex=self.barcode_regex,firmware_version=self.firmware_version,
+                        description=self.description)
+        on_insert = insert_stmt.on_duplicate_key_update(
+            client_id=insert_stmt.inserted.client_id,
+            warehouse_id=insert_stmt.inserted.warehouse_id,
+            deployment_stage=insert_stmt.inserted.deployment_stage,
+            barcode_regex=insert_stmt.inserted.barcode_regex,
+            firmware_version=insert_stmt.inserted.firmware_version,
+            description=insert_stmt.inserted.description
+        )
+        return on_insert
+
+
+
 
 
