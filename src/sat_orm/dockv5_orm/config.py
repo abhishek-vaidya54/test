@@ -118,9 +118,9 @@ class Config(Base):
             data.pop('dock_id',None)
             session.query(model).filter_by(dock_id=dock_id).update(data)
         else:
-            config = model(dock_id=data['dock_id'],client_id=data['client_id'],warehouse_id=data['warehouse_id'],
-                            deployment_stage=data['deployment_stage'],barcode_regex=data['barcode_regex'],
-                            firmware_version=data['firmware_version'],description=data['description'])
+            config = model(dock_id=data.get('dock_id',None),client_id=data.get('client_id',None),warehouse_id=data.get('warehouse_id',None),
+                            deployment_stage=data.get('deployment_stage','dev'),barcode_regex=data.get('barcode_regex',None),
+                            firmware_version=data.get('firmware_version',None),description=data.get('description',None))
             session.add(config)
         
 
