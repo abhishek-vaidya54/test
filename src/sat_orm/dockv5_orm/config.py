@@ -115,7 +115,7 @@ class Config(Base):
         dock_in_table = session.query(self).filter_by(dock_id=data['dock_id']).first()
         if dock_in_table:
             data.pop('dock_id',None)
-            session.query(model).update(data)
+            session.query(self).update(data)
         else:
             config = self(dock_id=data['dock_id'],client_id=data['client_id'],warehouse_id=data['warehouse_id'],
                             deployment_stage=data['deployment_stage'],barcode_regex=data['barcode_regex'],
