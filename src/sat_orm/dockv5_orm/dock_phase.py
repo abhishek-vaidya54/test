@@ -47,7 +47,7 @@ class DockPhase(Base):
     id = Column(Integer,primary_key=True,autoincrement=True)
     dock_id = Column(String,ForeignKey('config.dock_id'),nullable=False)
     timestamp = Column(DateTime,default=datetime.datetime.now(),nullable=False)
-    phase = Column(Enum('PREP','DEMO','INFIELD','MAINTENANCE','UNUSED','RETIRED'),nullable=False,default='PREP')
+    phase = Column(Enum('DEPLOYED','NOT DEPLOYED','MAINTENANCE'),nullable=False,default='NOT DEPLOYED')
     deployment_stage = Column(String(20), nullable=False)
 
     config = relationship('Config',back_populates='dock_phase')

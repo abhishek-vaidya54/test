@@ -41,3 +41,5 @@ def test_dock_phase___repr___returns_string():
     ''' Checks the return value of __repr is a string'''
     dock_phase = DockPhase()
     assert isinstance(dock_phase.__repr__(),str)
+
+# TODO: test dock_phase enum values

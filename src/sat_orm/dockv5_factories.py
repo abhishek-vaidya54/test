@@ -46,9 +46,8 @@ class ConfigFactory(factory.alchemy.SQLAlchemyModelFactory):
 class DockPhaseFactory(factory.alchemy.SQLAlchemyModelFactory):
     dock_id = factory.SubFactory(ConfigFactory)
     timestamp = factory.LazyFunction(datetime.datetime.now)
-    phase = factory.fuzzy.FuzzyChoice(['PREP','INFIELD','DEMO','MAINTENANCE','UNUSED','RETIRED'])
+    phase = factory.fuzzy.FuzzyChoice(['DEPLOYED','NOT DEPLOYED','MAINTENANCE'])
     
-
     class Meta:
         model = DockPhase
         sqlalchemy_session_persistence = 'commit'
