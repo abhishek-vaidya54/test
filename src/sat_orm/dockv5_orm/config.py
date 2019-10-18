@@ -107,17 +107,17 @@ class Config(Base):
     def __repr__(self):
         return str(self.as_dict())
     
-    def insert_or_update(self,session,data):
+    def insert_or_update(self,session,model,data):
         ''' checks to see if dock_id is in table,
             if it is, then only update the none primary key items.
             else insert a new row
         '''
-        dock_in_table = session.query(self).filter_by(dock_id=data['dock_id']).first()
+        dock_in_table = session.query(model).filter_by(dock_id=data['dock_id']).first()
         if dock_in_table:
             data.pop('dock_id',None)
-            session.query(self).update(data)
+            session.query(model).update(data)
         else:
-            config = self(dock_id=data['dock_id'],client_id=data['client_id'],warehouse_id=data['warehouse_id'],
+            config = model(dock_id=data['dock_id'],client_id=data['client_id'],warehouse_id=data['warehouse_id'],
                             deployment_stage=data['deployment_stage'],barcode_regex=data['barcode_regex'],
                             firmware_version=data['firmware_version'],description=data['description'])
             session.add(config)
