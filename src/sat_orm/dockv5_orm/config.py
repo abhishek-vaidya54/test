@@ -112,10 +112,11 @@ class Config(Base):
             if it is, then only update the none primary key items.
             else insert a new row
         '''
+        dock_id = data['dock_id']
         dock_in_table = session.query(model).filter_by(dock_id=data['dock_id']).first()
         if dock_in_table:
             data.pop('dock_id',None)
-            session.query(model).update(data)
+            session.query(model).filter_by(dock_id=dock_id).update(data)
         else:
             config = model(dock_id=data['dock_id'],client_id=data['client_id'],warehouse_id=data['warehouse_id'],
                             deployment_stage=data['deployment_stage'],barcode_regex=data['barcode_regex'],
