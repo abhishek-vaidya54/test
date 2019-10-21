@@ -93,7 +93,7 @@ class DockPhase(Base):
     def __repr__(self):
         return str(self.as_dict())
     
-    def update_phase(self,session,model1=Config,model2=DockPhase,data):
+    def update_phase(self,session,data,model1=Config,model2=DockPhase):
         ''' checks to see if the phase changed, if it did,
             a new row will be added to dock_phase. If there is no dock_id,
             add the new dock_id
