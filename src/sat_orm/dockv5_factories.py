@@ -8,9 +8,6 @@ import datetime
 
 from sat_orm.dockv5 import Config, DockPhase
 
-
-
-
 def generate_dock_id():
     hex_letters = ['A','B','C','D','E','F']
     count = 0

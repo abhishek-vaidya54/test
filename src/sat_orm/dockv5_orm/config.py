@@ -83,6 +83,14 @@ class Config(Base):
         else:
             return warehouse_id
     
+    @validates('barcode_regex')
+    def validate_barcode_regex(self,key,barcode_regex):
+        if barcode_regex == '':
+            return None 
+        else:
+            return barcode_regex
+
+    
     @validates('deployment_stage')
     def validate_deployment_stage(self,key,deployment_stage):
         if deployment_stage == None:
@@ -112,10 +120,11 @@ class Config(Base):
             if it is, then only update the none primary key items.
             else insert a new row
         '''
+        data.pop('phase',None) # removes phase if in data
         dock_id = data['dock_id']
         dock_in_table = session.query(model).filter_by(dock_id=data['dock_id']).first()
         if dock_in_table:
-            data.pop('dock_id',None)
+            data.pop('dock_id',None) # removes dock_id if in data
             session.query(model).filter_by(dock_id=dock_id).update(data)
         else:
             config = model(dock_id=data.get('dock_id',None),client_id=data.get('client_id',None),warehouse_id=data.get('warehouse_id',None),

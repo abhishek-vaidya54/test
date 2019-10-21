@@ -39,7 +39,6 @@ from sqlalchemy.orm import relationship, validates
 # Local Application Imports
 from sat_orm.dockv5_orm.dockv5_base import Base
 
-
 class DockPhase(Base):
     __tablename__="dock_phase"
     
