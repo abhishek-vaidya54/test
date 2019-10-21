@@ -19,5 +19,5 @@ if __name__=='__main__':
         "phase":"DEPLOYED"
     }
     config.insert_or_update(session,Config,data)
-    dock_phase.update_phase(session=session,data=data1)
+    dock_phase.update_phase(session=session,Config=Config,DockPhase=DockPhase,data=data1)
     session.commit()
