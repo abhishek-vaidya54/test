@@ -101,6 +101,8 @@ class DockPhase(Base):
         if (current_config.dock_phase == None or data.get('phase',None) != current_config.dock_phase.phase):
             dock_phase = DockPhase(dock_id=data.get('dock_id',None),phase=data.get('phase',None),deployment_stage=data.get('deployment_stage',None))
             session.add(dock_phase)
+            session.commit()
+
 
             
 

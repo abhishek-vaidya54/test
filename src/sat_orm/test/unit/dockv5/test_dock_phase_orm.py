@@ -2,6 +2,9 @@ import pytest
 
 from sat_orm.dockv5 import DockPhase
 
+# TODO: test dock_phase enum values
+# TODO: test update_phase method
+
 @pytest.mark.input_validation
 def test_dock_phase_dock_id_is_not_none():
     ''' Validates dock_phase dock_id column'''
@@ -42,4 +45,15 @@ def test_dock_phase___repr___returns_string():
     dock_phase = DockPhase()
     assert isinstance(dock_phase.__repr__(),str)
 
-# TODO: test dock_phase enum values
+@pytest.mark.test_inserts
+def test_dock_phase_update_phase():
+    ''' checks to see if the dock_id is in the dock_phase table,
+        if it is false insert new dock into dock_phase table. 
+        checks to see if the new phase is not equal to the current phase,
+        if it is not add a new row
+    '''
+    # TODO: check to see the output of current_config
+    # TODO: check database to see if data was inserted
+    # TODO: check database to see if nothing changed
+    
+    assert False

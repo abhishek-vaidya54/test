@@ -132,6 +132,7 @@ class Config(Base):
                             firmware_version=data.get('firmware_version',None),description=data.get('description',None),
                             dock_imei=data.get('dock_imei',None))
             session.add(config)
+            session.commit()
         
 
 
