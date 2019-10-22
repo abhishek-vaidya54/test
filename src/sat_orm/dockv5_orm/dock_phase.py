@@ -35,6 +35,7 @@ import datetime
 # Third Party Imports
 from sqlalchemy import Column, Integer, String, Enum, DateTime, ForeignKey
 from sqlalchemy.orm import relationship, validates
+from sqlalchemy.sql import text
 
 # Local Application Imports
 from sat_orm.dockv5_orm.dockv5_base import Base
@@ -45,7 +46,7 @@ class DockPhase(Base):
     # Table inputs
     id = Column(Integer,primary_key=True,autoincrement=True)
     dock_id = Column(String,ForeignKey('config.dock_id'),nullable=False)
-    timestamp = Column(DateTime,default=datetime.datetime.now(),nullable=False)
+    timestamp = Column(DateTime,server_default=text('CURRENT_TIMESTAMP'),nullable=False)
     phase = Column(Enum('DEPLOYED','NOT DEPLOYED','MAINTENANCE'),nullable=False,default='NOT DEPLOYED')
     deployment_stage = Column(String(20), nullable=False)
 
