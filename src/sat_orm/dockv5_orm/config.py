@@ -104,6 +104,7 @@ class Config(Base):
         return {
             "id": self.id,
             "dock_id": self.dock_id,
+            "dock_imei":self.dock_imei,
             "client_id": self.client_id,
             "warehouse_id": self.warehouse_id,
             "deployment_stage": self.deployment_stage,
