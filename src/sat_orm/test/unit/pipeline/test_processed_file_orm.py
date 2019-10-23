@@ -3,6 +3,7 @@
 # Third Party Imports
 import pytest
 # Local Application Imports
+from sat_orm.pipeline import ProcessedFile
 
 @pytest.mark.input_validation
 def test_processed_file_validate_name():
@@ -44,14 +45,14 @@ def test_processed_file_validate_twist_vel_exceeded_limit():
     ''' Checks to see if twist_vel_exceeded_limit is Null and returns the correct error message'''
     with pytest.raises(Exception) as exec_info:
         assert ProcessedFile(twist_vel_exceeded_limit=None)
-    assert 'cannot be Null' is str(exec_info.value)
+    assert 'cannot be Null' in str(exec_info.value)
 
 @pytest.mark.input_validation
 def test_processed_file_validate_cropping_time():
     ''' Checks to see if cropping_time is Null and returns the correct error message'''
     with pytest.raises(Exception) as exec_info:
         assert ProcessedFile(cropping_time=None)
-    assert 'cannot be Null' is str(exec_info.value)
+    assert 'cannot be Null' in str(exec_info.value)
 
 @pytest.mark.input_validation
 def test_processed_file_validate_cropping_percentage():
