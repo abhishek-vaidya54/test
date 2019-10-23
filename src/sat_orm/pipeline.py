@@ -4,6 +4,7 @@ from sat_orm.pipeline_orm.settings import Setting
 from sat_orm.pipeline_orm.messages_surveys import MessageSurvey
 from sat_orm.pipeline_orm.metadata import Metadata
 from sat_orm.pipeline_orm.processed_file import ProcessedFile
+from sat_orm.pipeline_orm.binary_bucket_monitor import BinaryBucketMonitor
 from sat_orm.pipeline_orm.client import Client
 from sat_orm.pipeline_orm.warehouse import Warehouse
 from sat_orm.pipeline_orm.job_function import JobFunction

@@ -117,9 +117,18 @@ class Config(Base):
         return str(self.as_dict())
     
 def insert_or_update(session,data):
-    ''' checks to see if dock_id is in table,
-        if it is, then only update the none primary key items.
-        else insert a new row
+    ''' 
+        Description
+            checks to see if dock_id is in table,
+            if it is, then only update the none primary key items.
+            else insert a new row.
+        
+        params
+            session: sqlalchemy.orm.session.Session
+            data: {key: value} dictionary
+
+        return
+            Does not return anything, however does commit to database
     '''
     data.pop('phase',None) # removes phase if in data
     dock_id = data['dock_id']
