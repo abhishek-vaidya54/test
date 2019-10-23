@@ -116,24 +116,24 @@ class Config(Base):
     def __repr__(self):
         return str(self.as_dict())
     
-    def insert_or_update(self,session,model,data):
-        ''' checks to see if dock_id is in table,
-            if it is, then only update the none primary key items.
-            else insert a new row
-        '''
-        data.pop('phase',None) # removes phase if in data
-        dock_id = data['dock_id']
-        dock_in_table = session.query(model).filter_by(dock_id=data['dock_id']).first()
-        if dock_in_table:
-            data.pop('dock_id',None) # removes dock_id if in data
-            session.query(model).filter_by(dock_id=dock_id).update(data)
-        else:
-            config = model(dock_id=data.get('dock_id',None),client_id=data.get('client_id',None),warehouse_id=data.get('warehouse_id',None),
-                            deployment_stage=data.get('deployment_stage','dev'),barcode_regex=data.get('barcode_regex',None),
-                            firmware_version=data.get('firmware_version',None),description=data.get('description',None),
-                            dock_imei=data.get('dock_imei',None))
-            session.add(config)
-            session.commit()
+def insert_or_update(session,data):
+    ''' checks to see if dock_id is in table,
+        if it is, then only update the none primary key items.
+        else insert a new row
+    '''
+    data.pop('phase',None) # removes phase if in data
+    dock_id = data['dock_id']
+    dock_in_table = session.query(Config).filter_by(dock_id=data['dock_id']).first()
+    if dock_in_table:
+        data.pop('dock_id',None) # removes dock_id if in data
+        session.query(Config).filter_by(dock_id=dock_id).update(data)
+    else:
+        config = Config(dock_id=data.get('dock_id',None),client_id=data.get('client_id',None),warehouse_id=data.get('warehouse_id',None),
+                        deployment_stage=data.get('deployment_stage','dev'),barcode_regex=data.get('barcode_regex',None),
+                        firmware_version=data.get('firmware_version',None),description=data.get('description',None),
+                        dock_imei=data.get('dock_imei',None))
+        session.add(config)
+        session.commit()
         
 
 
