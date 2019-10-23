@@ -126,7 +126,6 @@ def insert_or_update(session,data):
     dock_in_table = session.query(Config).filter_by(dock_id=data['dock_id']).first()
     if dock_in_table:
         data.pop('dock_id',None) # removes dock_id if in data
-        print('updating table')
         session.query(Config).filter_by(dock_id=dock_id).update(data)
         session.commit()
     else:
