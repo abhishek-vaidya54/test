@@ -39,6 +39,7 @@ from sqlalchemy.sql import text
 
 # Local Application Imports
 from sat_orm.dockv5_orm.dockv5_base import Base
+from sat_orm.dockv5_orm.config import Config
 
 class DockPhase(Base):
     __tablename__="dock_phase"
@@ -93,16 +94,16 @@ class DockPhase(Base):
     def __repr__(self):
         return str(self.as_dict())
     
-    def update_phase(self,session,Config,DockPhase,data):
-        ''' checks to see if the phase changed, if it did,
-            a new row will be added to dock_phase. If there is no dock_id,
-            add the new dock_id
-        '''
-        current_config = session.query(Config).filter_by(dock_id=data.get('dock_id',None)).first()
-        if (current_config.dock_phase == None or data.get('phase',None) != current_config.dock_phase.phase):
-            dock_phase = DockPhase(dock_id=data.get('dock_id',None),phase=data.get('phase',None),deployment_stage=data.get('deployment_stage',None))
-            session.add(dock_phase)
-            session.commit()
+def update_phase(self,session,Config,DockPhase,data):
+    ''' checks to see if the phase changed, if it did,
+        a new row will be added to dock_phase. If there is no dock_id,
+        add the new dock_id
+    '''
+    current_config = session.query(Config).filter_by(dock_id=data.get('dock_id',None)).first()
+    if (current_config.dock_phase == None or data.get('phase',None) != current_config.dock_phase.phase):
+        dock_phase = DockPhase(dock_id=data.get('dock_id',None),phase=data.get('phase',None),deployment_stage=data.get('deployment_stage',None))
+        session.add(dock_phase)
+        session.commit()
 
 
             
