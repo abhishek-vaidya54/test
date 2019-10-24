@@ -2,6 +2,13 @@ SAT ORM
 ===
 For easier database maintenance
 
+# setup
+copy .envrc.sample in this directory to .envrc and set the vault token
+(vault token should be created from database vault policy)
+
+To build docker container to run mysql locally and test changes locally
+`./docker/start_database_server`
+
 # Introduction
 Object Relational Mapper or (ORM) are used to interact with a database using the programming
 language that they are written in. Here at SAT our ORMs are designed using the python programming 
@@ -64,6 +71,11 @@ print(config_as_dict['dock_id'])
 
 The simplicity of sqlalchemy makes it easy to work with our databases. Now that we are familiar with the ORM classes, lets move on to contributing to sat_orm.
 
+# Running Migrations
+There are two ways to run migrations currently, locally and Online. Locally lets you update the database running on your local machine. The first thing you want to do is create a migration script. Here at SAT we use [alemic](https://alembic.sqlalchemy.org/en/latest/) to create migration scripts. By doing `alembic revision -m 'adding_new_column_to_tablename'` will generate a migration script in `alembic/versions`. To run this command, make sure you are in the right folder. To run migrations for dockv5, make sure you are in the dockv5 directory located at the root of the database_models folder. It is the same for the other schemas. Once you've create your migration script, make sure you also change the `env.py` file if you are trying to run it locally. Checkout the [Editing Database](https://github.com/strongarm-tech/database_models/wiki/Editing-Database) wiki page for more information. 
+
+Once you are ready to make your migration run `alembic upgrade head`, this will update your database according to your changes. If you realized you need to downgrade it, simply run `alembic downgrade -1`.
+
 # Contribution
 As we grow changes to the ORM's will be continuous, the good thing is that they help keep a single source of truth for the database. Being able to contribute to the growth of this product properly is essential to the success of sat_orm. We will first start with Why to contribute, then we will give a tutorial on how to contribute and lastly what to look out for when contributing.
 
@@ -121,7 +133,7 @@ This is straight forward. Start creating your new method until your primilinary 
 Improving Test means that you are adding more test cases to your test module. As you add more cases you make your code more robust and helps others understand what it can and cannot do. Thinking of edge cases and what should happened if they are reached is what to think about when adding more test. Also add how your method will handle them, and check to see if the method handles them correctly.
 
 ### Add Documentation
-Yes it is cool to write code, However if no one can understand how it works or how to use it, there is no use in what you wrote. Documentation of `sat_orm` is what will make it a successful product. When documenting, think about what you would want someone to tell you if it was your first time using the product. Even if it is easy to use, explain why and how it is easy to use. Pull Request must always include a link to your documentation. Documentation should be added in the [database models wiki](), there will be a section on how to add and update documentation in there.
+Yes it is cool to write code, However if no one can understand how it works or how to use it, there is no use in what you wrote. Documentation of `sat_orm` is what will make it a successful product. When documenting, think about what you would want someone to tell you if it was your first time using the product. Even if it is easy to use, explain why and how it is easy to use. Pull Request must always include a link to your documentation. Documentation should be added in the [database models wiki](https://github.com/strongarm-tech/database_models/wiki), there will be a section on how to add and update documentation in there.
 
 ### Make Pull Request
 Once You have added your issue to Jira, created your new branch, created your primilinary test, coded, improved your test and code, and documented, you are now ready to submit your PR. Submiting a PR is very simple just make sure that you are asking to merge to staging. A teammate will take over, check to see if you followed the procedures, well documented your changes, downloard the package and run the packaged test. Finally check to see the code coverage. Once all of those check out, they will merge your changes to staging.
@@ -132,20 +144,10 @@ Adding new features to `sat_orm` package is simple, and following these procedur
 # database-models
 [Database Model Wiki
 Page](https://github.com/strongarm-tech/database_models/wiki)
+
 ## setup
 copy .envrc.sample in this directory to .envrc and set the vault token
 (vault token should be created from database vault policy)
 
 To build docker container to run mysql locally and test changes locally
 `./docker/start_database_server`
-
-## using alembic
-
-To generate a new migration script
-`alembic revision -m 'name'`
-
-To run the migration script (run in dev branch for staging db before running in master branch for prod db)
-`alembic upgrade head`
-
-To undo the migration by one version
-`alembic downgrade -1`
