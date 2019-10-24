@@ -1,8 +1,12 @@
 # Standard Library Imports
 
 # Third Party Imports
+from sqlalchemy import Column, String, Integer, DateTime
+from sqlalchemy.orm import validates
+from sqlalchemy.sql import text
 
 # Local Application Imports
+from sat_orm.pipeline_orm.pipeline_base import Base
 
 class ParserMonitor(Base):
     __tablename__='parser_monitor'
@@ -20,7 +24,7 @@ class ParserMonitor(Base):
     db_created = Column(DateTime,server_default=text('CURRENT_TIMESTAMP'),nullable=True)
     db_modified = Column(DateTime,server_default=text('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'),nullable=False)
     file_status = Column(String(50),default='parsing',nullable=False)
-    message = Column(String(50),,default=None,nullable=True)
+    message = Column(String(50),default=None,nullable=True)
     file_size = Column(String(50),default=None,nullable=True)
 
     # Relationships
@@ -44,5 +48,5 @@ class ParserMonitor(Base):
         if file_status is None:
             raise Exception('file_status cannot be Null')
         else:
-            returan file_status
+            return file_status
     

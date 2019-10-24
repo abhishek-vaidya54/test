@@ -1,8 +1,12 @@
 # Standard Library Imports
 
 # Third Party Imports
+from sqlalchemy import Column, Integer, String, Boolean, DateTime
+from sqlalchemy.sql import text
+from sqlalchemy.orm import validates
 
 # Local Application Imports
+from sat_orm.pipeline_orm.pipeline_base import Base
 
 class RuleCondition(Base):
     __tablename__='rule_condition'
@@ -53,5 +57,4 @@ class RuleCondition(Base):
             raise Exception('deleted cannot be Null')
         else:
             return deleted
-    
     

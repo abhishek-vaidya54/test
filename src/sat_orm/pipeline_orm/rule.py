@@ -1,8 +1,12 @@
 # Standard Library Imports
 
 # Third Party Imports
+from sqlalchemy import Column, String, Integer, DateTime, Boolean
+from sqlalchemy.sql import text
+from sqlalchemy.orm import validates
 
 # Local Application Imports
+from sat_orm.pipeline_orm.pipeline_base import Base
 
 class Rule(Base):
     __tablename__='rule'
@@ -15,7 +19,7 @@ class Rule(Base):
     enabled = Column(Boolean,nullable=False, server_default='1')
     deleted = Column(Boolean,nullable=False,server_default='0')
     db_created_at = Column(DateTime,server_default=text('CURRENT_TIMESTAMP'),nullable=False)
-    db_updated-at = Column(DateTime,server_default=text('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'),nullable=False)
+    db_updated_at = Column(DateTime,server_default=text('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'),nullable=False)
     priority = Column(Integer,nullable=True,default=None)
     program_id = Column(Integer,nullable=True,default=None)
 
