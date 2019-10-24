@@ -13,6 +13,7 @@ Description:
 import pytest
 
 from sat_orm.dockv5 import Config, DockPhase
+from sat_orm.dockv5_orm import config
 from sat_orm.dockv5_factories import ConfigFactory, DockPhaseFactory
 
 
@@ -75,8 +76,7 @@ def test_config___repr___returns_string():
 @pytest.mark.test_inserts
 def test_config_insert_or_update(session):
     ''' checks to see if the row was updated or if a new row should be added'''
-    config = Config()
-    config.insert_or_update(session,Config,data)
+    config.insert_or_update(session,data)
     # TODO: Check to see if phase is poped out of data
     # TODO: check to see if dock_id is not None
     # TODO: if dock is in table, check to see if dock_id is poped out of data
