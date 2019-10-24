@@ -1,9 +1,20 @@
+'''
+LICENSE:
+    This file is subject to the terms and conditions defined in
+    file 'LICENSE.txt', which is part of this source code package.
+ 
+CONTRIBUTORS: 
+            Vincent Turnier
+
+CLASSIFICATION: 
+            Highly Sensitive
+
+    **** Add Contributors name if you have contributed to this file ****
+*********************************************************************************
+'''
+
 # Standard Library Imports
 import datetime
-import json
-import logging
-import uuid
-import re
 
 # Third Party imports
 from sqlalchemy import (ForeignKey, true, 

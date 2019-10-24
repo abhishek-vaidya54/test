@@ -11,22 +11,6 @@ CLASSIFICATION:
 
     **** Add Contributors name if you have contributed to this file ****
 *********************************************************************************
-
-DESCRIPTION:
-            The dockv5_orm package is a presentation of the orms for the dockv5
-            schema. As the table schema is deliccate and can affect other
-            files when changes, the goal of the orm is to match with the
-            schema at all times, meaning that we can now represent the 
-            dockv5 schema as lines of code.
-            
-            +---------------+
-            | Dockv5 Tables |
-            +---------------+
-            | config        |
-            | dock_phase    |
-            +---------------+
-
-            **** Edit This File If tables are added or removed ****
 '''
 
 # Standard Library Imports
@@ -35,10 +19,11 @@ import datetime
 # Third Party Imports
 from sqlalchemy import Column, Integer, String, Enum, DateTime, ForeignKey
 from sqlalchemy.orm import relationship, validates
+from sqlalchemy.sql import text
 
 # Local Application Imports
 from sat_orm.dockv5_orm.dockv5_base import Base
-
+from sat_orm.dockv5_orm.config import Config
 
 class DockPhase(Base):
     __tablename__="dock_phase"
@@ -46,8 +31,8 @@ class DockPhase(Base):
     # Table inputs
     id = Column(Integer,primary_key=True,autoincrement=True)
     dock_id = Column(String,ForeignKey('config.dock_id'),nullable=False)
-    timestamp = Column(DateTime,default=datetime.datetime.now(),nullable=False)
-    phase = Column(Enum('PREP','DEMO','INFIELD','MAINTENANCE','UNUSED','RETIRED'),nullable=False,default='PREP')
+    timestamp = Column(DateTime,server_default=text('CURRENT_TIMESTAMP'),nullable=False)
+    phase = Column(Enum('DEPLOYED','NOT DEPLOYED','MAINTENANCE'),nullable=False,default='NOT DEPLOYED')
     deployment_stage = Column(String(20), nullable=False)
 
     config = relationship('Config',back_populates='dock_phase')
@@ -92,3 +77,19 @@ class DockPhase(Base):
     
     def __repr__(self):
         return str(self.as_dict())
+    
+def update_phase(session,data):
+    ''' checks to see if the phase changed, if it did,
+        a new row will be added to dock_phase. If there is no dock_id,
+        add the new dock_id
+    '''
+    current_config = session.query(Config).filter_by(dock_id=data.get('dock_id',None)).first()
+    if (current_config.dock_phase == None or data.get('phase',None) != current_config.dock_phase.phase):
+        dock_phase = DockPhase(dock_id=data.get('dock_id',None),phase=data.get('phase',None),deployment_stage=data.get('deployment_stage',None))
+        session.add(dock_phase)
+        session.commit()
+
+
+            
+
+

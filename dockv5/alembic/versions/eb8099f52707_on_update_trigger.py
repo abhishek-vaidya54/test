@@ -21,9 +21,11 @@ def upgrade():
     sql_trigger = "CREATE TRIGGER update_dock_phase_development_stage AFTER UPDATE ON config \
                     FOR EACH ROW\
                     BEGIN \
-                        DECLARE phase_ VARCHAR(45);\
-                        SELECT phase INTO phase_ FROM dock_phase WHERE dock_phase.phase IS NOT NULL AND dock_phase.dock_id = OLD.dock_id ORDER BY dock_phase.timestamp DESC LIMIT 1;\
-                        INSERT INTO dock_phase (dock_id,phase,deployment_stage) VALUES (OLD.dock_id,phase_,NEW.deployment_stage);\
+                    DECLARE phase_ VARCHAR(45);\
+                        IF (OLD.deployment_stage != NEW.deployment_stage) THEN\
+                            SELECT phase INTO phase_ FROM dock_phase WHERE dock_phase.phase IS NOT NULL AND dock_phase.dock_id = OLD.dock_id ORDER BY dock_phase.timestamp DESC LIMIT 1;\
+                            INSERT INTO dock_phase (dock_id,phase,deployment_stage) VALUES (OLD.dock_id,phase_,NEW.deployment_stage);\
+                        END IF;\
                     END;"
 
     op.execute(sql_trigger)

@@ -31,27 +31,27 @@ def test_insert_into_config_table(session,config_factory):
     assert before_insert != after_insert
 
 
-def test_get_config_table_with_dock_phase(session):
-    config = session.query(Config).filter_by(dock_id='E423540B64BE').first()
-    for dock_phase in config.dock_phases:
-        assert dock_phase.dock_id == 'E423540B64BE'
+# def test_get_config_table_with_dock_phase(session):
+#     config = session.query(Config).filter_by(dock_id='E423540B64BE').first()
+#     for dock_phase in config.dock_phases:
+#         assert dock_phase.dock_id == 'E423540B64BE'
 
-def test_config_trigger_update_config_table(session):
-    config = session.query(Config).filter_by(dock_id='E423540B64BE').first()
-    dock_phase = config.dock_phases[0]
-    dock_phase_count = len(config.dock_phases)
-    dock_phase_deployment_stage = dock_phase.deployment_stage.lower()
-    if dock_phase_deployment_stage == 'dev':
-        new_dock_phase_deployment_stage = 'prod'
-    else:
-        new_dock_phase_deployment_stage = 'dev'
-    update_config = session.query(Config).filter_by(dock_id='E423540B64BE').update({"deployment_stage":new_dock_phase_deployment_stage})
-    session.commit()
-    config = session.query(Config).filter_by(dock_id='E423540B64BE').first()
-    dock_phase = config.dock_phases[0]
-    new_dock_phase_count = len(config.dock_phases)
-    assert dock_phase_count != new_dock_phase_count
-    assert new_dock_phase_deployment_stage == dock_phase.deployment_stage.lower()
+# def test_config_trigger_update_config_table(session):
+#     config = session.query(Config).filter_by(dock_id='E423540B64BE').first()
+#     dock_phase = config.dock_phases[0]
+#     dock_phase_count = len(config.dock_phases)
+#     dock_phase_deployment_stage = dock_phase.deployment_stage.lower()
+#     if dock_phase_deployment_stage == 'dev':
+#         new_dock_phase_deployment_stage = 'prod'
+#     else:
+#         new_dock_phase_deployment_stage = 'dev'
+#     update_config = session.query(Config).filter_by(dock_id='E423540B64BE').update({"deployment_stage":new_dock_phase_deployment_stage})
+#     session.commit()
+#     config = session.query(Config).filter_by(dock_id='E423540B64BE').first()
+#     dock_phase = config.dock_phases[0]
+#     new_dock_phase_count = len(config.dock_phases)
+#     assert dock_phase_count != new_dock_phase_count
+#     assert new_dock_phase_deployment_stage == dock_phase.deployment_stage.lower()
 
 
 

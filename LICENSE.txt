@@ -1,6 +1,6 @@
  /*************************************************************************
  * 
- * StrongArm Technology CONFIDENTIAL
+ * StrongArm Technology SENSITIVE
  * __________________
  * 
  *  All Rights Reserved.
