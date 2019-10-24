@@ -107,6 +107,7 @@ To contribute to sat_orm package there is a guide to help everyone know how the 
 | Improve test | Improve your test cases. Make sure to document them well, so that new users can easily use your new code |
 | Add Documentation | Add documentation for the new method that was added. Important so that others do not create the same method that already exist |
 | Make a Pull Request | Create a pull request to staging so that another team member can review your changes. Teammate will follow the guide to make sure that everything is up to standard. They will also run the test locally to make sure that all of them pass. They will also check to code coverage to see if the coverage is up to our standards, before accepting the Pull Request |
+| Versioning | making sure that you are following versioning standards |
 
 ### Create Issue
 Creating issues in jira is important so that the dev team knows exactly what you are working on, and what you are planning to add to the sat_orm package. It will also let others give their input before you start working on a new feauture for the package. This will also help you track what needs to be done for the package is being upgrade as needed.
@@ -137,6 +138,12 @@ Yes it is cool to write code, However if no one can understand how it works or h
 
 ### Make Pull Request
 Once You have added your issue to Jira, created your new branch, created your primilinary test, coded, improved your test and code, and documented, you are now ready to submit your PR. Submiting a PR is very simple just make sure that you are asking to merge to staging. A teammate will take over, check to see if you followed the procedures, well documented your changes, downloard the package and run the packaged test. Finally check to see the code coverage. Once all of those check out, they will merge your changes to staging.
+
+### Versioning
+The versioning system we use is for degree of compatibility with our API's. We use 3 different numbers, a major, minor, and patch (0.0.0). The patch is incremented everytime a bug is fixed, however thoes fixes do not change the API's. The minor version is incremented for releases which add new, API features and is also compatible with the current API. Major is used when there is no backwards compatibility with the current API's. 
+
+Example:
+let say we are at version 0.2 After releasing we realize that there is a bug. Once the bug is fixed and changes have been made accordingly and is realeased, then the new version of the application is version 0.2.1. If new features are added to the application, then the next release will be version 0.3 and with bug fixes will change accodingly 0.3.1 etc... For major changes that make it incompatible with OLD API's then we change the major number, 1.0.0 or just 1, and with new features it becomes 1.1 etc... and with bug fixes it becomes 1.1.1 etc... 
 
 ## Conclusion
 Adding new features to `sat_orm` package is simple, and following these procedures will ensure the best quality of the ORM's and of the package overall.
