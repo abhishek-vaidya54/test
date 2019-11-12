@@ -18,7 +18,7 @@ depends_on = None
 
 
 def upgrade():
-    sql_trigger = "CREATE TRIGGER update_dock_phase_development_stage AFTER UPDATE ON config \
+    sql_trigger = "CREATE TRIGGER update_dock_phase_deployment_stage AFTER UPDATE ON config \
                     FOR EACH ROW\
                     BEGIN \
                     DECLARE phase_ VARCHAR(45);\
@@ -32,4 +32,4 @@ def upgrade():
 
 
 def downgrade():
-    op.execute('DROP TRIGGER IF EXISTS update_dock_phase_development_stage')
+    op.execute('DROP TRIGGER IF EXISTS update_dock_phase_deployment_stage')
