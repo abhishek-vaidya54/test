@@ -43,13 +43,12 @@ def get_vault_config(configName):
   # Read the database secret
   secret = client.read('secret/database/' + configName)
   if secret:
-      config = json.loads(secret['data']['value'])
+      config = secret['data']
   
   return config
 
 def get_url():
     creds = get_vault_config('dockv5')
-
     username = ''
     if(branch == 'master'):
         creds = creds['PROD']

@@ -21,12 +21,11 @@ depends_on = None
 def upgrade():
     # Generating Dock Lifecycle Management Phase Table
     op.create_table("dock_phase",
-    sa.Column("id",sa.Integer(),nullable=False),
-    sa.Column("config_id",sa.Integer(),nullable=False),
+    sa.Column("id",sa.Integer(),primary_key=True,autoincrement=True,nullable=False),
+    sa.Column("dock_id",sa.String(45),nullable=False),
     sa.Column("timestamp",sa.DateTime,server_default=text("CURRENT_TIMESTAMP()")),
     sa.Column("phase",sa.Enum("PREP","INFIELD","DEMO","MAINTENANCE","UNUSED","RETIRED"),server_default="PREP"),
     sa.PrimaryKeyConstraint('id'),
-    sa.ForeignKeyConstraint(['config_id'],['config.id'], )
     )
 
 
