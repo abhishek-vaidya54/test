@@ -179,7 +179,8 @@ def test_dockv5_getEngagement_select_by_id(session):
 def test_dockv5_getUpdatedAthletes_select_group_id(session):
     client_id,warehouse_id = 33,34
     result = ia.dockv5_getUpdatedAthletes_select_group_id(session,client_id,warehouse_id)
-    validation_result = session.query(IndustrialAthlete).filter(IndustrialAthlete.group_id == group_id).all()
+    group_ids = [r.group_id for r in result]
+    validation_result = session.query(IndustrialAthlete).filter(IndustrialAthlete.group_id in group_ids).all()
     assert all([r.client_id == client_id and r.warehouse_id == warehouse_id for r in validation_result])
 
 
@@ -187,7 +188,7 @@ def test_dockv5_getUpdatedAthletes_select_group_id(session):
 def test_dockv5_getUpdatedAthletes_select_id(session):
     client_id,warehouse_id = 33,34
     result = ia.dockv5_getUpdatedAthletes_select_id(session,client_id,warehouse_id)
-    validation_result = session.query(IndustrialAthlete).filter(IndustrialAthlete.id == result.id).all()
+    validation_result = session.query(IndustrialAthlete).filter(IndustrialAthlete.id in [r.id for r in result]).all()
     assert all([r.client_id == client_id and r.warehouse_id == warehouse_id for r in validation_result])
 
 
@@ -195,7 +196,7 @@ def test_dockv5_getUpdatedAthletes_select_id(session):
 @pytest.mark.test_select
 def test_dockv5_getUpdatedAthletes_select_by_db_modified(session):
     timestamp= '2018-01-01'
-    dt = datetime.strptime(timestamp, '%Y-%m-%d')
+    dt = datetime.datetime.strptime(timestamp, '%Y-%m-%d')
     result = ia.dockv5_getUpdatedAthletes_select_by_db_modified(session,timestamp)
     assert all([r.db_modified_at >= dt for r in result])
 
