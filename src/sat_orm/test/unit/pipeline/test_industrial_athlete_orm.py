@@ -26,6 +26,7 @@ DESCRIPTION:
 
 # Third Party Import
 import pytest
+import datetime
 
 # Local Application Imports
 from sat_orm.pipeline import session
@@ -162,14 +163,14 @@ def test_get_all_athletes(session):
 def test_dockv5_getAthletes_select_by_client_warehouse_not_terminated(session):
     client_id, warehouse_id = 33,34
     result = ia.dockv5_getAthletes_select_by_client_warehouse_not_terminated(session,client_id,warehouse_id)
-    assert result != None
+    assert all([r.client_id == client_id and r.warehouse_id == warehouse_id for r in result])
 
 
 @pytest.mark.test_select
 def test_dockv5_getEngagement_select_by_id(session):
     id = 9789
     result = ia.dockv5_getEngagement_select_by_id(session,id)
-    assert result != None
+    assert result.id == id
 
 
 
@@ -178,21 +179,25 @@ def test_dockv5_getEngagement_select_by_id(session):
 def test_dockv5_getUpdatedAthletes_select_group_id(session):
     client_id,warehouse_id = 33,34
     result = ia.dockv5_getUpdatedAthletes_select_group_id(session,client_id,warehouse_id)
-    assert result != None
+    validation_result = session.query(IndustrialAthlete).filter(IndustrialAthlete.group_id == group_id).all()
+    assert all([r.client_id == client_id and r.warehouse_id == warehouse_id for r in validation_result])
 
 
 @pytest.mark.test_select
 def test_dockv5_getUpdatedAthletes_select_id(session):
     client_id,warehouse_id = 33,34
     result = ia.dockv5_getUpdatedAthletes_select_id(session,client_id,warehouse_id)
-    assert result != None
+    validation_result = session.query(IndustrialAthlete).filter(IndustrialAthlete.id == result.id).all()
+    assert all([r.client_id == client_id and r.warehouse_id == warehouse_id for r in validation_result])
+
 
 
 @pytest.mark.test_select
 def test_dockv5_getUpdatedAthletes_select_by_db_modified(session):
     timestamp= '2018-01-01'
+    dt = datetime.strptime(timestamp, '%Y-%m-%d')
     result = ia.dockv5_getUpdatedAthletes_select_by_db_modified(session,timestamp)
-    assert result != None
+    assert all([r.db_modified_at >= dt for r in result])
 
 
 @pytest.mark.test_select
@@ -200,7 +205,7 @@ def test_dockv5_getUpdatedAthletes_select_by_client_warehouse_db_modified(sessio
     client_id,warehouse_id = 33,34
     timestamp= '2018-01-01'
     result = ia.dockv5_getUpdatedAthletes_select_by_client_warehouse_db_modified(session,client_id,warehouse_id,timestamp)
-    assert result != None
+    assert all([r.db_modified_at >= dt and r.client_id == client_id and r.warehouse_id == warehouse_id for r in result])
 
 
 
