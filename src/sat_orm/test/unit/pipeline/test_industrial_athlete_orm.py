@@ -205,6 +205,7 @@ def test_dockv5_getUpdatedAthletes_select_by_db_modified(session):
 def test_dockv5_getUpdatedAthletes_select_by_client_warehouse_db_modified(session):
     client_id,warehouse_id = 33,34
     timestamp= '2018-01-01'
+    dt = datetime.datetime.strptime(timestamp, '%Y-%m-%d')
     result = ia.dockv5_getUpdatedAthletes_select_by_client_warehouse_db_modified(session,client_id,warehouse_id,timestamp)
     assert all([r.db_modified_at >= dt and r.client_id == client_id and r.warehouse_id == warehouse_id for r in result])
 
