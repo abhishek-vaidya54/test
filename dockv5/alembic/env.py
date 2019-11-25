@@ -48,6 +48,7 @@ def get_vault_config(configName):
   return config
 
 def get_url():
+    # return 'mysql+pymysql://root:password@localhost/dockv5'
     creds = get_vault_config('dockv5')
     username = ''
     if(branch == 'master'):
