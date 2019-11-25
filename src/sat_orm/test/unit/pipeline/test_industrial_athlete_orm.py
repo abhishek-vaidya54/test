@@ -26,13 +26,16 @@ DESCRIPTION:
 
 # Third Party Import
 import pytest
+import datetime
 
 # Local Application Imports
+from sat_orm.pipeline import session
 from sat_orm.pipeline import Client
 from sat_orm.pipeline import Warehouse
 from sat_orm.pipeline import JobFunction
 from sat_orm.pipeline import Shifts
 from sat_orm.pipeline import IndustrialAthlete
+from sat_orm.pipeline_orm import industrial_athlete as ia
 
 @pytest.mark.input_validation
 def test_industrial_athlete_validate_client_id():
@@ -145,6 +148,90 @@ def test_industrial_athlete_shifts_relationship(session):
     athlete = session.query(IndustrialAthlete).first()
     shifts = athlete.shifts
     assert shifts.id != None
+
+
+
+@pytest.mark.test_select
+def test_get_all_athletes(session):
+    """
+    verify we get athletes from the industrial_athlete table
+    """
+    result = ia.get_all_athletes(session)
+    assert result != None
+
+
+
+
+@pytest.mark.test_select
+def test_dockv5_getAthletes_select_by_client_warehouse_not_terminated(session):
+    """
+    verify all client_id and warehouse_id values from our result match what was queried for
+    """
+    client_id, warehouse_id = 33,34
+    result = ia.dockv5_getAthletes_select_by_client_warehouse_not_terminated(session,client_id,warehouse_id)
+    assert all([r.client_id == client_id and r.warehouse_id == warehouse_id for r in result])
+
+
+@pytest.mark.test_select
+def test_dockv5_getEngagement_select_by_id(session):
+    """
+    verify the athlete_id matches what was queried for
+    """
+    id = 9507
+    result = ia.dockv5_getEngagement_select_by_id(session,id)
+    assert result.id == id
+
+
+
+
+@pytest.mark.test_select
+def test_dockv5_getUpdatedAthletes_select_group_id(session):
+    """
+    verify that athletes selected by the group_ids of the result contain the correct client_id and warehouse_id
+    """
+    client_id,warehouse_id = 33,34
+    result = ia.dockv5_getUpdatedAthletes_select_group_id(session,client_id,warehouse_id)
+    group_ids = [r.group_id for r in result]
+    validation_result = session.query(IndustrialAthlete).filter(IndustrialAthlete.group_id in group_ids).all()
+    assert all([r.client_id == client_id and r.warehouse_id == warehouse_id for r in validation_result])
+
+
+@pytest.mark.test_select
+def test_dockv5_getUpdatedAthletes_select_id(session):
+    """
+    verify that athletes selected by the athlete_ids of the result contain the correct client_id and warehouse_id
+    """
+    client_id,warehouse_id = 33,34
+    result = ia.dockv5_getUpdatedAthletes_select_id(session,client_id,warehouse_id)
+    validation_result = session.query(IndustrialAthlete).filter(IndustrialAthlete.id in [r.id for r in result]).all()
+    assert all([r.client_id == client_id and r.warehouse_id == warehouse_id for r in validation_result])
+
+
+
+@pytest.mark.test_select
+def test_dockv5_getUpdatedAthletes_select_by_db_modified(session):
+    """
+    verify that athletes selected by the timestamp have db_modified_at >= the tiemstamp that was queried for
+    """
+    timestamp= '2018-01-01'
+    dt = datetime.datetime.strptime(timestamp, '%Y-%m-%d')
+    result = ia.dockv5_getUpdatedAthletes_select_by_db_modified(session,timestamp)
+    assert all([r.db_modified_at >= dt for r in result])
+
+
+@pytest.mark.test_select
+def test_dockv5_getUpdatedAthletes_select_by_client_warehouse_db_modified(session):
+    """
+    verify that athletes selected by the timestamp have db_modified_at >= the tiemstamp that was queried for
+    and have the correct client_id and warehouse_id
+    """
+    client_id,warehouse_id = 33,34
+    timestamp= '2018-01-01'
+    dt = datetime.datetime.strptime(timestamp, '%Y-%m-%d')
+    result = ia.dockv5_getUpdatedAthletes_select_by_client_warehouse_db_modified(session,client_id,warehouse_id,timestamp)
+    assert all([r.db_modified_at >= dt and r.client_id == client_id and r.warehouse_id == warehouse_id for r in result])
+
+
 
 
 

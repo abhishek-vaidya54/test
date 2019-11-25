@@ -112,10 +112,11 @@ def get(name, version=Config.ALGO_PROCESSING_VERSION):
     ).scalar()
 
 
-def create(name, athlete_data=None, file_params=None, status=PROCESSING, version=Config.ALGO_PROCESSING_VERSION):
+def create(name, athlete_data=None,settings_data = None ,file_params=None, status=PROCESSING, version=Config.ALGO_PROCESSING_VERSION):
     pf = None
 
     if athlete_data is not None:
+      group_id = settings_data.target_id if settings_data and settings_data.target_type == 'group' else athlete_data.group_id  
       pf = ProcessedFile(
           name=name, version=version,
           athlete_id=athlete_data.id,
@@ -123,7 +124,7 @@ def create(name, athlete_data=None, file_params=None, status=PROCESSING, version
           warehouse_id=athlete_data.warehouse_id,
           job_function_id=athlete_data.job_function.id,
           sensor_id=file_params['sensor_id'],
-          group_id=athlete_data.group_id,
+          group_id=group_id,
           setting_id=int(file_params['setting_id']),
           session_id=file_params['session_id'],
           status=status,
