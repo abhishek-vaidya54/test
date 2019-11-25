@@ -66,10 +66,9 @@ class Risk(db.Model):
 
 
 def create(rows, processed_file_id, commit=True):
-    assert all((isinstance(row, util.OutputRow) for row in rows))
+    # assert all((isinstance(row, util.OutputRow) for row in rows))
 
-    for row in rows:
-        risk = Risk(
+    risk = [ Risk(
             processed_file_id=processed_file_id,
             start_time=row.window_start,
             end_time=row.window_end,
@@ -82,8 +81,26 @@ def create(rows, processed_file_id, commit=True):
             avg_twist_velocity=row.avg_twist_velocity,
             risk_score=row.risk_score,
             max_moment=row.max_moment
-            )
-        db.session.add(risk)
+    ) for row in rows]
+    
+    db.session.bulk_save_objects(risk)
+
+    # for row in rows:
+    #     risk = Risk(
+    #         processed_file_id=processed_file_id,
+    #         start_time=row.window_start,
+    #         end_time=row.window_end,
+    #         lift_rate=row.lift_rate,
+    #         max_lateral_velocity=row.max_lateral_velocity,
+    #         max_flexion=row.max_flexion,
+    #         average_flexion=row.average_flexion,
+    #         max_lateral=row.max_lateral,
+    #         average_lateral=row.average_lateral,
+    #         avg_twist_velocity=row.avg_twist_velocity,
+    #         risk_score=row.risk_score,
+    #         max_moment=row.max_moment
+    #         )
+    #     db.session.add(risk)
 
     if commit:
         commit_or_rollback(db.session)
