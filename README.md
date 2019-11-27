@@ -2,6 +2,10 @@ SAT ORM
 ===
 For easier database maintenance
 
+### SAT Gitflow model:
+https://strongarm.atlassian.net/wiki/spaces/SPD/pages/771719173/Development+process+-+Gitflow+CI+CD
+
+
 # setup
 copy .envrc.sample in this directory to .envrc and set the vault token
 (vault token should be created from database vault policy)
