@@ -93,13 +93,7 @@ class Client(Base):
             'db_created_at':self.db_created_at,
             'db_modified_at':self.db_modified_at,
             'prefix':self.prefix,
-            'guid':self.guid,
-            'domain':self.domain,
-            'enable_processing':self.enable_processing,
-            'account_lock_timeout':self.account_lock_timeout,
-            'dynamic_shift':self.dynamic_shift,
-            'client_regex_code':self.client_regex_code,
-            'algo_version':self.algo_version
+            'enable_processing':self.enable_processing
         }
 
     def __repr__(self):
