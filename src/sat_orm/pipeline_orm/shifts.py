@@ -86,7 +86,7 @@ class Shifts(Base):
         'shift_end':self.shift_end,
         'color':self.color,
         'description':self.description,
-        'group_administrtor':self.group_administrator,
+        'group_administrator':self.group_administrator,
         'db_created_at':self.db_created_at,
         'db_modified_at':self.db_modified_at
     }
