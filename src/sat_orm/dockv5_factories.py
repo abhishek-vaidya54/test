@@ -43,7 +43,7 @@ def generate_dock_id():
     hex_letters = ['A','B','C','D','E','F']
     count = 0
     dock_id = ''
-    while(count<7):
+    while(count<6):
         dock_id += random.choice(hex_letters)+random.choice(string.digits)
         count+=1
     return dock_id
