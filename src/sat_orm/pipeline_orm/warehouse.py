@@ -39,7 +39,7 @@ class Warehouse(Base):
     utc_op_day_start = Column(String(45), nullable=False)
     week_start = Column(String(45), nullable=False)
     update_engagement = Column(Boolean, nullable=False)
-    hide_judgement = Column(Boolean,nullable=False)
+    # hide_judgement = Column(Boolean,nullable=False)
     # show_engagement = Column(Boolean,nullable=False)
     # standard_score = Column(Float,nullable=True)
     # min_safety_score = Column(Float,nullable=True)
