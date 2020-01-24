@@ -23,10 +23,11 @@ class ClientFactory(factory.alchemy.SQLAlchemyModelFactory):
     id = factory.Sequence(lambda n : n+1)
     name = factory.Sequence(lambda n : 'Test Client {0}'.format(n+1))
     prefix = factory.Sequence(lambda n : n+1)
-    guid = str(SmallUUID())
-    dynamic_shift = factory.Sequence(lambda n : n%2)
+    # guid = str(SmallUUID())
+    # dynamic_shift = factory.Sequence(lambda n : n%2)
     db_created_at = datetime.datetime.now()
     db_modified_at = datetime.datetime.now()
+    enable_processing = True
 
     @factory.post_generation
     def warehouse(self,create,extracted, **kwargs):
