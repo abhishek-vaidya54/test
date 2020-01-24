@@ -121,7 +121,7 @@ def insert_or_update(session, data):
         session.query(Client).filter_by(id=client_id).update(data)
         session.commit()
     else:
-        client = Client(name=client['name'], enable_processing=client['enable_processing'], prefix='')
+        client = Client(name=data['name'], enable_processing=data['enable_processing'], prefix='')
         session.add(client)
         session.commit()
     
