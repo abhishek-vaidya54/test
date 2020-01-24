@@ -120,10 +120,14 @@ def insert_or_update(session, data):
         data.pop('id', None)
         session.query(Client).filter_by(id=client_id).update(data)
         session.commit()
+        return client_id
     else:
         client = Client(name=data['name'], enable_processing=data['enable_processing'], prefix='')
         session.add(client)
         session.commit()
+        session.refresh(client)
+        return client.id
+
     
 
 
