@@ -100,5 +100,32 @@ class Client(Base):
         return str(self.as_dict())
 
 
+def insert_or_update(session, data):
+    '''
+        Description
+            checks to see if client_id is in table,
+            if it is, then only update the none primary key items.
+            else insert a new row.
+
+        params
+            session: sqlalchemy.orm.session.Session
+            data: {key: value} dictionary
+
+        return
+            Returns client id and commits to database
+    '''
+    client_id = data['id']
+    client_in_table = session.query(Client).filter_by(id=client_id).first()
+    if client_in_table:
+        data.pop('id', None)
+        session.query(Client).filter_by(id=client_id).update(data)
+        session.commit()
+    else:
+        client = Client(name=client['name'], enable_processing=client['enable_processing'], prefix='')
+        session.add(client)
+        session.commit()
+    
+
+
 
 
