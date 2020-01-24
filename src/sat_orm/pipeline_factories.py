@@ -56,9 +56,9 @@ class WarehouseFactory(factory.alchemy.SQLAlchemyModelFactory):
     display_names = factory.Sequence(lambda n : n%2)
     utc_op_day_start = '00:00:00'
     week_start = factory.fuzzy.FuzzyChoice(['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'])
-    show_engagement = factory.Sequence(lambda n : n%2)
+    # show_engagement = factory.Sequence(lambda n : n%2)
     update_engagement = factory.Sequence(lambda n : n%2)
-    hide_judgement = factory.Sequence(lambda n : n%2)
+    # hide_judgement = factory.Sequence(lambda n : n%2)
 
     @factory.post_generation
     def job_functions(self,create,extracted,**kwargs):
