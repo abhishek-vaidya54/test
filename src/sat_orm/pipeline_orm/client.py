@@ -118,6 +118,7 @@ def insert_or_update(session, data):
     client_in_table = session.query(Client).filter_by(id=client_id).first()
     if client_in_table:
         data.pop('id', None)
+        data.pop('client_id', None)
         session.query(Client).filter_by(id=client_id).update(data)
         session.commit()
         return client_id
