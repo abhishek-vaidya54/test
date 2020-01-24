@@ -122,7 +122,7 @@ def insert_or_update(session, data):
         session.commit()
         return client_id
     else:
-        client = Client(name=data['name'], enable_processing=data['enable_processing'], prefix='')
+        client = Client(name=data['name'], enable_processing=data['enableProcessing'], prefix='')
         session.add(client)
         session.commit()
         session.refresh(client)
