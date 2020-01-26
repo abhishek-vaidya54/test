@@ -129,6 +129,20 @@ def insert_or_update(session, data):
         session.refresh(client)
         return client.id
 
+
+def delete(session, data):
+    '''
+        Description
+            Deletes a client by the id.
+
+        params
+            session: sqlalchemy.orm.session.Session
+            data: {key: value} dictionary
+    '''
+    client_id = data['client_id']
+    session.query(Client).filter(id=client_id).delete()
+    session.commit()
+
     
 
 
