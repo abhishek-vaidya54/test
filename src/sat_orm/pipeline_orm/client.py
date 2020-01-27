@@ -48,8 +48,8 @@ class Client(Base):
     UniqueConstraint('domain','name')
 
     # Table Relationships
-    industrial_athletes = relationship('IndustrialAthlete',back_populates='client')
-    warehouses = relationship('Warehouse',back_populates='client')
+    industrial_athletes = relationship('IndustrialAthlete',back_populates='client', cascade="delete")
+    warehouses = relationship('Warehouse',back_populates='client', cascade="delete")
 
     @validates('name')
     def validate_name(self,key,name):
