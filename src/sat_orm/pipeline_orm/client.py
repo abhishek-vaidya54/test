@@ -142,6 +142,7 @@ def delete(session, data):
     client_id = data['client_id']
     session.query(Client).filter_by(id=client_id).delete()
     session.commit()
+    return {}
 
     
 
