@@ -140,8 +140,8 @@ def delete(session, data):
             data: {key: value} dictionary
     '''
     client_id = data['client_id']
-    client = session.query(Client).filter_by(id=client_id).first()
-    session.delete(client)
+    session.query(Client).filter_by(id=client_id).delete()
+    # session.delete(client)
     session.commit()
     return {}
 
