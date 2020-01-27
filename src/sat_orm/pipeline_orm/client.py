@@ -140,10 +140,15 @@ def delete(session, data):
             data: {key: value} dictionary
     '''
     client_id = data['client_id']
-    session.query(Client).filter_by(id=client_id).delete()
+    no_of_deleted_rows = session.query(Client).filter_by(id=client_id).delete()
     # session.delete(client)
-    session.commit()
-    return {}
+    if no_of_deleted_rows == 1:
+        session.commit()
+        return True
+    else:
+        return False
+    
+    # return {}
 
     
 
