@@ -102,12 +102,12 @@ class Client(Base):
         return str(self.as_dict())
 
 
-def insert_or_update(session, data):
+def insert(session, data):
     '''
         Description
             checks to see if client_id is in table,
             if it is, then only update the none primary key items.
-            else insert a new row.
+            else return 0.
 
         params
             session: sqlalchemy.orm.session.Session
@@ -119,19 +119,40 @@ def insert_or_update(session, data):
     client_id = data['id']
     client_in_table = session.query(Client).filter_by(id=client_id).first()
     if client_in_table:
-        data.pop('id', None)
-        data.pop('client_id', None)
-        data['enable_processing'] = data['enableProcessing']
-        data.pop('enableProcessing', None)
-        session.query(Client).filter_by(id=client_id).update(data)
-        session.commit()
-        return client_id
+        return 0
     else:
         client = Client(name=data['name'], enable_processing=data['enableProcessing'], prefix='')
         session.add(client)
         session.commit()
         session.refresh(client)
         return client.id
+
+
+def update(session, data):
+    '''
+        Description
+            checks to see if client_id is in table,
+            if it is, then only update the none primary key items.
+            else return 0.
+
+        params
+            session: sqlalchemy.orm.session.Session
+            data: {key: value} dictionary
+
+        return
+            Returns client id and commits to database
+    '''
+    client_id = data['client_id']
+    client_in_table = session.query(Client).filter_by(id=client_id).first()
+    if client_in_table:
+        data['enable_processing'] = data['enableProcessing']
+        data.pop('client_id', None)
+        data.pop('enableProcessing', None)
+        session.query(Client).filter_by(id=client_id).update(data)
+        session.commit()
+        return client_id
+    else:
+        return 0
 
 
 def delete(session, data):
