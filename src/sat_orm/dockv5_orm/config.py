@@ -38,10 +38,6 @@ class Config(Base):
     firmware_version = Column(Integer,nullable=True)
     description = Column(String(500),nullable=True)
 
-    # Relationships 
-    dock_phase = relationship('DockPhase',order_by='DockPhase.timestamp.desc()',back_populates='config',uselist=False)
-    dock_phases = relationship('DockPhase',order_by='DockPhase.timestamp.desc()',back_populates='configs')
-
     @validates('client_id')
     def validate_client_id(self,key,client_id):
         if client_id == None:
@@ -74,7 +70,6 @@ class Config(Base):
         else:
             return barcode_regex
 
-    
     @validates('deployment_stage')
     def validate_deployment_stage(self,key,deployment_stage):
         if deployment_stage == None:
