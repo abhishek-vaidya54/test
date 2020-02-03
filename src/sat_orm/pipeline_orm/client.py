@@ -5,6 +5,7 @@ LICENSE:
  
 CONTRIBUTORS: 
             Vincent Turnier
+            Reuben Tan
 
 CLASSIFICATION: 
             Highly Sensitive
@@ -38,12 +39,6 @@ class Client(Base):
     db_modified_at = Column(DateTime,default=datetime.datetime.utcnow,onupdate=datetime.datetime.utcnow,nullable=False)
     prefix = Column(String(255), nullable=False)
     enable_processing = Column(Boolean, nullable=False, server_default=true())
-    # guid = Column(String(32),nullable=False)
-    # domain = Column(String(255),nullable=True)
-    # account_lock_timeout = Column(Integer,nullable=True)
-    # dynamic_shift = Column(Boolean,nullable=False)
-    # client_regex_code = Column(String(255),nullable=True)
-    # algo_version = Column(Integer,nullable=True)
 
     # Table Constraints
     PrimaryKeyConstraint('id')
