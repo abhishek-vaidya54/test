@@ -117,9 +117,7 @@ class Warehouse(Base):
             'display_names':self.display_names,
             'utc_op_day_start':self.utc_op_day_start,
             'week_start':self.week_start,
-            'show_engagment':self.show_engagement,
-            'update_engagement':self.update_engagement,
-            'hide_judgement':self.hide_judgement,
+            'update_engagement':self.update_engagement
         }
 
     def __repr__(self):
