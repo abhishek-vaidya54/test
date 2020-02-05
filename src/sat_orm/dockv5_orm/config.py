@@ -5,6 +5,7 @@ LICENSE:
  
 CONTRIBUTORS: 
             Vincent Turnier
+            Norberto Fernandez
 
 CLASSIFICATION: 
             Highly Sensitive
@@ -55,7 +56,7 @@ class Config(Base):
         if dock_id == None:
             raise Exception('dock_id cannot be Null')
         else:
-            dock_id_length = 14
+            dock_id_length = 12
             assert isinstance(dock_id,str)
             assert len(dock_id) == dock_id_length
             return dock_id

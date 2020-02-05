@@ -5,6 +5,7 @@ LICENSE:
  
 CONTRIBUTORS: 
             Vincent Turnier
+            Norberto Fernandez
 
 CLASSIFICATION: 
             Highly Sensitive
@@ -38,15 +39,15 @@ class Warehouse(Base):
     display_names = Column(Boolean, nullable=False)
     utc_op_day_start = Column(String(45), nullable=False)
     week_start = Column(String(45), nullable=False)
-    show_engagement = Column(Boolean,nullable=False)
+    # show_engagement = Column(Boolean,nullable=False)
     update_engagement = Column(Boolean, nullable=False)
-    hide_judgement = Column(Boolean,nullable=False)
-    # standard_score = Column(Float,nullable=True)
-    # min_safety_score = Column(Float,nullable=True)
-    # max_safety_score = Column(Float,nullable=True)
-    # first_quarter_safety_score = Column(Float,nullable=True)
-    # median_safety_score = Column(Float,nullable=True)
-    # third_quarter_safety_score = Column(Float,nullable=True)
+    # hide_judgement = Column(Boolean,nullable=False)
+    standard_score = Column(Float,nullable=True)
+    min_safety_score = Column(Float,nullable=True)
+    max_safety_score = Column(Float,nullable=True)
+    first_quarter_safety_score = Column(Float,nullable=True)
+    median_safety_score = Column(Float,nullable=True)
+    third_quarter_safety_score = Column(Float,nullable=True)
 
     # Table Constraints
     PrimaryKeyConstraint('id')

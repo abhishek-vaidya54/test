@@ -1,0 +1,13 @@
+version: '3'
+
+services:
+  db:
+    build:
+      context: ./
+    container_name: sat_local_db
+    environment:
+      MYSQL_ROOT_PASSWORD: 'password'
+    ports:
+      - 3306:3306
+    expose:
+      - '3306'

@@ -5,6 +5,7 @@ LICENSE:
  
 CONTRIBUTORS: 
             Vincent Turnier
+            Norberto Fernandez
 
 CLASSIFICATION: 
             Highly Sensitive
@@ -35,13 +36,13 @@ class Client(Base):
     db_created_at = Column(DateTime,default=datetime.datetime.utcnow,nullable=False)
     db_modified_at = Column(DateTime,default=datetime.datetime.utcnow,onupdate=datetime.datetime.utcnow,nullable=False)
     prefix = Column(String(255), nullable=False)
-    guid = Column(String(32),nullable=False)
-    domain = Column(String(255),nullable=True)
+    # guid = Column(String(32),nullable=False)
+    # domain = Column(String(255),nullable=True)
     enable_processing = Column(Boolean, nullable=False, server_default=true())
-    account_lock_timeout = Column(Integer,nullable=True)
-    dynamic_shift = Column(Boolean,nullable=False)
-    client_regex_code = Column(String(255),nullable=True)
-    algo_version = Column(Integer,nullable=True)
+    # account_lock_timeout = Column(Integer,nullable=True)
+    # dynamic_shift = Column(Boolean,nullable=False)
+    # client_regex_code = Column(String(255),nullable=True)
+    # algo_version = Column(Integer,nullable=True)
 
     # Table Constraints
     PrimaryKeyConstraint('id')
