@@ -39,9 +39,7 @@ class Warehouse(Base):
     display_names = Column(Boolean, nullable=False)
     utc_op_day_start = Column(String(45), nullable=False)
     week_start = Column(String(45), nullable=False)
-    # show_engagement = Column(Boolean,nullable=False)
     update_engagement = Column(Boolean, nullable=False)
-    # hide_judgement = Column(Boolean,nullable=False)
     standard_score = Column(Float,nullable=True)
     min_safety_score = Column(Float,nullable=True)
     max_safety_score = Column(Float,nullable=True)
@@ -120,9 +118,7 @@ class Warehouse(Base):
             'display_names':self.display_names,
             'utc_op_day_start':self.utc_op_day_start,
             'week_start':self.week_start,
-            'show_engagment':self.show_engagement,
-            'update_engagement':self.update_engagement,
-            'hide_judgement':self.hide_judgement,
+            'update_engagement':self.update_engagement
         }
 
     def __repr__(self):
