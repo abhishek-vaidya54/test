@@ -5,6 +5,7 @@ LICENSE:
  
 CONTRIBUTORS: 
             Vincent Turnier
+            Hashmat Ibrahimi
 
 CLASSIFICATION: 
             Highly Sensitive
@@ -17,7 +18,7 @@ CLASSIFICATION:
 import datetime
 
 # Third Party Imports
-from sqlalchemy import ForeignKey, Column, Integer, DateTime, Text, Time, String
+from sqlalchemy import ForeignKey, Column, Integer, DateTime, Text, String
 from sqlalchemy.orm import relationship, validates
 
 # Local Application Import
@@ -82,8 +83,8 @@ class Shifts(Base):
         'id': self.id,
         'warehouse_id': self.warehouse_id,
         'name': self.name,
-        'shift_start':self.shift_start,
-        'shift_end':self.shift_end,
+        'shiftStart':self.shift_start,
+        'shiftEnd':self.shift_end,
         'color':self.color,
         'description':self.description,
         'group_administrator':self.group_administrator,
