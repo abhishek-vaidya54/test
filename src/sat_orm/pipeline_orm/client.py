@@ -5,7 +5,9 @@ LICENSE:
  
 CONTRIBUTORS: 
             Vincent Turnier
+            Norberto Fernandez
             Reuben Tan
+
 
 CLASSIFICATION: 
             Highly Sensitive
@@ -39,6 +41,7 @@ class Client(Base):
     db_modified_at = Column(DateTime,default=datetime.datetime.utcnow,onupdate=datetime.datetime.utcnow,nullable=False)
     prefix = Column(String(255), nullable=False)
     enable_processing = Column(Boolean, nullable=False, server_default=true())
+
 
     # Table Constraints
     PrimaryKeyConstraint('id')
