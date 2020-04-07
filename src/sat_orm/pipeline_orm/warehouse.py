@@ -41,12 +41,12 @@ class Warehouse(Base):
     show_engagement = Column(Boolean,nullable=False)
     update_engagement = Column(Boolean, nullable=False)
     hide_judgement = Column(Boolean,nullable=False)
-    # standard_score = Column(Float,nullable=True)
-    # min_safety_score = Column(Float,nullable=True)
-    # max_safety_score = Column(Float,nullable=True)
-    # first_quarter_safety_score = Column(Float,nullable=True)
-    # median_safety_score = Column(Float,nullable=True)
-    # third_quarter_safety_score = Column(Float,nullable=True)
+    standard_score = Column(Float,nullable=True)
+    min_safety_score = Column(Float,nullable=True)
+    max_safety_score = Column(Float,nullable=True)
+    first_quarter_safety_score = Column(Float,nullable=True)
+    median_safety_score = Column(Float,nullable=True)
+    third_quarter_safety_score = Column(Float,nullable=True)
 
     # Table Constraints
     PrimaryKeyConstraint('id')

@@ -5,6 +5,7 @@ LICENSE:
  
 CONTRIBUTORS: 
             Vincent Turnier
+            Hashmat Ibrahimi
 
 CLASSIFICATION: 
             Highly Sensitive
@@ -17,7 +18,7 @@ CLASSIFICATION:
 import datetime
 
 # Third Party Imports
-from sqlalchemy import ForeignKey, Column, Integer, DateTime, Text, Time, String
+from sqlalchemy import ForeignKey, Column, Integer, DateTime, Text, String
 from sqlalchemy.orm import relationship, validates
 
 # Local Application Import
@@ -30,8 +31,8 @@ class Shifts(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     warehouse_id = Column(Integer,ForeignKey('warehouse.id'),nullable=False)
     name = Column(String(255), nullable=False)
-    shift_start = Column(Time, nullable=False)
-    shift_end = Column(Time, nullable=False)
+    shift_start = Column(DateTime, nullable=False)
+    shift_end = Column(DateTime, nullable=False)
     group_administrator = Column(String(255), nullable=False)
     description = Column(Text, nullable=True)
     color = Column(String(255), nullable=True)
@@ -82,8 +83,8 @@ class Shifts(Base):
         'id': self.id,
         'warehouse_id': self.warehouse_id,
         'name': self.name,
-        'shift_start':self.shift_start,
-        'shift_end':self.shift_end,
+        'shiftStart':self.shift_start,
+        'shiftEnd':self.shift_end,
         'color':self.color,
         'description':self.description,
         'group_administrtor':self.group_administrator,
