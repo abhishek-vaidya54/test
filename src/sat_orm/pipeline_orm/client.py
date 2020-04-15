@@ -41,7 +41,7 @@ class Client(Base):
     db_modified_at = Column(DateTime,default=datetime.datetime.utcnow,onupdate=datetime.datetime.utcnow,nullable=False)
     prefix = Column(String(255), nullable=False)
     enable_processing = Column(Boolean, nullable=False, server_default=true())
-
+    
 
     # Table Constraints
     PrimaryKeyConstraint('id')
@@ -225,6 +225,3 @@ def has_athlete(session, client_id):
         return True
     else:
         return False
-
-
-

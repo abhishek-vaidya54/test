@@ -81,7 +81,7 @@ class Shifts(Base):
     def as_dict(self):
         return {
         'id': self.id,
-        'warehouse_id': self.warehouse_id,
+        'warehouseId': self.warehouse_id,
         'name': self.name,
         'shiftStart':self.shift_start,
         'shiftEnd':self.shift_end,
