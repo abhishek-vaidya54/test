@@ -34,24 +34,10 @@ def test_warehouse_validate_display_names():
     assert 'cannot be Null' in str(exc_info.value)
 
 @pytest.mark.input_validation
-def test_warehouse_validate_show_engagement():
-    ''' Validate warehouse show_engagement Column'''
-    with pytest.raises(Exception) as exc_info:
-        assert Warehouse(show_engagement=None)
-    assert 'cannot be Null' in str(exc_info.value)
-
-@pytest.mark.input_validation
 def test_warehouse_validate_update_engagement():
     ''' Validate warehouse update_engagement Column'''
     with pytest.raises(Exception) as exc_info:
         assert Warehouse(update_engagement=None)
-    assert 'cannot be Null' in str(exc_info.value)
-
-@pytest.mark.input_validation
-def test_warehouse_validate_hide_judgement():
-    ''' Validate warehouse hide_judgement Column'''
-    with pytest.raises(Exception) as exc_info:
-        assert Warehouse(hide_judgement=None)
     assert 'cannot be Null' in str(exc_info.value)
 
 @pytest.mark.test_return_type
