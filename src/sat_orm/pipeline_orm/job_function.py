@@ -42,11 +42,11 @@ class JobFunction(Base):
     db_created_at = Column(DateTime,default=datetime.datetime.utcnow,nullable=False)
     db_modified_at = Column(DateTime,default=datetime.datetime.utcnow,onupdate=datetime.datetime.utcnow,nullable=False)
     standard_score = Column(Float)
-    # min_safety_score = Column(Float,nullable=True)
-    # max_safety_score = Column(Float,nullable=True)
-    # first_quarter_safety_score = Column(Float,nullable=True)
-    # median_safety_score = Column(Float,nullable=True)
-    # third_quarter_safety_score = Column(Float,nullable=True)
+    min_safety_score = Column(Float,nullable=True)
+    max_safety_score = Column(Float,nullable=True)
+    first_quarter_safety_score = Column(Float,nullable=True)
+    median_safety_score = Column(Float,nullable=True)
+    third_quarter_safety_score = Column(Float,nullable=True)
 
     # Table Constraints
     PrimaryKeyConstraint('id')
@@ -81,7 +81,7 @@ class JobFunction(Base):
         "id": self.id,
         "warehouse_id": self.warehouse_id,
         "name": self.name,
-        'max_package+mass':self.max_package_mass,
+        'max_package_mass':self.max_package_mass,
         'group_administrator':self.group_administrator,
         'max_package_weight':self.max_package_weight,
         'min_package_weight':self.min_package_weight,
@@ -92,13 +92,18 @@ class JobFunction(Base):
         'color':self.color,
         'db_created_at':self.db_created_at,
         'db_modified_at':self.db_modified_at,
-        'standard_score':self.standard_score
+        'standard_score':self.standard_score,
+        'min_safety_score': self.min_safety_score,
+        'max_safety_score': self.max_safety_score,
+        'first_quarter_safety_score': self.first_quarter_safety_score,
+        'median_safety_score': self.median_safety_score,
+        'third_quarter_safety_score': self.third_quarter_safety_score
         }
 
     def __repr__(self):
         return str(self.as_dict())
 
-# 'min_safety_score':self.min_safety_score,
+#         'min_safety_score':self.min_safety_score,
 #         'max_safety_score':self.max_safety_score,
 #         'first_quarter_safety_score':self.first_quarter_safety_score,
 #         'median_safety_score':self.median_safety_score,
