@@ -51,6 +51,8 @@ class IndustrialAthlete(Base):
                             onupdate=datetime.datetime.utcnow, nullable=False)
     setting_id = Column(Integer, nullable=True)
     group_id = Column(Integer, nullable=True)
+    job_function_change_date = Column(DateTime, nullable=True)
+    gender_change_date = Column(DateTime, nullable=True)
 
     # Table Relationships
     client = relationship(

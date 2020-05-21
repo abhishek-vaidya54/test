@@ -42,7 +42,6 @@ class Client(Base):
     prefix = Column(String(255), nullable=False)
     enable_processing = Column(Boolean, nullable=False, server_default=true())
     
-
     # Table Constraints
     PrimaryKeyConstraint('id')
     UniqueConstraint('domain','name')
@@ -65,13 +64,6 @@ class Client(Base):
         else:
             return prefix
     
-    @validates('guid')
-    def validate_guid(self,key,guid):
-        if guid == None:
-            raise Exception('guid cannot be Null')
-        else:
-            return guid
-    
     @validates('enable_processing')
     def validate_enable_processing(self,key,enable_processing):
         if enable_processing == None:
@@ -79,13 +71,6 @@ class Client(Base):
         else:
             return enable_processing
     
-    @validates('dynamic_shift')
-    def validate_dynamic_shift(self,key,dynamic_shift):
-        if dynamic_shift == None:
-            raise Exception('dynamic_shift cannot be Null')
-        else:
-            return dynamic_shift
-
     def as_dict(self):
         return {
             'id':self.id,

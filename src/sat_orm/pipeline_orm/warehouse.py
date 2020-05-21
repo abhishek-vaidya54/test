@@ -88,28 +88,14 @@ class Warehouse(Base):
             raise Exception('display_names cannot be Null')
         else:
             return display_names
-
-    @validates('show_engagement')
-    def validate_show_engagement(self, key, show_engagement):
-        if show_engagement == None:
-            raise Exception('show_engagement cannot be Null')
-        else:
-            return show_engagement
-
+    
     @validates('update_engagement')
     def validate_update_engagement(self, key, update_engagement):
         if update_engagement == None:
             raise Exception("update_engagement cannot be Null")
         else:
             return update_engagement
-
-    @validates('hide_judgement')
-    def validate_hide_judgement(self, key, hide_judgement):
-        if hide_judgement == None:
-            raise Exception('hide_judgement cannot be Null')
-        else:
-            return hide_judgement
-
+    
     def as_dict(self):
         return {
             'id': self.id,
