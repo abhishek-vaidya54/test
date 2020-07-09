@@ -159,4 +159,16 @@ class IndustrialAthleteFactory(factory.alchemy.SQLAlchemyModelFactory):
         sqlalchemy_session_persistence = "commit"
 
 
+class ExternalAdminUserFactory(factory.alchemy.SQLAlchemyModelFactory):
+    id = factory.Sequence(lambda n: n)
+    email = "email-{0}@email.com".format(random_str())
+    username = str(uuid.uuid4())
+    client_id = ClientFactory.id
+    client = factory.SubFactory(ClientFactory)
+    warehouse_id = WarehouseFactory.id
+    warehouse = factory.SubFactory(WarehouseFactory)
+
+    class Meta:
+        model = ExternalAdminUser
+        sqlalchemy_session_persistence = "commit"
 
