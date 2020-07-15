@@ -16,7 +16,14 @@ import uuid
 from smalluuid import SmallUUID
 
 # Local Application Import
-from sat_orm.pipeline import Client, IndustrialAthlete, JobFunction, Warehouse, Shifts, ExternalAdminUser
+from sat_orm.pipeline import (
+    Client,
+    IndustrialAthlete,
+    JobFunction,
+    Warehouse,
+    Shifts,
+    ExternalAdminUser,
+)
 
 
 def random_str():
@@ -157,6 +164,9 @@ class IndustrialAthleteFactory(factory.alchemy.SQLAlchemyModelFactory):
     class Meta:
         model = IndustrialAthlete
         sqlalchemy_session_persistence = "commit"
+
+    class Params:
+        custom_client_id = None
 
 
 class ExternalAdminUserFactory(factory.alchemy.SQLAlchemyModelFactory):
