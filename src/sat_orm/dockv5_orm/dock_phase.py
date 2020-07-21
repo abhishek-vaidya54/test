@@ -17,7 +17,7 @@ CLASSIFICATION:
 import datetime
 
 # Third Party Imports
-from sqlalchemy import Column, Integer, String, Enum, DateTime, ForeignKey
+from sqlalchemy import Column, Integer, String, Enum, DateTime, ForeignKey, Boolean
 from sqlalchemy.orm import relationship, validates
 from sqlalchemy.sql import text
 
@@ -31,10 +31,33 @@ class DockPhase(Base):
     # Table inputs
     id = Column(Integer,primary_key=True,autoincrement=True)
     dock_id = Column(String,ForeignKey('config.dock_id'),nullable=False)
+    description = Column(String(255), nullable=False)
+
+    warehouse_id = Column(
+        Integer,
+        ForeignKey('warehouse.id'),
+        nullable=False
+    )
+    warehouse = relationship(
+        'Warehouse',
+        foreign_keys=warehouse_id,
+        backref='dock_phase'
+    )
+
+    client_id = Column(
+        Integer,
+        ForeignKey('client.id'),
+        nullable=False
+    )
+    client = relationship(
+        'Client',
+        foreign_keys=client_id,
+        backref='dock_phase'
+    )    
+    dock_firmware = Column(Boolean, nullable=True, default=False)
     timestamp = Column(DateTime,server_default=text('CURRENT_TIMESTAMP'),nullable=False)
     phase = Column(Enum('DEPLOYED','NOT DEPLOYED','MAINTENANCE'),nullable=False,default='NOT DEPLOYED')
     deployment_stage = Column(String(20), nullable=False)
-
     config = relationship('Config',back_populates='dock_phase')
     configs = relationship('Config',back_populates='dock_phases')
 
@@ -70,6 +93,10 @@ class DockPhase(Base):
         return {
             'id':self.id,
             'dock_id':self.dock_id,
+            'warehouse_id':self.dock_firmware,
+            'description':self.warehouse_id,
+            'dock_firmware':self.description,
+            'client_id':self.client_id,
             'timestamp':self.timestamp,
             'phase':self.phase,
             'deployment_stage':self.deployment_stage
