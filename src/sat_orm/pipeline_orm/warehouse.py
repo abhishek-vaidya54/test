@@ -1,4 +1,4 @@
-'''
+"""
 LICENSE:
     This file is subject to the terms and conditions defined in
     file 'LICENSE.txt', which is part of this source code package.
@@ -12,13 +12,23 @@ CLASSIFICATION:
 
     **** Add Contributors name if you have contributed to this file ****
 *********************************************************************************
-'''
+"""
 
 # Standard Library Import
 import datetime
 
 # Third Party Import
-from sqlalchemy import ForeignKey, PrimaryKeyConstraint, UniqueConstraint, Column, String, Integer, DateTime, Float, Boolean
+from sqlalchemy import (
+    ForeignKey,
+    PrimaryKeyConstraint,
+    UniqueConstraint,
+    Column,
+    String,
+    Integer,
+    DateTime,
+    Float,
+    Boolean,
+)
 from sqlalchemy.orm import relationship, validates
 
 # Local Application Import
@@ -26,90 +36,99 @@ from sat_orm.pipeline_orm.pipeline_base import Base
 
 
 class Warehouse(Base):
-    __tablename__ = 'warehouse'
+    __tablename__ = "warehouse"
 
     # Table Columns
     id = Column(Integer, primary_key=True, autoincrement=True)
-    client_id = Column(Integer, ForeignKey('client.id'), nullable=False)
+    client_id = Column(Integer, ForeignKey("client.id"), nullable=False)
     name = Column(String(255), nullable=False)
     location = Column(String(500), nullable=True)
-    db_created_at = Column(
-        DateTime, default=datetime.datetime.utcnow, nullable=False)
-    db_modified_at = Column(DateTime, default=datetime.datetime.utcnow,
-                            onupdate=datetime.datetime.utcnow, nullable=False)
-    prefered_timezone = Column(
-        String(100), server_default='UTC', nullable=False)
+    db_created_at = Column(DateTime, default=datetime.datetime.utcnow, nullable=False)
+    db_modified_at = Column(
+        DateTime,
+        default=datetime.datetime.utcnow,
+        onupdate=datetime.datetime.utcnow,
+        nullable=False,
+    )
+    prefered_timezone = Column(String(100), server_default="UTC", nullable=False)
     algo_version = Column(Integer, nullable=True)
     display_names = Column(Boolean, nullable=False)
     utc_op_day_start = Column(String(45), nullable=False)
     week_start = Column(String(45), nullable=False)
     update_engagement = Column(Boolean, nullable=False)
-    standard_score = Column(Float,nullable=True)
-    min_safety_score = Column(Float,nullable=True)
-    max_safety_score = Column(Float,nullable=True)
-    first_quarter_safety_score = Column(Float,nullable=True)
-    median_safety_score = Column(Float,nullable=True)
-    third_quarter_safety_score = Column(Float,nullable=True)
+    standard_score = Column(Float, nullable=True)
+    min_safety_score = Column(Float, nullable=True)
+    max_safety_score = Column(Float, nullable=True)
+    first_quarter_safety_score = Column(Float, nullable=True)
+    median_safety_score = Column(Float, nullable=True)
+    third_quarter_safety_score = Column(Float, nullable=True)
+
+    number_of_user_allocated = Column(Integer, nullable=False)
+    city = Column(String(30), nullable=False)
+    state = Column(String(30), nullable=False)
+    country = Column(String(30), nullable=False)
+    industry = Column(String(100), nullable=False)
+    latitude = Column(Float, nullable=False)
+    longitude = Column(Float, nullable=False)
 
     # Table Constraints
-    PrimaryKeyConstraint('id')
+    PrimaryKeyConstraint("id")
 
     # Table relationships
-    client = relationship('Client', back_populates='warehouses', uselist=False)
-    industrial_athletes = relationship(
-        "IndustrialAthlete", back_populates='warehouse')
-    job_functions = relationship('JobFunction', back_populates='warehouse')
-    shifts = relationship('Shifts', back_populates='warehouse')
+    client = relationship("Client", back_populates="warehouses", uselist=False)
+    industrial_athletes = relationship("IndustrialAthlete", back_populates="warehouse")
+    job_functions = relationship("JobFunction", back_populates="warehouse")
+    shifts = relationship("Shifts", back_populates="warehouse")
 
-    @validates('client_id')
+    @validates("client_id")
     def validate_client_id(self, key, client_id):
         if client_id == None:
-            raise Exception('client_id cannot be Null')
+            raise Exception("client_id cannot be Null")
         else:
             return client_id
 
-    @validates('name')
+    @validates("name")
     def validate_name(self, key, name):
         if name == None:
-            raise Exception('name cannot be Null')
+            raise Exception("name cannot be Null")
         else:
             return name
 
-    @validates('prefered_timezone')
+    @validates("prefered_timezone")
     def validate_prefered_timezone(self, key, prefered_timezone):
         if prefered_timezone == None:
-            raise Exception('prefered_timezone cannot be Null')
+            raise Exception("prefered_timezone cannot be Null")
         else:
             return prefered_timezone
 
-    @validates('display_names')
+    @validates("display_names")
     def validate_display_names(self, key, display_names):
         if display_names == None:
-            raise Exception('display_names cannot be Null')
+            raise Exception("display_names cannot be Null")
         else:
             return display_names
-    
-    @validates('update_engagement')
+
+    @validates("update_engagement")
     def validate_update_engagement(self, key, update_engagement):
         if update_engagement == None:
             raise Exception("update_engagement cannot be Null")
         else:
             return update_engagement
-    
+
     def as_dict(self):
         return {
-            'id': self.id,
-            'client_id': self.client_id,
-            'name': self.name,
-            'location': self.location,
-            'db_created_at': self.db_created_at,
-            'db_modified_at': self.db_modified_at,
-            'prefered_timezone': self.prefered_timezone,
-            'algo_version':self.algo_version,
-            'display_names':self.display_names,
-            'utc_op_day_start':self.utc_op_day_start,
-            'week_start':self.week_start,
-            'update_engagement':self.update_engagement
+            "id": self.id,
+            "client_id": self.client_id,
+            "name": self.name,
+            "location": self.location,
+            "db_created_at": self.db_created_at,
+            "db_modified_at": self.db_modified_at,
+            "prefered_timezone": self.prefered_timezone,
+            "algo_version": self.algo_version,
+            "display_names": self.display_names,
+            "utc_op_day_start": self.utc_op_day_start,
+            "week_start": self.week_start,
+            "update_engagement": self.update_engagement,
         }
 
     def __repr__(self):
