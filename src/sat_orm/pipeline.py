@@ -14,6 +14,7 @@ from sat_orm.pipeline_orm.job_function import JobFunction
 from sat_orm.pipeline_orm.shifts import Shifts
 from sat_orm.pipeline_orm.industrial_athlete import IndustrialAthlete
 from sat_orm.pipeline_orm.sensors import Sensors
+from sat_orm.pipeline_orm.settings import Setting
 from sat_orm.pipeline_orm.external_admin_user import ExternalAdminUser
 
 __Version__ = "0.2.4"
