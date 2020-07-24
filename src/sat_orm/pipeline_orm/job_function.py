@@ -66,7 +66,7 @@ class JobFunction(Base):
     median_safety_score = Column(Float, nullable=True)
     third_quarter_safety_score = Column(Float, nullable=True)
     settings_id = Column(Integer, ForeignKey("settings.id"), nullable=False)
-    settings = relationship("Settings", foreign_keys=settings_id, backref="settings")
+    settings = relationship("Setting", foreign_keys=settings_id, backref="settings")
 
     # Table Constraints
     PrimaryKeyConstraint("id")
