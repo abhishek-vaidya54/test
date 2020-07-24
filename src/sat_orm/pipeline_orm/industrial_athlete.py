@@ -50,7 +50,7 @@ class IndustrialAthlete(Base):
     db_modified_at = Column(DateTime, default=datetime.datetime.utcnow,
                             onupdate=datetime.datetime.utcnow, nullable=False)
     setting_id = Column(Integer, nullable=True)
-    group_id = Column(Integer, nullable=True)
+    group_id = Column(Integer, ForeignKey('groups.id'), nullable=True)
     job_function_change_date = Column(DateTime, nullable=True)
     gender_change_date = Column(DateTime, nullable=True)
 
@@ -63,6 +63,8 @@ class IndustrialAthlete(Base):
         'Shifts', back_populates='industrial_athletes', uselist=False)
     job_function = relationship(
         'JobFunction', back_populates='industrial_athletes', uselist=False)
+    groups = relationship(
+        'Groups', back_populates='industrial_athletes', uselist=False)
 
     @validates('client_id')
     def validate_client_id(self, key, client_id):

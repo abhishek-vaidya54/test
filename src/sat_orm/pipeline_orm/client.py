@@ -41,7 +41,8 @@ class Client(Base):
     db_modified_at = Column(DateTime,default=datetime.datetime.utcnow,onupdate=datetime.datetime.utcnow,nullable=False)
     prefix = Column(String(255), nullable=False)
     enable_processing = Column(Boolean, nullable=False, server_default=true())
-    
+    subdomain = Column(String(255), nullable=True)
+
     # Table Constraints
     PrimaryKeyConstraint('id')
     UniqueConstraint('domain','name')
