@@ -22,9 +22,6 @@ def upgrade():
         sa.Column("number_of_user_allocated", sa.Integer(), nullable=False),
     )
     op.add_column(
-        "warehouse", sa.Column("status", sa.String(length=20), nullable=False),
-    )
-    op.add_column(
         "warehouse", sa.Column("city", sa.String(length=20), nullable=False),
     )
     op.add_column(
@@ -46,7 +43,6 @@ def upgrade():
 
 def downgrade():
     op.drop_column("warehouse", "number_of_user_allocated")
-    op.drop_column("warehouse", "status")
     op.drop_column("warehouse", "city")
     op.drop_column("warehouse", "state")
     op.drop_column("warehouse", "country")
