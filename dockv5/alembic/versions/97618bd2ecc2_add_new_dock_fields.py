@@ -23,7 +23,7 @@ def upgrade():
             "client_id",
             sa.Integer(),
             sa.ForeignKey("pipeline.client.id"),
-            nullable=False,
+            nullable=True,
         ),
     )
     op.add_column(
@@ -32,7 +32,7 @@ def upgrade():
             "warehouse_id",
             sa.Integer(),
             sa.ForeignKey("pipeline.warehouse.id"),
-            nullable=False,
+            nullable=True,
         ),
     )
     op.add_column(
