@@ -23,6 +23,7 @@ from sat_orm.pipeline import (
     Warehouse,
     Shifts,
     ExternalAdminUser,
+    Setting,
 )
 
 
@@ -40,6 +41,10 @@ class ClientFactory(factory.alchemy.SQLAlchemyModelFactory):
     db_created_at = datetime.datetime.now()
     db_modified_at = datetime.datetime.now()
     enable_processing = True
+    status = factory.fuzzy.FuzzyChoice(["pilot", "deployment", "rollout", "inactive"])
+    contracted_users = factory.fuzzy.FuzzyInteger(1, 999999)
+    active_inactive_date = datetime.datetime.now()
+
     # @factory.post_generation
     # def warehouse(self,create,extracted, **kwargs):
     # if extracted is None:
@@ -70,6 +75,13 @@ class WarehouseFactory(factory.alchemy.SQLAlchemyModelFactory):
         ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
     )
     update_engagement = factory.Sequence(lambda n: n % 2)
+    number_of_user_allocated = factory.fuzzy.FuzzyInteger(1, 999999)
+    city = factory.fuzzy.FuzzyText(length=12)
+    state = factory.fuzzy.FuzzyText(length=12)
+    country = factory.fuzzy.FuzzyText(length=12)
+    industry = factory.fuzzy.FuzzyText(length=20)
+    latitude = factory.fuzzy.FuzzyFloat(30, 120)
+    longitude = factory.fuzzy.FuzzyFloat(30, 120)
     # @factory.post_generation
     # def job_functions(self,create,extracted,**kwargs):
     #     if extracted is None:
@@ -118,9 +130,20 @@ class ShiftsFactory(factory.alchemy.SQLAlchemyModelFactory):
     color = None
     description = factory.Faker("sentence")
     group_administrator = factory.Faker("email")
+    timezone = factory.fuzzy.FuzzyChoice(["US Eastern Time", "US Central Time"])
 
     class Meta:
         model = Shifts
+        sqlalchemy_session_persistence = "commit"
+
+
+class SettingsFactory(factory.alchemy.SQLAlchemyModelFactory):
+    id = factory.Sequence(lambda n: n)
+    target_type = str(uuid.uuid4())
+    target_id = factory.Sequence(lambda n: n)
+
+    class Meta:
+        model = Setting
         sqlalchemy_session_persistence = "commit"
 
 
@@ -140,6 +163,7 @@ class JobFunctionFactory(factory.alchemy.SQLAlchemyModelFactory):
     max_package_weight = 0
     min_package_weight = 0
     standard_score = 0
+    settings = factory.SubFactory(SettingsFactory)
 
     class Meta:
         model = JobFunction
