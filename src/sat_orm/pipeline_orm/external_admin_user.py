@@ -25,6 +25,8 @@ class ExternalAdminUser(Base):
 
     client_id = Column(Integer, ForeignKey('client.id'), nullable=False)
     client = relationship(Client, backref=__tablename__)
+    
+    role = Column(String(20), nullable=True)
 
     db_created_at = Column(
         DateTime,
