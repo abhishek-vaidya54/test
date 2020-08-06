@@ -31,7 +31,7 @@ class SensorEvents(Base):
 
     id = Column(Integer,primary_key=True,autoincrement=True)
     timestamp = Column(DateTime,nullable=False)
-    type = Column(String(45),nullable=True)
+    type = Column(String(45),index=True,nullable=True)
     dockID = Column(String(45),nullable=True)
     clientID = Column(String(45),nullable=True)
     warehouseID = Column(String(45), nullable=True)
