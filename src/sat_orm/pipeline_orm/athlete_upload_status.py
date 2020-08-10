@@ -5,30 +5,29 @@ import uuid
 import re
 
 from sqlalchemy import ForeignKey, true, false
-from sqlalchemy_utils import EmailType, PasswordType
 from sqlalchemy.dialects.mysql import INTEGER
 
 from itsdangerous import TimedJSONWebSignatureSerializer
-from flask import current_app
-from . import db
+from sqlalchemy import ForeignKey, Column, String, Integer, DateTime , desc
+from sqlalchemy.orm import relationship, validates
 
 logger = logging.getLogger(__name__)
+from sat_orm.pipeline_orm.pipeline_base import Base
 
-
-class AthleteUploadStatus(db.Model):
+class AthleteUploadStatus(Base):
     __tablename__ = 'athlete_upload_status'
 
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    username = db.Column(db.String(255), nullable=False)
-    processed = db.Column(db.Integer, nullable=False)
-    total = db.Column(db.Integer, nullable=False)
-    db_created_at = db.Column(
-        db.DateTime,
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    username = Column(String(255), nullable=False)
+    processed = Column(Integer, nullable=False)
+    total = Column(Integer, nullable=False)
+    db_created_at = Column(
+        DateTime,
         default=datetime.datetime.utcnow,
         nullable=False
     )
-    db_modified_at = db.Column(
-        db.DateTime,
+    db_modified_at = Column(
+        DateTime,
         default=datetime.datetime.utcnow,
         onupdate=datetime.datetime.utcnow,
         nullable=False
