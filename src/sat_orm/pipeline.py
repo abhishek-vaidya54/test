@@ -14,7 +14,6 @@ from sat_orm.pipeline_orm.job_function import JobFunction
 from sat_orm.pipeline_orm.shifts import Shifts
 from sat_orm.pipeline_orm.industrial_athlete import IndustrialAthlete
 from sat_orm.pipeline_orm.sensors import Sensors
-from sat_orm.pipeline_orm.settings import Setting
 from sat_orm.pipeline_orm.external_admin_user import ExternalAdminUser
 from sat_orm.pipeline_orm.athlete_upload_status import AthleteUploadStatus
 from sat_orm.pipeline_orm.imported_industrial_athlete import ImportedIndustrialAthlete
