@@ -25,16 +25,14 @@ class ImportedIndustrialAthlete(Base):
         backref="athlete_upload_status",
     )
     client_id = Column(Integer, nullable=False)
-    gender = Column(String(1), nullable=False)
+    gender = Column(String(1), nullable=True)
     first_name = Column(String(255), nullable=False)
     last_name = Column(String(255), nullable=False)
     external_id = Column(String(255), nullable=False)
-    schedule = Column(String(255), nullable=True)
     weight = Column(Integer, nullable=True)
     height = Column(Integer, nullable=True)
-    prior_back_injuries = Column(String(255), nullable=True)
 
-    hire_date = Column(DateTime, default=datetime.date.today(), nullable=True)
+    hire_date = Column(DateTime, default=datetime.date.today(), nullable=False)
 
     termination_date = Column(DateTime, nullable=True)
 
@@ -50,7 +48,6 @@ class ImportedIndustrialAthlete(Base):
         nullable=False,
     )
 
-    setting_id = Column(Integer)
     group_id = Column(Integer, nullable=True)
 
     def as_dict(self):
