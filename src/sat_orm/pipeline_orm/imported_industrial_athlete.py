@@ -69,9 +69,16 @@ class ImportedIndustrialAthlete(Base):
 
     def as_dict(self):
         return {
-        "id": self.id,
-        "warehouse_id": self.warehouse_id
-    }
+            'id': self.id,
+            'client_id': self.client_id,
+            'warehouse_id': self.warehouse_id,
+            'job_function_id': self.job_function_id,
+            'shift_id': self.shift_id,
+            'first_name': self.first_name,
+            'last_name': self.last_name,
+            'gender': self.gender,
+            'external_id': self.external_id
+        }
 
     @classmethod
     def get_warehouse_id(self, athlete_id):
