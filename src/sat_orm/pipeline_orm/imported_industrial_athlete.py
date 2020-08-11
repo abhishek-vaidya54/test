@@ -7,65 +7,48 @@ from sqlalchemy.orm import object_session
 
 from sat_orm.pipeline_orm.pipeline_base import Base
 
-from sqlalchemy import ForeignKey, Column, String, Integer, DateTime , desc
+from sqlalchemy import ForeignKey, Column, String, Integer, DateTime, desc
 from sqlalchemy.orm import relationship, validates
 
+
 class ImportedIndustrialAthlete(Base):
-    __tablename__ = 'imported_industrial_athlete'
+    __tablename__ = "imported_industrial_athlete"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
 
-    athlete_upload_status_id = Column(Integer, ForeignKey('athlete_upload_status.id'), nullable=False)
+    athlete_upload_status_id = Column(
+        Integer, ForeignKey("athlete_upload_status.id"), nullable=False
+    )
     client = relationship(
-        'AthleteUploadStatus',
+        "AthleteUploadStatus",
         foreign_keys=athlete_upload_status_id,
-        backref='athlete_upload_status'
+        backref="athlete_upload_status",
     )
     client_id = Column(Integer, nullable=False)
-    gender = Column(String(1), nullable=False)
+    gender = Column(String(1), nullable=True)
     first_name = Column(String(255), nullable=False)
     last_name = Column(String(255), nullable=False)
     external_id = Column(String(255), nullable=False)
-    schedule = Column(String(255), nullable=True)
     weight = Column(Integer, nullable=True)
     height = Column(Integer, nullable=True)
-    prior_back_injuries = Column(String(255), nullable=True)
 
-    hire_date = Column(
-        DateTime,
-        default=datetime.date.today(),
-        nullable=True
-    )
+    hire_date = Column(DateTime, default=datetime.date.today(), nullable=False)
 
-    termination_date = Column(
-        DateTime,
-        nullable=True
-    )
+    termination_date = Column(DateTime, nullable=True)
 
-    warehouse_id = Column(
-        Integer,
-        nullable=True
-    )
+    warehouse_id = Column(Integer, nullable=True)
     shift_id = Column(Integer, nullable=True)
-    job_function_id = Column(
-        Integer,
-        nullable=True
-    )
-  
-    db_created_at = Column(
-        DateTime,
-        default=datetime.datetime.utcnow,
-        nullable=False
-    )
+    job_function_id = Column(Integer, nullable=True)
+
+    db_created_at = Column(DateTime, default=datetime.datetime.utcnow, nullable=False)
     db_updated_at = Column(
         DateTime,
         default=datetime.datetime.utcnow,
         onupdate=datetime.datetime.utcnow,
-        nullable=False
+        nullable=False,
     )
 
-    setting_id = Column(Integer)
-    group_id = Column(Integer)
+    group_id = Column(Integer, nullable=True)
 
     def as_dict(self):
         return {
@@ -90,10 +73,5 @@ class ImportedIndustrialAthlete(Base):
 
 
     def __repr__(self):
-        return '%s@%s' % (self.id, self.client.id)
+        return "%s@%s" % (self.id, self.client.id)
 
-
-def get(athlete_id):
-    return session.query(ImportedIndustrialAthlete).filter(
-        ImportedIndustrialAthlete.id == athlete_id,
-    ).scalar()

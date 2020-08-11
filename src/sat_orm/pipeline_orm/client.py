@@ -57,6 +57,8 @@ class Client(Base):
     status = Column(String(20), nullable=False)
     contracted_users = Column(Integer, nullable=False)
     active_inactive_date = Column(DateTime, nullable=False)
+    firstname_format = Column(String(20), default="capital", nullable=False)
+    lastname_format = Column(String(20), default="capital", nullable=False)
 
     # Table Constraints
     PrimaryKeyConstraint("id")
