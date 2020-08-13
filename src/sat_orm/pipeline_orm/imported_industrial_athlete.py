@@ -60,7 +60,11 @@ class ImportedIndustrialAthlete(Base):
             'first_name': self.first_name,
             'last_name': self.last_name,
             'gender': self.gender,
-            'external_id': self.external_id
+            'external_id': self.external_id,
+            'weight': self.weight,
+            'height': self.height,
+            'hire_date': self.hire_date,
+            'termination_date': self.termination_date,
         }
 
     @classmethod
