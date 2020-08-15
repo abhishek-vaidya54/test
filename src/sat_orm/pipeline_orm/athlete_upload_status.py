@@ -23,6 +23,7 @@ class AthleteUploadStatus(Base):
     processed = Column(Integer, nullable=False)
     total = Column(Integer, nullable=False)
     client_id = Column(Integer, nullable=False)
+    connection_id = Column(String(30), nullable=True)
     db_created_at = Column(DateTime, default=datetime.datetime.utcnow, nullable=False)
     db_updated_at = Column(
         DateTime,
@@ -39,4 +40,3 @@ class AthleteUploadStatus(Base):
 
     def __repr__(self):
         return self.id
-
