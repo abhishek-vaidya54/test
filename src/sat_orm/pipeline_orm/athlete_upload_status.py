@@ -34,9 +34,13 @@ class AthleteUploadStatus(Base):
 
     def as_dict(self):
         return {
+            "id": getattr(self, "id"),
+            "username": getattr(self, "username"),
             "processed": getattr(self, "processed"),
             "total": getattr(self, "total"),
+            "client_id": getattr(self, "client_id"),
+            "connection_id": getattr(self, "connection_id"),
         }
 
-    def __repr__(self):
-        return self.id
+    # def __repr__(self):
+    #     return "%s" % (self.id)
