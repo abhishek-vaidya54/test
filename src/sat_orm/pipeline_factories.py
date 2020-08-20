@@ -24,6 +24,8 @@ from sat_orm.pipeline import (
     Shifts,
     ExternalAdminUser,
     Setting,
+    ImportedIndustrialAthlete,
+    AthleteUploadStatus,
 )
 
 
@@ -201,8 +203,43 @@ class ExternalAdminUserFactory(factory.alchemy.SQLAlchemyModelFactory):
     client = factory.SubFactory(ClientFactory)
     warehouse_id = WarehouseFactory.id
     warehouse = factory.SubFactory(WarehouseFactory)
+    role = factory.fuzzy.FuzzyChoice(["admin", "manager"])
 
     class Meta:
         model = ExternalAdminUser
         sqlalchemy_session_persistence = "commit"
 
+
+class AthleteUploadStatusFactory(factory.alchemy.SQLAlchemyModelFactory):
+    id = factory.Sequence(lambda n: n)
+    username = str(uuid.uuid4())
+    processed = factory.fuzzy.FuzzyInteger(1, 100)
+    total = 100
+    client_id = ClientFactory.id
+    connection_id = random_str()
+
+    class Meta:
+        model = AthleteUploadStatus
+        sqlalchemy_session_persistence = "commit"
+
+
+class ImportedIndustrialAthleteFactory(factory.alchemy.SQLAlchemyModelFactory):
+    id = factory.Sequence(lambda n: n)
+    athlete_upload_status = factory.SubFactory(AthleteUploadStatusFactory)
+    group_id = factory.Sequence(lambda n: n)
+    client_id = ClientFactory.id
+    warehouse_id = WarehouseFactory.id
+    shift_id = ShiftsFactory.id
+    job_function_id = JobFunctionFactory.id
+    gender = factory.fuzzy.FuzzyChoice(["f", "m"])
+    first_name = factory.Faker("first_name")
+    last_name = factory.Faker("last_name")
+    external_id = str(uuid.uuid4())
+    weight = factory.fuzzy.FuzzyInteger(60, 100)
+    height = factory.fuzzy.FuzzyInteger(150, 200)
+    hire_date = datetime.datetime.now()
+    termination_date = datetime.datetime.now()
+
+    class Meta:
+        model = ImportedIndustrialAthlete
+        sqlalchemy_session_persistence = "commit"
