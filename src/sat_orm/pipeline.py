@@ -18,5 +18,6 @@ from sat_orm.pipeline_orm.external_admin_user import ExternalAdminUser
 from sat_orm.pipeline_orm.athlete_upload_status import AthleteUploadStatus
 from sat_orm.pipeline_orm.imported_industrial_athlete import ImportedIndustrialAthlete
 from sat_orm.pipeline_orm.temp_industrial_athlete import TempIndustrialAthlete
+from sat_orm.pipeline_orm.bulk_upload_log import BulkUploadLog
 
 __Version__ = "0.2.4"
