@@ -26,6 +26,7 @@ from sat_orm.pipeline import (
     Setting,
     ImportedIndustrialAthlete,
     AthleteUploadStatus,
+    CasbinRule,
 )
 
 
@@ -242,4 +243,27 @@ class ImportedIndustrialAthleteFactory(factory.alchemy.SQLAlchemyModelFactory):
 
     class Meta:
         model = ImportedIndustrialAthlete
+        sqlalchemy_session_persistence = "commit"
+
+
+class CasbinRuleFactory(factory.alchemy.SQLAlchemyModelFactory):
+    id = factory.Sequence(lambda n: n)
+    ptype = "p"
+    v0 = factory.fuzzy.FuzzyChoice(["admin", "manager"])
+    v1 = factory.fuzzy.FuzzyChoice(
+        [
+            "athletes",
+            "clients",
+            "shifts",
+            "docks",
+            "warehouses",
+            "jobfunctions",
+            "roles",
+            "bulkupload",
+        ]
+    )
+    v2 = factory.fuzzy.FuzzyChoice(["get", "post", "put", "delete"])
+
+    class Meta:
+        model = CasbinRule
         sqlalchemy_session_persistence = "commit"
