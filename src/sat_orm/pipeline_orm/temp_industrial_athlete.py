@@ -47,7 +47,7 @@ class TempIndustrialAthlete(Base):
             "gender": self.gender,
             "external_id": self.external_id,
             "db_created_at": self.db_created_at,
-            "db_modified_at": self.db_modified_at,
+            "db_updated_at": self.db_updated_at,
         }
 
     def __repr__(self):

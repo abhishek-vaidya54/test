@@ -17,7 +17,9 @@ class ImportedIndustrialAthlete(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
 
     athlete_upload_status_id = Column(
-        Integer, ForeignKey("athlete_upload_status.id"), nullable=False
+        Integer,
+        ForeignKey("athlete_upload_status.id", ondelete="CASCADE"),
+        nullable=False,
     )
     athlete_upload_status = relationship(
         "AthleteUploadStatus",
