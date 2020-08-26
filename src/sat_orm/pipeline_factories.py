@@ -39,7 +39,7 @@ class ClientFactory(factory.alchemy.SQLAlchemyModelFactory):
     """ Client Factory: creates a fake client with its relationships"""
 
     id = factory.Sequence(lambda n: n)
-    name = factory.Sequence(lambda n: "Test Client {0}".format(n))
+    name = factory.Sequence(lambda n: "Test Client {0}".format(random_str()))
     prefix = factory.Sequence(lambda n: n + 1)
     db_created_at = datetime.datetime.now()
     db_modified_at = datetime.datetime.now()
