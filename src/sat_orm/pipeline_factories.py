@@ -204,7 +204,7 @@ class ExternalAdminUserFactory(factory.alchemy.SQLAlchemyModelFactory):
     client = factory.SubFactory(ClientFactory)
     warehouse_id = WarehouseFactory.id
     warehouse = factory.SubFactory(WarehouseFactory)
-    role = factory.fuzzy.FuzzyChoice(["admin", "manager"])
+    role = "admin"
 
     class Meta:
         model = ExternalAdminUser
