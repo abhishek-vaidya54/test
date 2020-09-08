@@ -58,6 +58,7 @@ class Client(Base):
     contracted_users = Column(Integer, nullable=False)
     active_inactive_date = Column(DateTime, nullable=False)
     ia_name_format = Column(String(45), server_default="FIRST_NAME_LAST_NAME")
+    subdomain = Column(String(255), nullable=True)
 
     # Table Constraints
     PrimaryKeyConstraint("id")

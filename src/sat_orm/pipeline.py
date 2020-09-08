@@ -20,5 +20,6 @@ from sat_orm.pipeline_orm.imported_industrial_athlete import ImportedIndustrialA
 from sat_orm.pipeline_orm.temp_industrial_athlete import TempIndustrialAthlete
 from sat_orm.pipeline_orm.bulk_upload_log import BulkUploadLog
 from sat_orm.pipeline_orm.casbin_rule import CasbinRule
+from sat_orm.pipeline_orm.groups import Groups
 
 __Version__ = "0.2.4"
