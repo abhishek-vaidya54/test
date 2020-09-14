@@ -9,6 +9,7 @@ class Warehouse(db.Model):
     __tablename__ = 'warehouse'
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    # 
     client_id = db.Column(db.Integer, ForeignKey('client.id'), nullable=False)
     client = db.relationship(
         'Client',
@@ -42,6 +43,19 @@ class Warehouse(db.Model):
     utc_op_day_start = db.Column(db.String(45), nullable=False)
 
     week_start = db.Column(db.String(45), nullable=False)
+
+    update_engagement = db.Column(
+        db.Integer,
+        default=1, 
+        nullable=False
+    )
+
+    standard_score = db.Column(db.Float, nullable=True)
+    min_safety_score = db.Column(db.Float, nullable=True)
+    max_safety_score = db.Column(db.Float, nullable=True)
+    first_quarter_safety_score = db.Column(db.Float, nullable=True)
+    median_safety_score = db.Column(db.Float, nullable=True)
+    third_quarter_safety_score = db.Column(db.Float, nullable=True)
 
 
     def as_dict(self):
