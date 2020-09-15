@@ -5,6 +5,7 @@ LICENSE:
  
 CONTRIBUTORS: 
             Vincent Turnier
+            Norberto Fernandez
 
 CLASSIFICATION: 
             Highly Sensitive
@@ -42,6 +43,7 @@ class Config(Base):
     dock_phase = relationship('DockPhase',order_by='DockPhase.timestamp.desc()',back_populates='config',uselist=False)
     dock_phases = relationship('DockPhase',order_by='DockPhase.timestamp.desc()',back_populates='configs')
 
+
     @validates('client_id')
     def validate_client_id(self,key,client_id):
         if client_id == None:
@@ -55,7 +57,7 @@ class Config(Base):
         if dock_id == None:
             raise Exception('dock_id cannot be Null')
         else:
-            dock_id_length = 14
+            dock_id_length = 12
             assert isinstance(dock_id,str)
             assert len(dock_id) == dock_id_length
             return dock_id
@@ -74,7 +76,6 @@ class Config(Base):
         else:
             return barcode_regex
 
-    
     @validates('deployment_stage')
     def validate_deployment_stage(self,key,deployment_stage):
         if deployment_stage == None:
