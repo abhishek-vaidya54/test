@@ -74,4 +74,9 @@ def upgrade():
 
 
 def downgrade():
-    op.drop_table('casbin_rule')
+    conn = op.get_bind()
+    inspector = Inspector.from_engine(conn)
+    tables = inspector.get_table_names()
+
+    if 'casbin_rule' in tables:
+        op.drop_table("casbin_rule")

@@ -7,6 +7,7 @@ Create Date: 2020-08-10 16:10:46.331705
 """
 from alembic import op
 import sqlalchemy as sa
+from sqlalchemy.engine.reflection import Inspector
 import datetime
 
 # revision identifiers, used by Alembic.
@@ -61,4 +62,9 @@ def upgrade():
 
 
 def downgrade():
-    op.drop_table("imported_industrial_athlete")
+    conn = op.get_bind()
+    inspector = Inspector.from_engine(conn)
+    tables = inspector.get_table_names()
+    
+    if 'imported_industrial_athlete' in tables:
+        op.drop_table("imported_industrial_athlete")

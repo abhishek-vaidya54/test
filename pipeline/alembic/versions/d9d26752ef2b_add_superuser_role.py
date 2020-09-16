@@ -9,6 +9,7 @@ from alembic import op
 import sqlalchemy as sa
 from sqlalchemy import orm
 from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.engine.reflection import Inspector
 from sqlalchemy.exc import InternalError
 
 RBAC_VALID_RESOURCES = (
@@ -86,4 +87,11 @@ def upgrade():
 
 
 def downgrade():
-    op.drop_table("casbin_rule")
+    bind = op.get_bind()
+
+    conn = op.get_bind()
+    inspector = Inspector.from_engine(conn)
+    tables = inspector.get_table_names()
+
+    if 'casbin_rule' in tables:
+        op.drop_table("casbin_rule")
