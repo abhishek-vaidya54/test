@@ -25,8 +25,6 @@ RBAC_VALID_RESOURCES = (
 
 ADMIN_RESOURCES = {
     "athletes": ["get", "post", "put", "delete"],
-    "bulkupload": ["get", "post", "put", "delete"],
-    "clients": ["get", "post", "put", "delete"],
     "shifts": ["get"],
     "jobfunctions": ["get"],
 }
@@ -62,7 +60,7 @@ def build_records():
     for resource in RBAC_VALID_RESOURCES:
         for action in list(RBAC_ACTION_KEYS.keys()):
             records.append(CasbinRule(v0="superuser", v1=resource, v2=action))
-            if resource in ("athletes", "bulkupload"):
+            if resource in ("athletes"):
                 records.append(CasbinRule(v0="manager", v1=resource, v2=action))
             if resource in ADMIN_RESOURCES:
                 if action in ADMIN_RESOURCES[resource]:

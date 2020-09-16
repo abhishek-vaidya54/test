@@ -9,17 +9,11 @@ from alembic import op
 import sqlalchemy as sa
 from sqlalchemy import orm
 from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.engine.reflection import Inspector
 from sqlalchemy.exc import InternalError
 
 RBAC_VALID_RESOURCES = (
     "athletes",
-    "clients",
-    "shifts",
-    "docks",
-    "warehouses",
-    "jobfunctions",
-    "roles",
-    "bulkupload",
 )
 
 RBAC_ACTION_KEYS = {"get": "read", "post": "write", "put": "update", "delete": "delete"}
@@ -51,7 +45,7 @@ def build_records():
     records = []
     for resource in RBAC_VALID_RESOURCES:
         for action in list(RBAC_ACTION_KEYS.keys()):
-            if resource in ("athletes", "bulkupload"):
+            if resource in ("athletes"):
                 records.append(CasbinRule(v0="manager", v1=resource, v2=action))
             records.append(CasbinRule(v0="admin", v1=resource, v2=action))
     return records
