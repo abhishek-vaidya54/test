@@ -50,11 +50,10 @@ def build_records():
             records.append(CasbinRule(v0="admin", v1=resource, v2=action))
     return records
 
-
 def upgrade():
     bind = op.get_bind()
     session = orm.Session(bind=bind)
-    records = build_records()
+    #records = build_records()
     try:
         CasbinRule.__table__.create(bind)
     except InternalError as e:
@@ -62,8 +61,8 @@ def upgrade():
         if code == "1050":
             session.query(CasbinRule).delete()
     finally:
-        session.add_all(records)
-        session.commit()
+        #session.add_all(records)
+        #session.commit()
         session.close()
 
 
