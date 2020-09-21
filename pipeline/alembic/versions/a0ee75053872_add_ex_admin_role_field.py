@@ -6,6 +6,8 @@ Create Date: 2020-07-30 13:17:43.976327
 
 """
 from alembic import op
+from sqlalchemy import orm
+from sqlalchemy.sql.expression import table
 import sqlalchemy as sa
 
 
@@ -18,9 +20,8 @@ depends_on = None
 
 def upgrade():
     op.add_column(
-        "external_admin_user", sa.Column("role", sa.String(length=20), nullable=True),
+        "external_admin_user", sa.Column("role", sa.String(length=20), nullable=False, server_default='manager'),
     )
-
 
 def downgrade():
     op.drop_column("external_admin_user", "role")

@@ -25,7 +25,7 @@ def upgrade():
             "ia_name_format",
             sa.String(length=45),
             nullable=True,
-            server_default="FIRST_NAME_LAST_NAME",
+            server_default="ANONYMOUS",
         ),
     )
 
