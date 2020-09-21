@@ -24,4 +24,6 @@ def upgrade():
 
 
 def downgrade():
-    op.drop_column("settings", "settings_id")
+    #the constraint name is not bound? so you will have to look this up?
+    op.drop_constraint(u'job_function_ibfk_2', 'job_function', type_='foreignkey')
+    op.drop_column("job_function", "settings_id")
