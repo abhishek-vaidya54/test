@@ -16,6 +16,9 @@ CLASSIFICATION:
 # Standard Library Imports
 import os
 
+from ddtrace import patch
+patch(sqlalchemy=True)
+
 # Third Party Library Imports
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
