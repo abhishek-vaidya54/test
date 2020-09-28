@@ -20,9 +20,9 @@ import os
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.pool import NullPool
 
 connection_string = os.environ.get("PIPELINE_CONNECTION_STRING", 0)
-
 
 def get_connection_string(connection_string):
     if connection_string:
@@ -33,8 +33,9 @@ def get_connection_string(connection_string):
         )
 
 
-engine = create_engine(get_connection_string(connection_string))
+engine = create_engine(get_connection_string(connection_string), poolclass=NullPool)
 connection = engine.connect()
 Session = sessionmaker(bind=connection)
 session = Session()
+
 Base = declarative_base()
