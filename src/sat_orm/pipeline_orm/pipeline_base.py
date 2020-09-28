@@ -33,7 +33,7 @@ def get_connection_string(connection_string):
         )
 
 
-engine = create_engine(get_connection_string(connection_string), poolclass=NullPool)
+engine = create_engine(get_connection_string(connection_string), poolclass=NullPool, pool_pre_ping=True)
 connection = engine.connect()
 Session = sessionmaker(bind=connection)
 session = Session()
