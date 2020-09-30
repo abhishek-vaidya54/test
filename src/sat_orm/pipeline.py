@@ -1,4 +1,4 @@
-from sat_orm.pipeline_orm.pipeline_base import Base, session, engine, connection
+from sat_orm.pipeline_orm.pipeline_base import get_session
 
 from sat_orm.pipeline_orm.settings import Setting
 from sat_orm.pipeline_orm.messages_surveys import MessageSurvey
