@@ -12,8 +12,8 @@ class Sensors(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     serial_number = Column(String(45), nullable=False)
     sensor_id = Column(String(45), nullable=True)
-    stiction_flagged = Column(Boolean, default=False, nullable=False)
-    decommissioned = Column(Boolean, default=False, nullable=False)
+    stiction_flagged = Column(String(1), default="0", nullable=False)
+    decommissioned = Column(String(1), default="0", nullable=False)
 
     db_created_at = Column(DateTime, default=datetime.datetime.utcnow, nullable=False)
     db_modified_at = Column(

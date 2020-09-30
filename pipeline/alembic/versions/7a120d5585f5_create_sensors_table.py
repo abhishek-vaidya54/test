@@ -23,8 +23,8 @@ def upgrade():
         sa.Column("id", sa.Integer(), nullable=False),
         sa.Column("serial_number", sa.String(length=45), nullable=False),
         sa.Column("sensor_id", sa.String(length=45), nullable=True),
-        sa.Column("stiction_flagged", sa.Boolean(), default=False, nullable=False),
-        sa.Column("decommissioned", sa.Boolean(), default=False, nullable=False),
+        sa.Column("stiction_flagged", sa.String(length=1), server_default="0", nullable=False),
+        sa.Column("decommissioned", sa.String(length=1), server_default="0", nullable=False),
         sa.Column(
             "db_created_at",
             sa.DateTime,
