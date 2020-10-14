@@ -17,7 +17,7 @@ depends_on = None
 
 
 def upgrade():
-    op.execute("ALTER TABLE industrial_athlete ADD UNIQUE (external_id, warehouse_id);")
+    op.execute("ALTER TABLE industrial_athlete ADD UNIQUE (external_id, warehouse_id, termination_date);")
 
 
 def downgrade():
