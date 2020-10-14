@@ -6,6 +6,7 @@ Create Date: 2020-08-10 19:15:11.727037
 
 """
 from alembic import op
+from sqlalchemy.engine.reflection import Inspector
 import sqlalchemy as sa
 import datetime
 
@@ -60,4 +61,9 @@ def upgrade():
 
 
 def downgrade():
-    op.drop_table("imported_industrial_athlete")
+    conn = op.get_bind()
+    inspector = Inspector.from_engine(conn)
+    tables = inspector.get_table_names()
+
+    if 'imported_industrial_athlete' in tables:
+        op.drop_table("imported_industrial_athlete")
