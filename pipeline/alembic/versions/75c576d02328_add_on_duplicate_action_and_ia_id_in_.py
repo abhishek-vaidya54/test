@@ -32,5 +32,5 @@ def upgrade():
 
 
 def downgrade():
-    op.drop_column("imported_industrial_athlete", "deactivate_and_insert")
+    op.drop_column("imported_industrial_athlete", "on_duplicate_action")
     op.drop_column("imported_industrial_athlete", "ia_id")
