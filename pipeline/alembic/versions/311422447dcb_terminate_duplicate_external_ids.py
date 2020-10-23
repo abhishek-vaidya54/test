@@ -16,8 +16,6 @@ branch_labels = None
 depends_on = None
 
 
-
-
 def upgrade():
     connection = op.get_bind()
 
@@ -27,7 +25,8 @@ def upgrade():
                 JOIN (
                     SELECT external_id, warehouse_id
                     FROM pipeline.industrial_athlete
-                    WHERE termination_date is null
+                    WHERE client_id IN (41, 44, 47, 50, 52, 62, 90, 91, 93, 94, 98, 99, 100, 109, 110, 115, 119, 120, 121)
+                    AND termination_date is null
                     GROUP BY external_id, warehouse_id
                     HAVING COUNT(*) > 1
                 ) t2 ON t1.external_id = t2.external_id AND t1.warehouse_id = t2.warehouse_id
