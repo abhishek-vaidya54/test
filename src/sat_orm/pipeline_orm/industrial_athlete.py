@@ -1,4 +1,4 @@
-'''
+"""
 LICENSE:
     This file is subject to the terms and conditions defined in
     file 'LICENSE.txt', which is part of this source code package.
@@ -11,26 +11,30 @@ CLASSIFICATION:
 
     **** Add Contributors name if you have contributed to this file ****
 *********************************************************************************
-'''
+"""
 
 # Standard Library Imports
 import datetime
+import copy
+import json
 
 # Third Party Imports
-from sqlalchemy import ForeignKey, Column, String, Integer, DateTime , desc
+from sqlalchemy import ForeignKey, Column, String, Integer, DateTime, desc, event
 from sqlalchemy.orm import relationship, validates
 
 
 # Local Application Imports
 from sat_orm.pipeline_orm.pipeline_base import Base
+import sat_orm.constants as constants
+from sat_orm.pipeline_orm.utilities import ia_utils
 
 
 class IndustrialAthlete(Base):
-    __tablename__ = 'industrial_athlete'
+    __tablename__ = "industrial_athlete"
 
     # Table Columns
     id = Column(Integer, primary_key=True, autoincrement=True)
-    client_id = Column(Integer, ForeignKey('client.id'), nullable=False)
+    client_id = Column(Integer, ForeignKey("client.id"), nullable=False)
     gender = Column(String(1), nullable=False)
     first_name = Column(String(255), nullable=False)
     last_name = Column(String(255), nullable=False)
@@ -41,100 +45,103 @@ class IndustrialAthlete(Base):
     prior_back_injuries = Column(String(255), nullable=True)
     hire_date = Column(DateTime, default=datetime.date.today(), nullable=True)
     termination_date = Column(DateTime, nullable=True)
-    warehouse_id = Column(Integer, ForeignKey('warehouse.id'), nullable=False)
-    shift_id = Column(Integer, ForeignKey('shifts.id'), nullable=False)
-    job_function_id = Column(Integer, ForeignKey(
-        'job_function.id'), nullable=False)
-    db_created_at = Column(
-        DateTime, default=datetime.datetime.utcnow, nullable=False)
-    db_modified_at = Column(DateTime, default=datetime.datetime.utcnow,
-                            onupdate=datetime.datetime.utcnow, nullable=False)
+    warehouse_id = Column(Integer, ForeignKey("warehouse.id"), nullable=False)
+    shift_id = Column(Integer, ForeignKey("shifts.id"), nullable=False)
+    job_function_id = Column(Integer, ForeignKey("job_function.id"), nullable=False)
+    db_created_at = Column(DateTime, default=datetime.datetime.utcnow, nullable=False)
+    db_modified_at = Column(
+        DateTime,
+        default=datetime.datetime.utcnow,
+        onupdate=datetime.datetime.utcnow,
+        nullable=False,
+    )
     setting_id = Column(Integer, nullable=True)
-    group_id = Column(Integer, ForeignKey('groups.id'), nullable=True)
+    group_id = Column(Integer, ForeignKey("groups.id"), nullable=True)
     job_function_change_date = Column(DateTime, nullable=True)
     gender_change_date = Column(DateTime, nullable=True)
 
     # Table Relationships
-    client = relationship(
-        'Client', back_populates='industrial_athletes', uselist=False)
+    client = relationship("Client", back_populates="industrial_athletes", uselist=False)
     warehouse = relationship(
-        'Warehouse', back_populates='industrial_athletes', uselist=False)
-    shifts = relationship(
-        'Shifts', back_populates='industrial_athletes', uselist=False)
+        "Warehouse", back_populates="industrial_athletes", uselist=False
+    )
+    shifts = relationship("Shifts", back_populates="industrial_athletes", uselist=False)
     job_function = relationship(
-        'JobFunction', back_populates='industrial_athletes', uselist=False)
-    groups = relationship(
-        'Groups', back_populates='industrial_athletes', uselist=False)
+        "JobFunction", back_populates="industrial_athletes", uselist=False
+    )
+    groups = relationship("Groups", back_populates="industrial_athletes", uselist=False)
 
-    @validates('client_id')
+    @validates("client_id")
     def validate_client_id(self, key, client_id):
         if client_id == None:
-            raise Exception('client_id cannot be Null')
+            raise Exception("client_id cannot be Null")
         else:
             return client_id
 
-    @validates('gender')
+    @validates("gender")
     def validate_gender(self, key, gender):
         if gender == None:
-            raise Exception('gender cannot be Null')
+            raise Exception("gender cannot be Null")
         else:
             return gender
 
-    @validates('first_name')
+    @validates("first_name")
     def validate_first_name(self, key, first_name):
         if first_name == None:
-            raise Exception('first_name cannot be Null')
+            raise Exception("first_name cannot be Null")
         else:
             return first_name
 
-    @validates('last_name')
+    @validates("last_name")
     def validate_last_name(self, key, last_name):
         if last_name == None:
-            raise Exception('last_name cannot be Null')
+            raise Exception("last_name cannot be Null")
         else:
             return last_name
 
-    @validates('external_id')
+    @validates("external_id")
     def validate_external_id(self, key, external_id):
         if external_id == None:
-            raise Exception('external_id cannot be Null')
+            raise Exception("external_id cannot be Null")
         else:
             return external_id
 
-    @validates('warehouse_id')
+    @validates("warehouse_id")
     def validate_warehouse_id(self, key, warehouse_id):
         if warehouse_id == None:
-            raise Exception('warehouse_id cannot be Null')
+            raise Exception("warehouse_id cannot be Null")
         else:
             return warehouse_id
 
-    @validates('shift_id')
+    @validates("shift_id")
     def validate_shift_id(self, key, shift_id):
         if shift_id == None:
-            raise Exception('shift_id cannot be Null')
+            raise Exception("shift_id cannot be Null")
         else:
             return shift_id
 
-    @validates('job_function_id')
+    @validates("job_function_id")
     def validate_job_function_id(self, key, job_function_id):
         if job_function_id == None:
-            raise Exception('job_function_id cannot be Null')
+            raise Exception("job_function_id cannot be Null")
         else:
             return job_function_id
 
     def as_dict(self):
         return {
-            'id': self.id,
-            'client_id': self.client_id,
-            'warehouse_id': self.warehouse_id,
-            'job_function_id': self.job_function_id,
-            'shift_id': self.shift_id,
-            'first_name': self.first_name,
-            'last_name': self.last_name,
-            'gender': self.gender,
-            'external_id': self.external_id,
-            'db_created_at': self.db_created_at,
-            'db_modified_at': self.db_modified_at
+            "id": self.id,
+            "firstName": self.first_name,
+            "lastName": self.last_name,
+            "externalId": self.external_id,
+            "sex": self.gender,
+            "shiftId": self.shift_id,
+            "jobFunctionId": self.job_function_id,
+            "clientId": self.client_id,
+            "warehouseId": self.warehouse_id,
+            "hireDate": self.hire_date,
+            "terminationDate": self.termination_date,
+            "db_created_at": self.db_created_at,
+            "db_modified_at": self.db_modified_at,
         }
 
     def __repr__(self):
@@ -144,72 +151,212 @@ class IndustrialAthlete(Base):
         return len(self.as_dict())
 
 
+@event.listens_for(IndustrialAthlete, "before_update")
+def validate_before_update(mapper, connection, target):
+    """
+    Helper method to check if params are valid for updating a single athlete
+    Input:
+        param_input: json containing data to be updated for a single athlete.
+                        id field MUST be inside.
+        warehouse_id: warehouse ID to validate job function
+    Output:
+        Return [True, None] if all params are valid.
+        Returns [False, Errors] if there are params which are not valid
+    """
+    param_input = {}
+    for key, value in target.as_dict().items():
+        if value is not None:
+            param_input[key] = value
+
+    errors = []
+
+    # Athlete ID is required
+    ia = connection.execute(
+        "SELECT * FROM industrial_athlete WHERE id={}".format(target.id)
+    ).fetchone()
+
+    if "firstName" in param_input:
+        is_valid, message = ia_utils.is_valid_ia_first_last_name(
+            connection, param_input.get("firstName", ""), "First Name", ia.client_id
+        )
+        if not is_valid:
+            error = copy.deepcopy(constants.ERROR_DATA)
+            error["fieldName"] = "firstName"
+            error["reason"] = message
+            errors.append(error)
+
+    if "lastName" in param_input:
+        is_valid, message = ia_utils.is_valid_ia_first_last_name(
+            connection, param_input.get("lastName", ""), "Last Name", ia.client_id
+        )
+        if not is_valid:
+            error = copy.deepcopy(constants.ERROR_DATA)
+            error["fieldName"] = "lastName"
+            error["reason"] = message
+            errors.append(error)
+
+    if "externalId" in param_input:
+        is_valid, message = ia_utils.is_valid_external_id(
+            connection,
+            ia,
+            param_input.get("externalId", ""),
+            existing_ia_id=param_input.get("id"),
+        )
+        if not is_valid:
+            error = copy.deepcopy(constants.ERROR_DATA)
+            error["fieldName"] = "externalId"
+            error["reason"] = message
+            errors.append(error)
+
+    if "sex" in param_input:
+        is_valid = param_input.get("sex", "") in ("m", "f")
+        if not is_valid:
+            sex_error = copy.deepcopy(constants.ERROR_DATA)
+            sex_error["fieldName"] = "sex"
+            sex_error["reason"] = constants.INVALID_PARAM_SEX_MESSAGE
+            errors.append(sex_error)
+
+    if "shiftId" in param_input:
+        is_valid = ia_utils.is_valid_shift(
+            connection, param_input.get("shiftId", ""), ia.warehouse_id
+        )
+        if not is_valid:
+            error = copy.deepcopy(constants.ERROR_DATA)
+            error["fieldName"] = "shiftId"
+            error["reason"] = constants.INVALID_SHIFT_MESSAGE
+            errors.append(error)
+
+    if "jobFunctionId" in param_input:
+        is_valid = ia_utils.is_valid_job_function(
+            connection, param_input.get("jobFunctionId", ""), ia.warehouse_id
+        )
+        if not is_valid:
+            error = copy.deepcopy(constants.ERROR_DATA)
+            error["fieldName"] = "jobFunctionId"
+            error["reason"] = constants.INVALID_JOB_FUNCTION_MESSAGE
+            errors.append(error)
+
+    if "hireDate" in param_input:
+        is_valid, date_obj = ia_utils.is_valid_date(param_input.get("hireDate", ""))
+        if not is_valid:
+            hire_date_error = copy.deepcopy(constants.ERROR_DATA)
+            hire_date_error["fieldName"] = "hireDate"
+            hire_date_error["reason"] = constants.INVALID_DATE_MESSAGE
+            errors.append(hire_date_error)
+
+    if "terminationDate" in param_input:
+        is_valid, date_obj = ia_utils.is_valid_date(
+            param_input.get("terminationDate", "")
+        )
+        if not is_valid:
+            hire_date_error = copy.deepcopy(constants.ERROR_DATA)
+            hire_date_error["fieldName"] = "terminationDate"
+            hire_date_error["reason"] = constants.INVALID_DATE_MESSAGE
+            errors.append(hire_date_error)
+
+    if len(errors) > 0:
+        error_response = copy.deepcopy(constants.ERROR)
+        error_response["message"] = constants.INVALID_PARAMS_MESSAGE
+        error_response["errors"] = errors
+        raise Exception(json.dumps(error_response))
+
 
 def get_all_athletes(session):
     """
-        Generic select * from industrial_athlete where column = value for value in filter_args
+    Generic select * from industrial_athlete where column = value for value in filter_args
     """
     return session.query(IndustrialAthlete).all()
 
 
-
-def dockv5_getAthletes_select_by_client_warehouse_not_terminated(session,client_id, warehouse_id):
+def dockv5_getAthletes_select_by_client_warehouse_not_terminated(
+    session, client_id, warehouse_id
+):
     """
-        Implements the below query in the DockV5-API getAthletes lambda:
-        SELECT * FROM industrial_athlete WHERE client_id= %s AND warehouse_id= %s AND termination_date is NULL;', (client_id, warehouse_id)
+    Implements the below query in the DockV5-API getAthletes lambda:
+    SELECT * FROM industrial_athlete WHERE client_id= %s AND warehouse_id= %s AND termination_date is NULL;', (client_id, warehouse_id)
     """
-    return session.query(IndustrialAthlete) \
-        .filter(IndustrialAthlete.client_id == client_id, IndustrialAthlete.warehouse_id == warehouse_id, IndustrialAthlete.termination_date.isnot(None)).all()
+    return (
+        session.query(IndustrialAthlete)
+        .filter(
+            IndustrialAthlete.client_id == client_id,
+            IndustrialAthlete.warehouse_id == warehouse_id,
+            IndustrialAthlete.termination_date.isnot(None),
+        )
+        .all()
+    )
 
 
-def dockv5_getEngagement_select_by_id(session,id):
+def dockv5_getEngagement_select_by_id(session, id):
     """
-        Implements the below query in the DockV5-API getEngagement lambda:
-        'SELECT * FROM industrial_athlete WHERE id=%s LIMIT 1',(athlete_id)
+    Implements the below query in the DockV5-API getEngagement lambda:
+    'SELECT * FROM industrial_athlete WHERE id=%s LIMIT 1',(athlete_id)
     """
     return session.query(IndustrialAthlete).filter(IndustrialAthlete.id == id).first()
 
 
-def dockv5_getUpdatedAthletes_select_group_id(session,client_id, warehouse_id):
+def dockv5_getUpdatedAthletes_select_group_id(session, client_id, warehouse_id):
     """
-        Implements the below query in the DockV5-API getUpdatedAthletes lambda:
-        select group_id from industrial_athlete where client_id = %s and warehouse_id = %s)
+    Implements the below query in the DockV5-API getUpdatedAthletes lambda:
+    select group_id from industrial_athlete where client_id = %s and warehouse_id = %s)
     """
-    return session.query(IndustrialAthlete.group_id) \
-        .filter(IndustrialAthlete.client_id == client_id, IndustrialAthlete.warehouse_id == warehouse_id).all()
+    return (
+        session.query(IndustrialAthlete.group_id)
+        .filter(
+            IndustrialAthlete.client_id == client_id,
+            IndustrialAthlete.warehouse_id == warehouse_id,
+        )
+        .all()
+    )
 
 
-def dockv5_getUpdatedAthletes_select_id(session,client_id, warehouse_id):
+def dockv5_getUpdatedAthletes_select_id(session, client_id, warehouse_id):
     """
-        Implements the below query in DockV5-API getUpdatedAthletes lambda:
-        select id from industrial_athlete where client_id = %s and warehouse_id = %s
+    Implements the below query in DockV5-API getUpdatedAthletes lambda:
+    select id from industrial_athlete where client_id = %s and warehouse_id = %s
     """
-    return session.query(IndustrialAthlete.id) \
-        .filter(IndustrialAthlete.client_id == client_id, IndustrialAthlete.warehouse_id == warehouse_id).all()
+    return (
+        session.query(IndustrialAthlete.id)
+        .filter(
+            IndustrialAthlete.client_id == client_id,
+            IndustrialAthlete.warehouse_id == warehouse_id,
+        )
+        .all()
+    )
 
 
-def dockv5_getUpdatedAthletes_select_by_db_modified(session,last_checked_timestamp):
+def dockv5_getUpdatedAthletes_select_by_db_modified(session, last_checked_timestamp):
     """
-        Implements the below query in DockV5-API getUpdatedAthletes lambda:
-        select * from industrial_athlete where db_modified_at > %s order by db_modified_at DESC;
+    Implements the below query in DockV5-API getUpdatedAthletes lambda:
+    select * from industrial_athlete where db_modified_at > %s order by db_modified_at DESC;
     """
-    return session.query(IndustrialAthlete) \
-        .filter(IndustrialAthlete.db_modified_at > last_checked_timestamp) \
-        .order_by(IndustrialAthlete.db_modified_at).all()
+    return (
+        session.query(IndustrialAthlete)
+        .filter(IndustrialAthlete.db_modified_at > last_checked_timestamp)
+        .order_by(IndustrialAthlete.db_modified_at)
+        .all()
+    )
+
 
 # TODO ''
 
 
-def dockv5_getUpdatedAthletes_select_by_client_warehouse_db_modified(session,client_id, warehouse_id, last_athlete_check):
-
+def dockv5_getUpdatedAthletes_select_by_client_warehouse_db_modified(
+    session, client_id, warehouse_id, last_athlete_check
+):
 
     """
-        Implements the below query in DockV5-API getUpdatedAthletes lambda:
-        'select * from industrial_athlete where client_id = %s and warehouse_id = %s and db_modified_at > %s order by db_modified_at DESC'
+    Implements the below query in DockV5-API getUpdatedAthletes lambda:
+    'select * from industrial_athlete where client_id = %s and warehouse_id = %s and db_modified_at > %s order by db_modified_at DESC'
     """
-    return session.query(IndustrialAthlete) \
-        .filter(IndustrialAthlete.client_id == client_id, IndustrialAthlete.warehouse_id == warehouse_id, IndustrialAthlete.db_modified_at > last_athlete_check) \
+    return (
+        session.query(IndustrialAthlete)
+        .filter(
+            IndustrialAthlete.client_id == client_id,
+            IndustrialAthlete.warehouse_id == warehouse_id,
+            IndustrialAthlete.db_modified_at > last_athlete_check,
+        )
         .order_by(desc(IndustrialAthlete.db_modified_at))
+    )
 
     """
     TODO
