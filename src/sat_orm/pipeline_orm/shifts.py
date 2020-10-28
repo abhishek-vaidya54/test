@@ -16,13 +16,19 @@ CLASSIFICATION:
 
 # Standard Library Imports
 import datetime
+import copy
+import json
 
 # Third Party Imports
-from sqlalchemy import ForeignKey, Column, Integer, DateTime, Text, String
+from sqlalchemy import ForeignKey, Column, Integer, DateTime, Text, String, event
 from sqlalchemy.orm import relationship, validates
 
 # Local Application Import
 from sat_orm.pipeline_orm.pipeline_base import Base
+import sat_orm.constants as constants
+from sat_orm.pipeline_orm.utilities import ia_utils
+from sat_orm.pipeline_orm.utilities import shift_utils
+from sat_orm.pipeline_orm.utilities import job_function_utils
 
 
 class Shifts(Base):
@@ -102,3 +108,65 @@ class Shifts(Base):
     def __repr__(self):
         return str(self.as_dict())
 
+
+@event.listens_for(Shifts, "before_insert")
+def validate_before_insert(mapper, connection, target):
+    """
+    Event hook to check if params are valid for adding a single shift
+    """
+    param_input = {}
+    for key, value in target.as_dict().items():
+        if value is not None:
+            param_input[key] = value
+    errors = []
+    # Name
+    is_valid, message = shift_utils.is_valid_string(param_input.get("name", ""))
+    if not is_valid:
+        error = copy.deepcopy(constants.ERROR_DATA)
+        error["fieldName"] = "name"
+        error["reason"] = message
+        errors.append(error)
+    # Warehouse ID
+    is_valid = shift_utils.is_valid_warehouse(
+        connection, param_input.get("warehouseId", ""), None
+    )
+    if not is_valid:
+        error = copy.deepcopy(constants.ERROR_DATA)
+        error["fieldName"] = "warehouse_id"
+        error["reason"] = constants.INVALID_WAREHOUSE_ID_MESSAGE
+        errors.append(error)
+    # Shift start
+    is_valid, message = shift_utils.is_valid_time(param_input.get("shiftStart", ""))
+    if not is_valid:
+        error = copy.deepcopy(constants.ERROR_DATA)
+        error["fieldName"] = "shift_start"
+        error["reason"] = constants.INVALID_DATE_MESSAGE
+        errors.append(error)
+    # Shift end
+    is_valid, message = shift_utils.is_valid_time(param_input.get("shiftEnd", ""))
+    if not is_valid:
+        error = copy.deepcopy(constants.ERROR_DATA)
+        error["fieldName"] = "shift_end"
+        error["reason"] = constants.INVALID_DATE_MESSAGE
+        errors.append(error)
+    # Timezone
+    is_valid = shift_utils.is_valid_shift_timezone(target.timezone)
+    if not is_valid:
+        error = copy.deepcopy(constants.ERROR_DATA)
+        error["fieldName"] = "timezone"
+        error["reason"] = constants.INVALID_SHIFT_TIMEZONE_MESSAGE
+        errors.append(error)
+    # Group admin
+    is_valid = job_function_utils.is_valid_group_admin(
+        param_input.get("group_administrator", "")
+    )
+    if not is_valid:
+        error = copy.deepcopy(constants.ERROR_DATA)
+        error["fieldName"] = "group_administrator"
+        error["reason"] = constants.INVALID_GROUP_ADMIN_MESSAGE
+        errors.append(error)
+    if len(errors) > 0:
+        error_response = copy.deepcopy(constants.ERROR)
+        error_response["message"] = constants.INVALID_PARAMS_MESSAGE
+        error_response["errors"] = errors
+        raise Exception(json.dumps(error_response))
