@@ -151,6 +151,89 @@ class IndustrialAthlete(Base):
         return len(self.as_dict())
 
 
+@event.listens_for(IndustrialAthlete, "before_insert")
+def validate_before_insert(mapper, connection, target):
+    """
+    Helper method to check if params are valid for adding a single athlete
+    Input:
+        param_input: json containing data to be added for a single athlete.
+        warehouse_id: warehouse ID to validate job function
+    """
+    param_input = {}
+    for key, value in target.as_dict().items():
+        if value is not None:
+            param_input[key] = value
+    errors = []
+
+    is_valid, message = ia_utils.is_valid_ia_first_last_name(
+        connection, param_input.get("firstName", ""), "First Name", target.client_id
+    )
+    if not is_valid:
+        error = copy.deepcopy(constants.ERROR_DATA)
+        error["fieldName"] = "firstName"
+        error["reason"] = message
+        errors.append(error)
+
+    is_valid, message = ia_utils.is_valid_ia_first_last_name(
+        connection, param_input.get("lastName", ""), "Last Name", target.client_id
+    )
+    if not is_valid:
+        error = copy.deepcopy(constants.ERROR_DATA)
+        error["fieldName"] = "lastName"
+        error["reason"] = message
+        errors.append(error)
+
+    is_valid, message = ia_utils.is_valid_external_id(
+        connection,
+        target,
+        param_input.get("externalId", ""),
+        existing_ia_id=param_input.get("id"),
+    )
+    if not is_valid:
+        error = copy.deepcopy(constants.ERROR_DATA)
+        error["fieldName"] = "externalId"
+        error["reason"] = message
+        errors.append(error)
+
+    is_valid = param_input.get("sex", "") in ("m", "f")
+    if not is_valid:
+        sex_error = copy.deepcopy(constants.ERROR_DATA)
+        sex_error["fieldName"] = "sex"
+        sex_error["reason"] = constants.INVALID_PARAM_SEX_MESSAGE
+        errors.append(sex_error)
+
+    is_valid = ia_utils.is_valid_shift(
+        connection, param_input.get("shiftId", ""), target.warehouse_id
+    )
+    if not is_valid:
+        error = copy.deepcopy(constants.ERROR_DATA)
+        error["fieldName"] = "shiftId"
+        error["reason"] = constants.INVALID_SHIFT_MESSAGE
+        errors.append(error)
+
+    is_valid = ia_utils.is_valid_job_function(
+        connection, param_input.get("jobFunctionId", ""), target.warehouse_id
+    )
+    if not is_valid:
+        error = copy.deepcopy(constants.ERROR_DATA)
+        error["fieldName"] = "jobFunctionId"
+        error["reason"] = constants.INVALID_JOB_FUNCTION_MESSAGE
+        errors.append(error)
+
+    is_valid, date_obj = ia_utils.is_valid_date(param_input.get("hireDate", ""))
+    if not is_valid:
+        hire_date_error = copy.deepcopy(constants.ERROR_DATA)
+        hire_date_error["fieldName"] = "hireDate"
+        hire_date_error["reason"] = constants.INVALID_DATE_MESSAGE
+        errors.append(hire_date_error)
+
+    if len(errors) > 0:
+        error_response = copy.deepcopy(constants.ERROR)
+        error_response["message"] = constants.INVALID_PARAMS_MESSAGE
+        error_response["errors"] = errors
+        raise Exception(json.dumps(error_response))
+
+
 @event.listens_for(IndustrialAthlete, "before_update")
 def validate_before_update(mapper, connection, target):
     """
