@@ -7,7 +7,7 @@ from sqlalchemy.orm import object_session
 
 from sat_orm.pipeline_orm.pipeline_base import Base
 
-from sqlalchemy import ForeignKey, Column, String, Integer, DateTime, desc
+from sqlalchemy import ForeignKey, Column, String, Integer, DateTime, desc, Enum
 from sqlalchemy.orm import relationship, validates
 
 
@@ -51,6 +51,12 @@ class ImportedIndustrialAthlete(Base):
 
     group_id = Column(Integer, nullable=True)
 
+    on_duplicate_action = Column(
+        Enum("deactivate_and_insert", "update"),
+        nullable=True,
+    )
+    ia_id = Column(Integer, nullable=True)
+
     def as_dict(self):
         return {
             "id": self.id,
@@ -78,4 +84,3 @@ class ImportedIndustrialAthlete(Base):
 
     # def __repr__(self):
     #     return "%s@%s" % (self.id, self.client.id)
-
