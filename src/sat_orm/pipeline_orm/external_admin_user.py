@@ -27,7 +27,8 @@ class ExternalAdminUser(Base):
     client_id = Column(Integer, ForeignKey("client.id"), nullable=False)
     client = relationship(Client, backref=__tablename__)
 
-    role = Column(String(20), nullable=True)
+    role = Column(String(20), nullable=True, server_default="manager")
+    is_active = Column(String(5), server_default="true")
 
     db_created_at = Column(DateTime, default=datetime.datetime.utcnow, nullable=False)
     db_modified_at = Column(
@@ -87,7 +88,7 @@ class ExternalAdminUser(Base):
 
     def __eq__(self, other):
         """
-            Override the default equals behavior
+        Override the default equals behavior
         """
         return (
             self.id == other.id
@@ -140,4 +141,3 @@ class ExternalAdminUser(Base):
         external_admin_user = ExternalAdminUser.get_by_id(session, id)
         session.delete(external_admin_user)
         session.commit()
-
