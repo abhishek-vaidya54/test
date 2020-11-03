@@ -28,6 +28,7 @@ from sqlalchemy import (
     DateTime,
     Float,
     Boolean,
+    Enum,
 )
 from sqlalchemy.orm import relationship, validates
 
@@ -63,13 +64,23 @@ class Warehouse(Base):
     median_safety_score = Column(Float, nullable=True)
     third_quarter_safety_score = Column(Float, nullable=True)
 
-    number_of_user_allocated = Column(Integer, nullable=False)
-    city = Column(String(30), nullable=False)
-    state = Column(String(30), nullable=False)
-    country = Column(String(30), nullable=False)
+    number_of_user_allocated = Column(Integer, nullable=True)
+    city = Column(String(30), nullable=True)
+    state = Column(String(30), nullable=True)
+    country = Column(String(30), nullable=True)
     industry = Column(String(100), nullable=False)
-    latitude = Column(Float, nullable=False)
-    longitude = Column(Float, nullable=False)
+    latitude = Column(Float, nullable=True)
+    longitude = Column(Float, nullable=True)
+    lat_direction = Column(
+        Enum("N", "S", "E", "W"),
+        nullable=True,
+        default="N",
+    )
+    long_direction = Column(
+        Enum("N", "S", "E", "W"),
+        nullable=True,
+        default="N",
+    )
 
     # Table Constraints
     PrimaryKeyConstraint("id")
