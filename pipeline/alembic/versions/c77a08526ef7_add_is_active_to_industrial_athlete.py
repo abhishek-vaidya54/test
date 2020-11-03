@@ -17,33 +17,35 @@ depends_on = None
 
 
 def upgrade():
-    try:
-        op.execute("DROP INDEX `external_id` ON industrial_athlete")
-    except:
-        pass
-    finally:
-        op.add_column(
-            "industrial_athlete",
-            sa.Column("is_active", sa.Boolean(), nullable=True, server_default=None),
-        )
-        op.execute(
-            """
-                ALTER TABLE industrial_athlete
-                ADD CONSTRAINT external_id_warehouse_id_is_active
-                UNIQUE (external_id, warehouse_id, is_active);
-            """
-        )
+    print("Skipping")
+    # try:
+    #     op.execute("DROP INDEX `external_id` ON industrial_athlete")
+    # except:
+    #     pass
+    # finally:
+    #     op.add_column(
+    #         "industrial_athlete",
+    #         sa.Column("is_active", sa.Boolean(), nullable=True, server_default=None),
+    #     )
+    #     op.execute(
+    #         """
+    #             ALTER TABLE industrial_athlete
+    #             ADD CONSTRAINT external_id_warehouse_id_is_active
+    #             UNIQUE (external_id, warehouse_id, is_active);
+    #         """
+    #     )
 
 
 def downgrade():
-    try:
-        op.execute(
-            "ALTER TABLE industrial_athlete ADD UNIQUE (external_id, warehouse_id, termination_date);"
-        )
-    except:
-        pass
-    finally:
-        op.drop_column("industrial_athlete", "is_active")
-        op.execute(
-            "DROP INDEX `external_id_warehouse_id_is_active` ON industrial_athlete"
-        )
+    print("Skipping")
+    # try:
+    #     op.execute(
+    #         "ALTER TABLE industrial_athlete ADD UNIQUE (external_id, warehouse_id, termination_date);"
+    #     )
+    # except:
+    #     pass
+    # finally:
+    #     op.drop_column("industrial_athlete", "is_active")
+    #     op.execute(
+    #         "DROP INDEX `external_id_warehouse_id_is_active` ON industrial_athlete"
+    #     )
