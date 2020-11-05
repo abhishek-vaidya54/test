@@ -7,6 +7,7 @@ from sat_orm.pipeline_orm.warehouse import Warehouse
 from sat_orm.pipeline_orm.job_function import JobFunction
 from sat_orm.pipeline_orm.settings import Setting
 from sat_orm.pipeline_orm.shifts import Shifts
+from sat_orm.pipeline_orm.casbin_rule import CasbinRule
 
 
 # class ShiftsSchema(SQLAlchemyAutoSchema):
@@ -40,6 +41,11 @@ class JobFunctionSchema(SQLAlchemyAutoSchema):
         include_relationships = True
         load_instance = True
 
+class CasbinRuleSchema(SQLAlchemyAutoSchema):
+    class Meta:
+        model = CasbinRule
+        include_relationships = True
+        load_instance = True
 
 # class ClientSchema(SQLAlchemyAutoSchema):
 #     class Meta:
