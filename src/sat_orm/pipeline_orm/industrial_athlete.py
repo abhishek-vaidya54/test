@@ -19,7 +19,7 @@ import copy
 import json
 
 # Third Party Imports
-from sqlalchemy import ForeignKey, Column, String, Integer, DateTime, desc, event
+from sqlalchemy import ForeignKey, Column, String, Integer, Boolean, DateTime, desc, event
 from sqlalchemy.orm import relationship, validates
 
 
@@ -59,6 +59,7 @@ class IndustrialAthlete(Base):
     group_id = Column(Integer, ForeignKey("groups.id"), nullable=True)
     job_function_change_date = Column(DateTime, nullable=True)
     gender_change_date = Column(DateTime, nullable=True)
+    is_active = Column(Boolean, nullable=True, server_default=None)
 
     # Table Relationships
     client = relationship("Client", back_populates="industrial_athletes", uselist=False)

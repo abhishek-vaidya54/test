@@ -4,6 +4,8 @@ from sat_orm.pipeline_orm.queries import athlete_queries
 from sat_orm.pipeline_orm.queries import client_queries
 from sat_orm.pipeline_orm.queries import shift_queries
 from sat_orm.pipeline_orm.queries import job_function_queries
+from sat_orm.pipeline_orm.queries import warehouse_queries
+from sat_orm.pipeline_orm.queries import setting_queries
 import sat_orm.constants as constants
 
 
@@ -73,6 +75,26 @@ def is_valid_date(date_input):
         return False, None
 
 
+def is_valid_warehouse(connection, warehouse_id):
+    """
+    Validates a warehouse, checks if warehouse belongs to the client
+    Returns True if it is a valid warehouse
+    Returns False if it is not
+    """
+    warehouse = warehouse_queries.get_warehouse(connection, warehouse_id)
+    return bool(warehouse)
+
+
+def is_valid_setting(connection, settings_id):
+    """
+    Validates a warehouse, checks if warehouse belongs to the client
+    Returns True if it is a valid warehouse
+    Returns False if it is not
+    """
+    warehouse = setting_queries.get_setting(connection, settings_id)
+    return bool(warehouse)
+
+
 def is_valid_shift(connection, shift_id, warehouse_id):
     """
     Validates a shift, checks if shift belongs to the warehouse
@@ -95,3 +117,42 @@ def is_valid_job_function(connection, job_function_id, warehouse_id):
         connection, job_function_id, warehouse_id
     )
     return bool(job_function)
+
+
+def is_valid_string(string_input):
+    """
+    Helper method to check if input is a valid string
+    Return [True, None] if it is a valid string
+    Returns [False, reason] if it is not valid
+    """
+    if string_input == "":
+        return False, constants.MISSING_STRING_MESSAGE
+    if re.match(constants.REGEX_STRING, string_input):
+        return True, None
+    return False, constants.INVALID_STRING_MESSAGE
+
+
+def is_valid_int(int_input):
+    """
+    Helper method to check if input is a valid integer
+    Return True if it is a valid int
+    Returns False if it is not valid
+    """
+    try:
+        int(int_input)
+        return True, None
+    except ValueError:
+        return False, constants.INVALID_INTEGER_MESSAGE
+
+
+def is_valid_float(float_input):
+    """
+    Helper method to check if input is a valid integer
+    Return True if it is a valid int
+    Returns False if it is not valid
+    """
+    try:
+        float(float_input)
+        return True, None
+    except ValueError:
+        return False, constants.INVALID_FLOAT_MESSAGE

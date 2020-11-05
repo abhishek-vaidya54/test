@@ -56,6 +56,8 @@ INVALID_CLIENT_IA_NAME_FORMAT_MESSAGE = "Invalid client ia name format."
 
 INVALID_WAREHOUSE_ID_MESSAGE = "Invalid warehouse ID."
 
+INVALID_SETTINGS_ID_MESSAGE = "Invalid settings ID."
+
 INVALID_CLIENT_ID_MESSAGE = "Invalid client ID."
 
 INVALID_SHIFT_TIMEZONE_MESSAGE = "Invalid shift time zone."
