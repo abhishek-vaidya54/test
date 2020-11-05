@@ -128,7 +128,7 @@ def validate_before_insert(mapper, connection, target):
         errors.append(error)
     # Warehouse ID
     is_valid = shift_utils.is_valid_warehouse(
-        connection, param_input.get("warehouseId", ""), None
+        connection, param_input.get("warehouseId", "")
     )
     if not is_valid:
         error = copy.deepcopy(constants.ERROR_DATA)

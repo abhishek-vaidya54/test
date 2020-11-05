@@ -21,16 +21,14 @@ def is_valid_string(string_input):
     return False, constants.INVALID_STRING_MESSAGE
 
 
-def is_valid_warehouse(session, warehouse_id, client_id):
+def is_valid_warehouse(session, warehouse_id):
     """
     Validates a warehouse, checks if warehouse belongs to the client
     Returns True if it is a valid warehouse
     Returns False if it is not
     """
     try:
-        warehouse = warehouse_queries.get_warehouse(
-            session, int(warehouse_id), client_id
-        )
+        warehouse = warehouse_queries.get_warehouse(session, int(warehouse_id))
         return bool(warehouse)
     except Exception as error:
         return False
