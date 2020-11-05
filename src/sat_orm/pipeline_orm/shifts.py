@@ -165,6 +165,7 @@ def validate_before_insert(mapper, connection, target):
         error["fieldName"] = "group_administrator"
         error["reason"] = constants.INVALID_GROUP_ADMIN_MESSAGE
         errors.append(error)
+
     if len(errors) > 0:
         error_response = copy.deepcopy(constants.ERROR)
         error_response["message"] = constants.INVALID_PARAMS_MESSAGE
@@ -184,14 +185,6 @@ def validate_before_update(mapper, connection, target):
 
     errors = []
 
-    is_valid = shift_utils.is_valid_shift_id(
-        connection, param_input.get("id", ""), param_input.get("warehouseId", "")
-    )
-    if not is_valid:
-        error = copy.deepcopy(constants.ERROR_DATA)
-        error["fieldName"] = "id"
-        error["reason"] = constants.MISSING_ID_MESSAGE
-        errors.append(error)
     # Name
     if "name" in param_input:
         is_valid, message = shift_utils.is_valid_string(param_input.get("name", ""))
@@ -203,7 +196,7 @@ def validate_before_update(mapper, connection, target):
     # Warehouse ID
     if "warehouseId" in param_input:
         is_valid = shift_utils.is_valid_warehouse(
-            connection, param_input.get("warehouseId", ""), None
+            connection, param_input.get("warehouseId", "")
         )
         if not is_valid:
             error = copy.deepcopy(constants.ERROR_DATA)
