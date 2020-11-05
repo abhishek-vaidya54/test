@@ -1,5 +1,6 @@
 from marshmallow_sqlalchemy import SQLAlchemyAutoSchema, ModelSchema
 from marshmallow import validates, fields, ValidationError, Schema, post_dump
+from datetime import datetime
 
 from sat_orm.pipeline_orm.industrial_athlete import IndustrialAthlete
 from sat_orm.pipeline_orm.client import Client
@@ -9,11 +10,15 @@ from sat_orm.pipeline_orm.settings import Setting
 from sat_orm.pipeline_orm.shifts import Shifts
 
 
-# class ShiftsSchema(SQLAlchemyAutoSchema):
-#     class Meta:
-#         model = Shifts
-#         include_relationships = True
-#         load_instance = True
+def convert_date(date_input):
+    return datetime.strptime(str(date_input), "%Y-%m-%d %H:%M:%S").strftime("%m/%d/%Y")
+
+
+class ShiftsSchema(SQLAlchemyAutoSchema):
+    class Meta:
+        model = Shifts
+        include_relationships = True
+        load_instance = True
 
 
 class SettingSchema(SQLAlchemyAutoSchema):
@@ -63,30 +68,27 @@ class JobFunctionSchema(SQLAlchemyAutoSchema):
 #     #         raise ValidationError("Pin codes must contain only digits.") from error
 
 
-# class IndustrialAthleteSchema(ModelSchema):
-#     hire_date = CustomDateField()
-#     first_name = fields.Str(load_only=False)
-#     # client_id = fields.Nested(ClientSchema)
-#     # warehouse_id = fields.Nested(WarehouseSchema)
-#     # job_function_id = fields.Nested(JobFunctionSchema)
-#     # shift_id = fields.Nested(ShiftsSchema, load_from='shiftId')
-#     # shift_id = fields.Str(load_from='shiftId')
-#     class Meta:
-#         model = IndustrialAthlete
-#         include_fk = True
-#         # include_relationships = True
-#         extend_existing = True
+class IndustrialAthleteSchema(ModelSchema):
+    warehouse = fields.Nested(WarehouseSchema(only=("id", "name")))
+    shifts = fields.Nested(ShiftsSchema(only=("id", "name")))
+    job_function = fields.Nested(JobFunctionSchema(only=("id", "name")))
 
-#     # @pre_load
-#     # def set_field_session(self, data, **kwargs):
-#     #     for value in filter(lambda f: hasattr(f, 'schema'), self.fields.values()):
-#     #         value.schema.session = self.session
-#     @validates("hire_date")
-#     def validate_hire_date(self, value):
-#         print("HIRE_DATE ===>", value)
+    firstName = fields.Function(lambda obj: obj.first_name)
+    lastName = fields.Function(lambda obj: obj.last_name)
+    externalId = fields.Function(lambda obj: obj.external_id)
+    sex = fields.Function(lambda obj: obj.gender)
+    warehouseId = fields.Function(lambda obj: obj.warehouse_id)
+    shiftId = fields.Function(lambda obj: obj.shift_id)
+    jobFunctionId = fields.Function(lambda obj: obj.job_function_id)
+    hireDate = fields.Function(
+        lambda obj: convert_date(obj.hire_date) if obj.hire_date else None
+    )
+    terminationDate = fields.Function(
+        lambda obj: convert_date(obj.termination_date) if obj.termination_date else None
+    )
 
-#     @validates("first_name")
-#     def validate_first_name(self, value):
-#         print("VALIDATING ===>", value)
-#         if value == "Mukul":
-#             raise ValidationError("Cannot be Mukul")
+    class Meta:
+        model = IndustrialAthlete
+        include_fk = True
+        include_relationships = True
+        load_instance = True
