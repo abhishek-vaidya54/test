@@ -201,6 +201,101 @@ def validate_before_insert(mapper, connection, target):
         raise Exception(json.dumps(error_response))
 
 
+@event.listens_for(DockPhase, "before_update")
+def validate_before_update(mapper, connection, target):
+    """
+    Helper method to check if params are valid for adding a single athlete
+    Input:
+        params_input: json containing data to be added for a single athlete.
+        warehouse_id: warehouse ID to validate job function
+    """
+    params_input = {}
+    for key, value in target.as_dict().items():
+        if value is not None:
+            params_input[key] = value
+    errors = []
+
+    if "dock_id" in params_input:
+        is_valid = dock_utils.is_non_empty_string(params_input.get("dock_id", ""))
+        if not is_valid:
+            error = copy.deepcopy(constants.ERROR_DATA)
+            error["fieldName"] = "dock_id"
+            error["reason"] = constants.EMPTY_STRING_ERROR_MESSAGE
+            errors.append(error)
+
+    if "client_id" in params_input:
+        is_valid = ia_utils.is_valid_client(
+            connection, params_input.get("client_id", "")
+        )
+        if not is_valid:
+            error = copy.deepcopy(constants.ERROR_DATA)
+            error["fieldName"] = "client_id"
+            error["reason"] = constants.INVALID_CLIENT_ID_MESSAGE
+            errors.append(error)
+
+    if "warehouse_id" in params_input:
+        is_valid = ia_utils.is_valid_warehouse(
+            connection, params_input.get("warehouse_id", "")
+        )
+        if not is_valid:
+            error = copy.deepcopy(constants.ERROR_DATA)
+            error["fieldName"] = "warehouse_id"
+            error["reason"] = constants.INVALID_WAREHOUSE_ID_MESSAGE
+            errors.append(error)
+
+    if "phase" in params_input:
+        is_valid = dock_utils.is_valid_dock_phase(params_input.get("phase", ""))
+        if not is_valid:
+            error = copy.deepcopy(constants.ERROR_DATA)
+            error["fieldName"] = "phase"
+            error["reason"] = constants.INVALID_DOCK_PHASE_MESSAGE
+            errors.append(error)
+
+    if "phase_date" in params_input:
+        is_valid, message = ia_utils.is_valid_date(params_input.get("phase_date", ""))
+        if not is_valid:
+            error = copy.deepcopy(constants.ERROR_DATA)
+            error["fieldName"] = "phase_date"
+            error["reason"] = message
+            errors.append(error)
+
+    if "deployment_stage" in params_input:
+        is_valid = dock_utils.is_valid_dock_deployment_stage(
+            params_input.get("deployment_stage", "")
+        )
+        if not is_valid:
+            error = copy.deepcopy(constants.ERROR_DATA)
+            error["fieldName"] = "deployment_stage"
+            error["reason"] = constants.INVALID_DOCK_DEPLOYMENT_STAGE_MESSAGE
+            errors.append(error)
+
+    if "dock_firmware_version" in params_input:
+        is_valid = dock_utils.is_valid_dock_firmware_version(
+            params_input.get("dock_firmware_version", "")
+        )
+        if not is_valid:
+            error = copy.deepcopy(constants.ERROR_DATA)
+            error["fieldName"] = "dock_firmware_version"
+            error["reason"] = constants.INVALID_DOCK_FIRMWARE_VERSION_MESSAGE
+            errors.append(error)
+
+    if "description" in params_input:
+        is_valid, message = ia_utils.is_valid_string(
+            params_input.get("description", "").strip()
+        )
+        if not is_valid:
+            error = copy.deepcopy(constants.ERROR_DATA)
+            error["fieldName"] = "description"
+            error["reason"] = message
+            errors.append(error)
+
+    if len(errors) > 0:
+        error_response = copy.deepcopy(constants.ERROR)
+        error_response["message"] = constants.INVALID_PARAMS_MESSAGE
+        error_response["errors"] = errors
+        raise Exception(json.dumps(error_response))
+
+
 def update_phase(session, data):
     """checks to see if the phase changed, if it did,
     a new row will be added to dock_phase. If there is no dock_id,
