@@ -1,16 +1,17 @@
 # Standard Library Imports
 import datetime
-import os
+import copy
 import json
 
 # Third Party Imports
-from sqlalchemy import ForeignKey, Column, String, Integer, DateTime, desc
+from sqlalchemy import ForeignKey, Column, String, Integer, DateTime, desc, event
 from sqlalchemy.orm import relationship, validates
 
 # Local Application Imports
 from sat_orm.pipeline_orm.warehouse import Warehouse
 from sat_orm.pipeline_orm.client import Client
 from sat_orm.pipeline_orm.pipeline_base import Base
+import sat_orm.constants as constants 
 
 
 class ExternalAdminUser(Base):
@@ -141,3 +142,25 @@ class ExternalAdminUser(Base):
         external_admin_user = ExternalAdminUser.get_by_id(session, id)
         session.delete(external_admin_user)
         session.commit()
+
+
+@event.listens_for(ExternalAdminUser, "before_update")
+def validate_role_before_update(mapper, connection, target):
+    """
+    Event hook method that fires before role update to check if 
+    role is valid
+    """
+    errors = []
+
+    is_valid = target.role in constants.RBAC_VALID_ROLES
+    if not is_valid:
+        error = copy.deepcopy(constants.ERROR_DATA)
+        error["fieldName"] = "role"
+        error["reason"] = constants.INVALID_ROLE_ERROR_MESSAGE
+        errors.append(error)
+
+    if len(errors) > 0:
+        error_response = copy.deepcopy(constants.ERROR)
+        error_response["message"] = constants.INVALID_PARAMS_MESSAGE
+        error_response["errors"] = errors
+        raise Exception(json.dumps(error_response))
