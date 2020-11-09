@@ -1,4 +1,4 @@
-'''
+"""
 LICENSE:
     This file is subject to the terms and conditions defined in
     file 'LICENSE.txt', which is part of this source code package.
@@ -27,8 +27,10 @@ DESCRIPTION:
             +---------------+
 
             **** Edit This File If tables are added or removed ****
-'''
+"""
 from sat_orm.dockv5_orm.dockv5_base import get_session
 
 from sat_orm.dockv5_orm.config import Config
 from sat_orm.dockv5_orm.dock_phase import DockPhase
+
+from sat_orm.dockv5_orm.marshmallow import schemas as Schemas

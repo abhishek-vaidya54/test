@@ -75,6 +75,16 @@ def is_valid_date(date_input):
         return False, None
 
 
+def is_valid_client(connection, client_id):
+    """
+    Validates a client, checks if client belongs to the client
+    Returns True if it is a valid client
+    Returns False if it is not
+    """
+    client = client_queries.get_client_by_id(connection, client_id)
+    return bool(client)
+
+
 def is_valid_warehouse(connection, warehouse_id):
     """
     Validates a warehouse, checks if warehouse belongs to the client

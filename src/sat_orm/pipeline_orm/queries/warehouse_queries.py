@@ -7,7 +7,7 @@ def get_warehouse(connection, warehouse_id):
         warehouse: The Warehouse object retrieved from the database
     """
     warehouse = connection.execute(
-        "SELECT * FROM warehouse WHERE id={}".format(warehouse_id)
+        "SELECT * FROM pipeline.warehouse WHERE id={}".format(warehouse_id)
     ).fetchone()
 
     return warehouse
