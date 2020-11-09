@@ -41,7 +41,7 @@ from sat_orm.pipeline_orm.pipeline_base import Base
 from sat_orm.pipeline_orm.warehouse import Warehouse
 from sat_orm.pipeline_orm.industrial_athlete import IndustrialAthlete
 from sat_orm.pipeline_orm.utilities import client_utils
-from sat_orm.pipeline_orm.utilities import ia_utils
+from sat_orm.pipeline_orm.utilities import utils
 import sat_orm.constants as constants
 from sat_orm.pipeline_orm.utilities.utils import build_error
 
@@ -168,14 +168,14 @@ def validate_before_update(mapper, connection, target):
             errors.append(build_error("status", constants.INVALID_CLIENT_STATUS_MESSAGE))
 
     if "contracted_users" in params_input:
-        is_valid, message = ia_utils.is_valid_int(
+        is_valid, message = utils.is_valid_int(
             params_input.get("contracted_users", "")
         )
         if not is_valid:
             errors.append(build_error("contracted_users", message))
 
     if "active_inactive_date" in params_input:
-        is_valid, date_obj = ia_utils.is_valid_date(
+        is_valid, date_obj = utils.is_valid_date(
             params_input.get("active_inactive_date", "")
         )
         if not is_valid:
@@ -221,14 +221,14 @@ def validate_before_insert(mapper, connection, target):
             errors.append(build_error("status", constants.INVALID_CLIENT_STATUS_MESSAGE))
 
     if "contracted_users" in params_input:
-        is_valid, message = ia_utils.is_valid_int(
+        is_valid, message = utils.is_valid_int(
             params_input.get("contracted_users", "")
         )
         if not is_valid:
             errors.append(build_error("contracted_users", message))
 
     if "active_inactive_date" in params_input:
-        is_valid, date_obj = ia_utils.is_valid_date(
+        is_valid, date_obj = utils.is_valid_date(
             params_input.get("active_inactive_date", "")
         )
         if not is_valid:

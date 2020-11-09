@@ -38,6 +38,7 @@ from sqlalchemy.orm import relationship, validates
 # Local Application Imports
 from sat_orm.pipeline_orm.pipeline_base import Base
 import sat_orm.constants as constants
+from sat_orm.pipeline_orm.utilities import utils
 from sat_orm.pipeline_orm.utilities import ia_utils
 from sat_orm.pipeline_orm.utilities import job_function_utils
 from sat_orm.pipeline_orm.utilities.utils import build_error
@@ -140,7 +141,7 @@ def validate_before_insert(mapper, connection, target):
     settings_id = params_input.get("settings_id", "")
     max_package_weight = params_input.get("max_package_weight", "")
 
-    is_valid, message = ia_utils.is_valid_string(name)
+    is_valid, message = utils.is_valid_string(name)
     if not is_valid:
         errors.append(build_error("name", message))
 
@@ -158,11 +159,11 @@ def validate_before_insert(mapper, connection, target):
             errors.append(build_error("group_administrator", constants.INVALID_GROUP_ADMIN_MESSAGE))
 
     if description:
-        is_valid, message = ia_utils.is_valid_string(description)
+        is_valid, message = utils.is_valid_string(description)
         if not is_valid:
             errors.append(build_error("description", message))
 
-    is_valid, message = ia_utils.is_valid_float(max_package_weight)
+    is_valid, message = utils.is_valid_float(max_package_weight)
     if not is_valid:
         errors.append(build_error("max_package_weight", message))
 
@@ -191,7 +192,7 @@ def validate_before_update(mapper, connection, target):
     errors = []
 
     if "name" in params_input:
-        is_valid, message = ia_utils.is_valid_string(params_input.get("name", ""))
+        is_valid, message = utils.is_valid_string(params_input.get("name", ""))
         if not is_valid:
             errors.append(build_error("name", message))
 
@@ -217,14 +218,14 @@ def validate_before_update(mapper, connection, target):
             errors.append(build_error("group_administrator", constants.INVALID_GROUP_ADMIN_MESSAGE))
 
     if "description" in params_input:
-        is_valid, message = ia_utils.is_valid_string(
+        is_valid, message = utils.is_valid_string(
             params_input.get("description", "")
         )
         if not is_valid:
             errors.append(build_error("description", message))
 
     if "max_package_weight" in params_input:
-        is_valid, message = ia_utils.is_valid_float(
+        is_valid, message = utils.is_valid_float(
             params_input.get("max_package_weight", "")
         )
         if not is_valid:

@@ -58,23 +58,6 @@ def is_valid_external_id(connection, ia, external_id, existing_ia_id=None):
     )  # DB contains an IA with same external_id, but not comparing against the same IA.
 
 
-def is_valid_date(date_input):
-    """
-    Helper method to check if input is a valid date (MM/dd/YY)
-    Returns True if it is a valid date
-    Returns False if it is not a valid date
-    """
-    try:
-        if isinstance(date_input, datetime) or isinstance(date_input, date):
-            return True, date_input
-        if date_input is None:
-            raise ValueError()
-        date_str = str(datetime.strptime(date_input, "%m/%d/%Y").date())
-        return True, date_str
-    except ValueError:
-        return False, None
-
-
 def is_valid_client(connection, client_id):
     """
     Validates a client, checks if client belongs to the client
@@ -127,42 +110,3 @@ def is_valid_job_function(connection, job_function_id, warehouse_id):
         connection, job_function_id, warehouse_id
     )
     return bool(job_function)
-
-
-def is_valid_string(string_input):
-    """
-    Helper method to check if input is a valid string
-    Return [True, None] if it is a valid string
-    Returns [False, reason] if it is not valid
-    """
-    if string_input == "":
-        return False, constants.MISSING_STRING_MESSAGE
-    if re.match(constants.REGEX_STRING, string_input):
-        return True, None
-    return False, constants.INVALID_STRING_MESSAGE
-
-
-def is_valid_int(int_input):
-    """
-    Helper method to check if input is a valid integer
-    Return True if it is a valid int
-    Returns False if it is not valid
-    """
-    try:
-        int(int_input)
-        return True, None
-    except ValueError:
-        return False, constants.INVALID_INTEGER_MESSAGE
-
-
-def is_valid_float(float_input):
-    """
-    Helper method to check if input is a valid integer
-    Return True if it is a valid int
-    Returns False if it is not valid
-    """
-    try:
-        float(float_input)
-        return True, None
-    except ValueError:
-        return False, constants.INVALID_FLOAT_MESSAGE

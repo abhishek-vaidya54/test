@@ -26,7 +26,6 @@ from sqlalchemy.orm import relationship, validates
 # Local Application Import
 from sat_orm.pipeline_orm.pipeline_base import Base
 import sat_orm.constants as constants
-from sat_orm.pipeline_orm.utilities import ia_utils
 from sat_orm.pipeline_orm.utilities import shift_utils
 from sat_orm.pipeline_orm.utilities import job_function_utils
 from sat_orm.pipeline_orm.utilities.utils import build_error

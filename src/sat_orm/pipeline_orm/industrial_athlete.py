@@ -26,6 +26,7 @@ from sqlalchemy.orm import relationship, validates
 # Local Application Imports
 from sat_orm.pipeline_orm.pipeline_base import Base
 import sat_orm.constants as constants
+from sat_orm.pipeline_orm.utilities import utils
 from sat_orm.pipeline_orm.utilities import ia_utils
 from sat_orm.pipeline_orm.utilities.utils import build_error
 
@@ -204,7 +205,7 @@ def validate_before_insert(mapper, connection, target):
     if not is_valid:
         errors.append(build_error("jobFunctionId", constants.INVALID_JOB_FUNCTION_MESSAGE))
 
-    is_valid, date_obj = ia_utils.is_valid_date(param_input.get("hireDate", ""))
+    is_valid, date_obj = utils.is_valid_date(param_input.get("hireDate", ""))
     if not is_valid:
         errors.append(build_error("hireDate", constants.INVALID_DATE_MESSAGE))
 
@@ -283,12 +284,12 @@ def validate_before_update(mapper, connection, target):
             errors.append(build_error("jobFunctionId", constants.INVALID_JOB_FUNCTION_MESSAGE))
 
     if "hireDate" in param_input:
-        is_valid, date_obj = ia_utils.is_valid_date(param_input.get("hireDate", ""))
+        is_valid, date_obj = utils.is_valid_date(param_input.get("hireDate", ""))
         if not is_valid:
             errors.append(build_error("hireDate", constants.INVALID_DATE_MESSAGE))
 
     if "terminationDate" in param_input:
-        is_valid, date_obj = ia_utils.is_valid_date(
+        is_valid, date_obj = utils.is_valid_date(
             param_input.get("terminationDate", "")
         )
         if not is_valid:
