@@ -15,14 +15,18 @@ CLASSIFICATION:
 
 # Standard Library Imports
 import datetime
+import copy
+import json
 
 # Third Party Imports
-from sqlalchemy import ForeignKey, Column, String, Integer, Boolean, DateTime, desc
+from sqlalchemy import ForeignKey, Column, String, Integer, Boolean, DateTime, desc, event
 from sqlalchemy.orm import relationship, validates
 
 
 # Local Application Imports
 from sat_orm.pipeline_orm.pipeline_base import Base
+import sat_orm.constants as constants
+from sat_orm.pipeline_orm.utilities import ia_utils
 
 
 class IndustrialAthlete(Base):
@@ -127,14 +131,16 @@ class IndustrialAthlete(Base):
     def as_dict(self):
         return {
             "id": self.id,
-            "client_id": self.client_id,
-            "warehouse_id": self.warehouse_id,
-            "job_function_id": self.job_function_id,
-            "shift_id": self.shift_id,
-            "first_name": self.first_name,
-            "last_name": self.last_name,
-            "gender": self.gender,
-            "external_id": self.external_id,
+            "firstName": self.first_name,
+            "lastName": self.last_name,
+            "externalId": self.external_id,
+            "sex": self.gender,
+            "shiftId": self.shift_id,
+            "jobFunctionId": self.job_function_id,
+            "clientId": self.client_id,
+            "warehouseId": self.warehouse_id,
+            "hireDate": self.hire_date,
+            "terminationDate": self.termination_date,
             "db_created_at": self.db_created_at,
             "db_modified_at": self.db_modified_at,
         }
@@ -144,6 +150,199 @@ class IndustrialAthlete(Base):
 
     def __len__(self):
         return len(self.as_dict())
+
+
+@event.listens_for(IndustrialAthlete, "before_insert")
+def validate_before_insert(mapper, connection, target):
+    """
+    Helper method to check if params are valid for adding a single athlete
+    Input:
+        param_input: json containing data to be added for a single athlete.
+        warehouse_id: warehouse ID to validate job function
+    """
+    param_input = {}
+    for key, value in target.as_dict().items():
+        if value is not None:
+            param_input[key] = value
+    errors = []
+
+    is_valid, message = ia_utils.is_valid_ia_first_last_name(
+        connection, param_input.get("firstName", ""), "First Name", target.client_id
+    )
+    if not is_valid:
+        error = copy.deepcopy(constants.ERROR_DATA)
+        error["fieldName"] = "firstName"
+        error["reason"] = message
+        errors.append(error)
+
+    is_valid, message = ia_utils.is_valid_ia_first_last_name(
+        connection, param_input.get("lastName", ""), "Last Name", target.client_id
+    )
+    if not is_valid:
+        error = copy.deepcopy(constants.ERROR_DATA)
+        error["fieldName"] = "lastName"
+        error["reason"] = message
+        errors.append(error)
+
+    is_valid, message = ia_utils.is_valid_external_id(
+        connection,
+        target,
+        param_input.get("externalId", ""),
+        existing_ia_id=param_input.get("id"),
+    )
+    if not is_valid:
+        error = copy.deepcopy(constants.ERROR_DATA)
+        error["fieldName"] = "externalId"
+        error["reason"] = message
+        errors.append(error)
+
+    is_valid = param_input.get("sex", "") in ("m", "f")
+    if not is_valid:
+        sex_error = copy.deepcopy(constants.ERROR_DATA)
+        sex_error["fieldName"] = "sex"
+        sex_error["reason"] = constants.INVALID_PARAM_SEX_MESSAGE
+        errors.append(sex_error)
+
+    is_valid = ia_utils.is_valid_shift(
+        connection, param_input.get("shiftId", ""), target.warehouse_id
+    )
+    if not is_valid:
+        error = copy.deepcopy(constants.ERROR_DATA)
+        error["fieldName"] = "shiftId"
+        error["reason"] = constants.INVALID_SHIFT_MESSAGE
+        errors.append(error)
+
+    is_valid = ia_utils.is_valid_job_function(
+        connection, param_input.get("jobFunctionId", ""), target.warehouse_id
+    )
+    if not is_valid:
+        error = copy.deepcopy(constants.ERROR_DATA)
+        error["fieldName"] = "jobFunctionId"
+        error["reason"] = constants.INVALID_JOB_FUNCTION_MESSAGE
+        errors.append(error)
+
+    is_valid, date_obj = ia_utils.is_valid_date(param_input.get("hireDate", ""))
+    if not is_valid:
+        hire_date_error = copy.deepcopy(constants.ERROR_DATA)
+        hire_date_error["fieldName"] = "hireDate"
+        hire_date_error["reason"] = constants.INVALID_DATE_MESSAGE
+        errors.append(hire_date_error)
+
+    if len(errors) > 0:
+        error_response = copy.deepcopy(constants.ERROR)
+        error_response["message"] = constants.INVALID_PARAMS_MESSAGE
+        error_response["errors"] = errors
+        raise Exception(json.dumps(error_response))
+
+
+@event.listens_for(IndustrialAthlete, "before_update")
+def validate_before_update(mapper, connection, target):
+    """
+    Helper method to check if params are valid for updating a single athlete
+    Input:
+        param_input: json containing data to be updated for a single athlete.
+                        id field MUST be inside.
+        warehouse_id: warehouse ID to validate job function
+    Output:
+        Return [True, None] if all params are valid.
+        Returns [False, Errors] if there are params which are not valid
+    """
+    param_input = {}
+    for key, value in target.as_dict().items():
+        if value is not None:
+            param_input[key] = value
+
+    errors = []
+
+    # Athlete ID is required
+    ia = connection.execute(
+        "SELECT * FROM industrial_athlete WHERE id={}".format(target.id)
+    ).fetchone()
+
+    if "firstName" in param_input:
+        is_valid, message = ia_utils.is_valid_ia_first_last_name(
+            connection, param_input.get("firstName", ""), "First Name", ia.client_id
+        )
+        if not is_valid:
+            error = copy.deepcopy(constants.ERROR_DATA)
+            error["fieldName"] = "firstName"
+            error["reason"] = message
+            errors.append(error)
+
+    if "lastName" in param_input:
+        is_valid, message = ia_utils.is_valid_ia_first_last_name(
+            connection, param_input.get("lastName", ""), "Last Name", ia.client_id
+        )
+        if not is_valid:
+            error = copy.deepcopy(constants.ERROR_DATA)
+            error["fieldName"] = "lastName"
+            error["reason"] = message
+            errors.append(error)
+
+    if "externalId" in param_input:
+        is_valid, message = ia_utils.is_valid_external_id(
+            connection,
+            ia,
+            param_input.get("externalId", ""),
+            existing_ia_id=param_input.get("id"),
+        )
+        if not is_valid:
+            error = copy.deepcopy(constants.ERROR_DATA)
+            error["fieldName"] = "externalId"
+            error["reason"] = message
+            errors.append(error)
+
+    if "sex" in param_input:
+        is_valid = param_input.get("sex", "") in ("m", "f")
+        if not is_valid:
+            sex_error = copy.deepcopy(constants.ERROR_DATA)
+            sex_error["fieldName"] = "sex"
+            sex_error["reason"] = constants.INVALID_PARAM_SEX_MESSAGE
+            errors.append(sex_error)
+
+    if "shiftId" in param_input:
+        is_valid = ia_utils.is_valid_shift(
+            connection, param_input.get("shiftId", ""), ia.warehouse_id
+        )
+        if not is_valid:
+            error = copy.deepcopy(constants.ERROR_DATA)
+            error["fieldName"] = "shiftId"
+            error["reason"] = constants.INVALID_SHIFT_MESSAGE
+            errors.append(error)
+
+    if "jobFunctionId" in param_input:
+        is_valid = ia_utils.is_valid_job_function(
+            connection, param_input.get("jobFunctionId", ""), ia.warehouse_id
+        )
+        if not is_valid:
+            error = copy.deepcopy(constants.ERROR_DATA)
+            error["fieldName"] = "jobFunctionId"
+            error["reason"] = constants.INVALID_JOB_FUNCTION_MESSAGE
+            errors.append(error)
+
+    if "hireDate" in param_input:
+        is_valid, date_obj = ia_utils.is_valid_date(param_input.get("hireDate", ""))
+        if not is_valid:
+            hire_date_error = copy.deepcopy(constants.ERROR_DATA)
+            hire_date_error["fieldName"] = "hireDate"
+            hire_date_error["reason"] = constants.INVALID_DATE_MESSAGE
+            errors.append(hire_date_error)
+
+    if "terminationDate" in param_input:
+        is_valid, date_obj = ia_utils.is_valid_date(
+            param_input.get("terminationDate", "")
+        )
+        if not is_valid:
+            hire_date_error = copy.deepcopy(constants.ERROR_DATA)
+            hire_date_error["fieldName"] = "terminationDate"
+            hire_date_error["reason"] = constants.INVALID_DATE_MESSAGE
+            errors.append(hire_date_error)
+
+    if len(errors) > 0:
+        error_response = copy.deepcopy(constants.ERROR)
+        error_response["message"] = constants.INVALID_PARAMS_MESSAGE
+        error_response["errors"] = errors
+        raise Exception(json.dumps(error_response))
 
 
 def get_all_athletes(session):
