@@ -1,5 +1,8 @@
-import datetime
-from sqlalchemy import Column, String, Integer, DateTime
+import copy
+import json
+from sqlalchemy import Column, String, Integer, event
+
+import sat_orm.constants as constants 
 
 from sat_orm.pipeline_orm.pipeline_base import Base
 
@@ -15,3 +18,40 @@ class CasbinRule(Base):
     v3 = Column(String(255), nullable=True)
     v4 = Column(String(255), nullable=True)
     v5 = Column(String(255), nullable=True)
+
+
+@event.listens_for(CasbinRule, "before_insert")
+def validate_before_insert(mapper, connection, target):
+    """
+    Event hook method that fires before insert to check if 
+    params are valid for adding a single CasbinRule entry
+    """
+    errors = []
+    
+    is_valid = target.v0 in constants.RBAC_VALID_ROLES
+    if not is_valid:
+        error = copy.deepcopy(constants.ERROR_DATA)
+        error["fieldName"] = "role"
+        error["reason"] = constants.INVALID_ROLE_ERROR_MESSAGE
+        errors.append(error)
+
+    is_valid = target.v1 in constants.RBAC_VALID_RESOURCES
+    if not is_valid:
+        error = copy.deepcopy(constants.ERROR_DATA)
+        error["fieldName"] = "resource"
+        error["reason"] = constants.INVALID_RESOURCE_ERROR_MESSAGE
+        errors.append(error)
+
+    is_valid = target.v2 in constants.RBAC_ACTION_VALUES.values()
+    if not is_valid:
+        error = copy.deepcopy(constants.ERROR_DATA)
+        error["fieldName"] = "action"
+        error["reason"] = constants.INVALID_ACTION_ERROR_MESSAGE
+        errors.append(error)
+
+
+    if len(errors) > 0:
+        error_response = copy.deepcopy(constants.ERROR)
+        error_response["message"] = constants.INVALID_PARAMS_MESSAGE
+        error_response["errors"] = errors
+        raise Exception(json.dumps(error_response))
