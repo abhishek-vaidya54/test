@@ -208,6 +208,73 @@ def validate_before_update(mapper, connection, target):
         error_response["errors"] = errors
         raise Exception(json.dumps(error_response))
 
+@event.listens_for(Client, "before_insert")
+def validate_before_insert(mapper, connection, target):
+    """
+    Event hook method that fires before insert 
+    to check if params are valid for inserting a single client
+    """
+    params_input = {}
+    for key, value in target.as_dict().items():
+        if value is not None:
+            params_input[key] = value
+
+    errors = []
+
+    if "name" in params_input:
+        is_valid, message = client_utils.is_valid_client_name(
+            connection, params_input.get("name", ""), params_input.get("id", "")
+        )
+        if not is_valid:
+            error = copy.deepcopy(constants.ERROR_DATA)
+            error["fieldName"] = "name"
+            error["reason"] = message
+            errors.append(error)
+
+    if "status" in params_input:
+        is_valid = client_utils.is_valid_client_status(params_input.get("status", ""))
+        if not is_valid:
+            error = copy.deepcopy(constants.ERROR_DATA)
+            error["fieldName"] = "status"
+            error["reason"] = constants.INVALID_CLIENT_STATUS_MESSAGE
+            errors.append(error)
+
+    if "contracted_users" in params_input:
+        is_valid, message = ia_utils.is_valid_int(
+            params_input.get("contracted_users", "")
+        )
+        if not is_valid:
+            error = copy.deepcopy(constants.ERROR_DATA)
+            error["fieldName"] = "contracted_users"
+            error["reason"] = message
+            errors.append(error)
+
+    if "active_inactive_date" in params_input:
+        is_valid, date_obj = ia_utils.is_valid_date(
+            params_input.get("active_inactive_date", "")
+        )
+        if not is_valid:
+            error = copy.deepcopy(constants.ERROR_DATA)
+            error["fieldName"] = "active_inactive_date"
+            error["reason"] = constants.INVALID_DATE_MESSAGE
+            errors.append(error)
+
+    if "ia_name_format" in params_input:
+        is_valid = client_utils.is_valid_client_ia_name_format(
+            params_input.get("ia_name_format", "")
+        )
+        if not is_valid:
+            error = copy.deepcopy(constants.ERROR_DATA)
+            error["fieldName"] = "ia_name_format"
+            error["reason"] = constants.INVALID_CLIENT_IA_NAME_FORMAT_MESSAGE
+            errors.append(error)
+
+    if len(errors) > 0:
+        error_response = copy.deepcopy(constants.ERROR)
+        error_response["message"] = constants.INVALID_PARAMS_MESSAGE
+        error_response["errors"] = errors
+        raise Exception(json.dumps(error_response))
+
 
 def insert(session, data):
     """
