@@ -17,6 +17,8 @@ CLASSIFICATION:
 
 # Standard Library Imports
 import datetime
+import copy
+import json
 
 # Third Party Imports
 from sqlalchemy import (
@@ -29,11 +31,15 @@ from sqlalchemy import (
     Text,
     Boolean,
     PrimaryKeyConstraint,
+    event,
 )
 from sqlalchemy.orm import relationship, validates
 
 # Local Application Imports
 from sat_orm.pipeline_orm.pipeline_base import Base
+import sat_orm.constants as constants
+from sat_orm.pipeline_orm.utilities import ia_utils
+from sat_orm.pipeline_orm.utilities import job_function_utils
 
 
 class JobFunction(Base):
@@ -101,33 +107,166 @@ class JobFunction(Base):
     def as_dict(self):
         return {
             "id": self.id,
-            "warehouse_id": self.warehouse_id,
             "name": self.name,
-            "max_package_mass": self.max_package_mass,
             "group_administrator": self.group_administrator,
-            "max_package_weight": self.max_package_weight,
-            "min_package_weight": self.min_package_weight,
-            "avg_package_weight": self.avg_package_weight,
-            "lbd_indicence": self.lbd_indicence,
-            "lbd_indicence_rate": self.lbd_indicence_rate,
             "description": self.description,
-            "color": self.color,
-            "db_created_at": str(self.db_created_at),
-            "db_modified_at": str(self.db_modified_at),
-            "standard_score": self.standard_score,
-            "min_safety_score": self.min_safety_score,
-            "max_safety_score": self.max_safety_score,
-            "first_quarter_safety_score": self.first_quarter_safety_score,
-            "median_safety_score": self.median_safety_score,
-            "third_quarter_safety_score": self.third_quarter_safety_score,
+            "warehouse_id": self.warehouse_id,
+            "settings_id": self.settings_id,
+            "max_package_weight": self.max_package_weight,
         }
 
     def __repr__(self):
         return str(self.as_dict())
 
 
-#         'min_safety_score':self.min_safety_score,
-#         'max_safety_score':self.max_safety_score,
-#         'first_quarter_safety_score':self.first_quarter_safety_score,
-#         'median_safety_score':self.median_safety_score,
-#         'third_quarter_safety_score':self.third_quarter_safety_score
+@event.listens_for(JobFunction, "before_insert")
+def validate_before_insert(mapper, connection, target):
+    """
+    Helper method to check if params are valid
+    Return [True, None] if all params are valid.
+    Returns [False, Errors] if there are params which are not valid
+    """
+    params_input = {}
+    for key, value in target.as_dict().items():
+        if value is not None:
+            params_input[key] = value
+    errors = []
+
+    name = params_input.get("name", "")
+    group_administrator = params_input.get("group_administrator", "")
+    description = params_input.get("description", "")
+    warehouse_id = params_input.get("warehouse_id", "")
+    settings_id = params_input.get("settings_id", "")
+    max_package_weight = params_input.get("max_package_weight", "")
+
+    is_valid, message = ia_utils.is_valid_string(name)
+    if not is_valid:
+        error = copy.deepcopy(constants.ERROR_DATA)
+        error["fieldName"] = "name"
+        error["reason"] = message
+        errors.append(error)
+
+    is_valid = ia_utils.is_valid_warehouse(connection, warehouse_id)
+    if not is_valid:
+        error = copy.deepcopy(constants.ERROR_DATA)
+        error["fieldName"] = "warehouse_id"
+        error["reason"] = constants.INVALID_WAREHOUSE_ID_MESSAGE
+        errors.append(error)
+
+    is_valid = ia_utils.is_valid_setting(connection, settings_id)
+    if not is_valid:
+        error = copy.deepcopy(constants.ERROR_DATA)
+        error["fieldName"] = "settings_id"
+        error["reason"] = constants.INVALID_SETTINGS_ID_MESSAGE
+        errors.append(error)
+
+    if group_administrator:
+        is_valid = job_function_utils.is_valid_group_admin(group_administrator)
+        if not is_valid:
+            error = copy.deepcopy(constants.ERROR_DATA)
+            error["fieldName"] = "group_administrator"
+            error["reason"] = constants.INVALID_GROUP_ADMIN_MESSAGE
+            errors.append(error)
+
+    if description:
+        is_valid, message = ia_utils.is_valid_string(description)
+        if not is_valid:
+            error = copy.deepcopy(constants.ERROR_DATA)
+            error["fieldName"] = "description"
+            error["reason"] = message
+            errors.append(error)
+
+    is_valid, message = ia_utils.is_valid_float(max_package_weight)
+    if not is_valid:
+        error = copy.deepcopy(constants.ERROR_DATA)
+        error["fieldName"] = "max_package_weight"
+        error["reason"] = message
+        errors.append(error)
+
+    if len(errors) > 0:
+        error_response = copy.deepcopy(constants.ERROR)
+        error_response["message"] = constants.INVALID_PARAMS_MESSAGE
+        error_response["errors"] = errors
+        raise Exception(json.dumps(error_response))
+
+
+@event.listens_for(JobFunction, "before_update")
+def validate_before_update(mapper, connection, target):
+    """
+    Helper method to check if params are valid for updating a single job_function
+    Input:
+        param_input: json containing data to be updated for a single job_function.
+                        id field MUST be inside.
+    Output:
+        Return [True, None] if all params are valid.
+        Returns [False, Errors] if there are params which are not valid
+    """
+    params_input = {}
+    for key, value in target.as_dict().items():
+        if value is not None:
+            params_input[key] = value
+    errors = []
+
+    if "name" in params_input:
+        is_valid, message = ia_utils.is_valid_string(params_input.get("name", ""))
+        if not is_valid:
+            error = copy.deepcopy(constants.ERROR_DATA)
+            error["fieldName"] = "name"
+            error["reason"] = message
+            errors.append(error)
+
+    if "warehouse_id" in params_input:
+        is_valid = ia_utils.is_valid_warehouse(
+            connection, params_input.get("warehouse_id", "")
+        )
+        if not is_valid:
+            error = copy.deepcopy(constants.ERROR_DATA)
+            error["fieldName"] = "warehouse_id"
+            error["reason"] = constants.INVALID_WAREHOUSE_ID_MESSAGE
+            errors.append(error)
+
+    if "settings_id" in params_input:
+        is_valid = ia_utils.is_valid_setting(
+            connection, params_input.get("settings_id", "")
+        )
+        if not is_valid:
+            error = copy.deepcopy(constants.ERROR_DATA)
+            error["fieldName"] = "settings_id"
+            error["reason"] = constants.INVALID_SETTINGS_ID_MESSAGE
+            errors.append(error)
+
+    if "group_administrator" in params_input:
+        is_valid = job_function_utils.is_valid_group_admin(
+            params_input.get("group_administrator", "")
+        )
+        if not is_valid:
+            error = copy.deepcopy(constants.ERROR_DATA)
+            error["fieldName"] = "group_administrator"
+            error["reason"] = constants.INVALID_GROUP_ADMIN_MESSAGE
+            errors.append(error)
+
+    if "description" in params_input:
+        is_valid, message = ia_utils.is_valid_string(
+            params_input.get("description", "")
+        )
+        if not is_valid:
+            error = copy.deepcopy(constants.ERROR_DATA)
+            error["fieldName"] = "description"
+            error["reason"] = message
+            errors.append(error)
+
+    if "max_package_weight" in params_input:
+        is_valid, message = ia_utils.is_valid_float(
+            params_input.get("max_package_weight", "")
+        )
+        if not is_valid:
+            error = copy.deepcopy(constants.ERROR_DATA)
+            error["fieldName"] = "max_package_weight"
+            error["reason"] = message
+            errors.append(error)
+
+    if len(errors) > 0:
+        error_response = copy.deepcopy(constants.ERROR)
+        error_response["message"] = constants.INVALID_PARAMS_MESSAGE
+        error_response["errors"] = errors
+        raise Exception(json.dumps(error_response))
