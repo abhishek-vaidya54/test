@@ -40,8 +40,8 @@ class Config(Base):
     description = Column(String(500),nullable=True)
 
     # Relationships 
-    dock_phase = relationship('DockPhase',order_by='DockPhase.timestamp.desc()',back_populates='config',uselist=False)
-    dock_phases = relationship('DockPhase',order_by='DockPhase.timestamp.desc()',back_populates='configs')
+    # dock_phase = relationship('DockPhase',order_by='DockPhase.timestamp.desc()',back_populates='config',uselist=False)
+    # dock_phases = relationship('DockPhase',order_by='DockPhase.timestamp.desc()',back_populates='configs')
 
 
     @validates('client_id')
