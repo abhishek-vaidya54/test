@@ -46,11 +46,17 @@ class JobFunctionSchema(SQLAlchemyAutoSchema):
         load_instance = True
 
 
-# class ClientSchema(SQLAlchemyAutoSchema):
-#     class Meta:
-#         model = Client
-#         include_relationships = True
-#         load_instance = True
+class ClientSchema(SQLAlchemyAutoSchema):
+    active_inactive_date = fields.Function(
+        lambda obj: convert_date(obj.active_inactive_date)
+        if obj.active_inactive_date
+        else None
+    )
+
+    class Meta:
+        model = Client
+        include_relationships = True
+        load_instance = True
 
 
 # class CustomDateField(fields.Field):
