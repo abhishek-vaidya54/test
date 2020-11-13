@@ -1,7 +1,7 @@
 """manually assign groups for haptic parameters
 
 Revision ID: b6ddbbb1507d
-Revises: b6978481f4b1
+Revises: cfafa0bc6498
 Create Date: 2020-11-06 11:22:31.349443
 
 """
