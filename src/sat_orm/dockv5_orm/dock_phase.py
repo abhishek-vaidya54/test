@@ -38,6 +38,7 @@ from sat_orm.dockv5_orm.config import Config
 from sat_orm.pipeline import Warehouse, Client
 import sat_orm.constants as constants
 from sat_orm.dockv5_orm.utilities import dock_utils
+from sat_orm.pipeline_orm.utilities.utils import build_error
 from sat_orm.pipeline_orm.utilities import ia_utils
 
 
@@ -139,60 +140,36 @@ def validate_before_insert(mapper, connection, target):
 
     is_valid = dock_utils.is_non_empty_string(dock_id)
     if not is_valid:
-        error = copy.deepcopy(constants.ERROR_DATA)
-        error["fieldName"] = "dock_id"
-        error["reason"] = constants.EMPTY_STRING_ERROR_MESSAGE
-        errors.append(error)
+        errors.append(build_error("dock_id", constants.EMPTY_STRING_ERROR_MESSAGE))
 
     is_valid = ia_utils.is_valid_client(connection, client_id)
     if not is_valid:
-        error = copy.deepcopy(constants.ERROR_DATA)
-        error["fieldName"] = "client_id"
-        error["reason"] = constants.INVALID_CLIENT_ID_MESSAGE
-        errors.append(error)
+        errors.append(build_error("client_id", constants.INVALID_CLIENT_ID_MESSAGE))
 
     is_valid = ia_utils.is_valid_warehouse(connection, warehouse_id)
     if not is_valid:
-        error = copy.deepcopy(constants.ERROR_DATA)
-        error["fieldName"] = "warehouse_id"
-        error["reason"] = constants.INVALID_WAREHOUSE_ID_MESSAGE
-        errors.append(error)
+        errors.append(build_error("warehouse_id", constants.INVALID_WAREHOUSE_ID_MESSAGE))
 
     is_valid = dock_utils.is_valid_dock_phase(phase)
     if not is_valid:
-        error = copy.deepcopy(constants.ERROR_DATA)
-        error["fieldName"] = "phase"
-        error["reason"] = constants.INVALID_DOCK_PHASE_MESSAGE
-        errors.append(error)
+        errors.append(build_error("phase", constants.INVALID_DOCK_PHASE_MESSAGE))
 
     is_valid, date_obj = ia_utils.is_valid_date(phase_date)
     if not is_valid:
-        error = copy.deepcopy(constants.ERROR_DATA)
-        error["fieldName"] = "phase_date"
-        error["reason"] = constants.INVALID_DATE_MESSAGE
-        errors.append(error)
+        errors.append(build_error("phase_date", constants.INVALID_DATE_MESSAGE))
 
     is_valid = dock_utils.is_valid_dock_deployment_stage(deployment_stage)
     if not is_valid:
-        error = copy.deepcopy(constants.ERROR_DATA)
-        error["fieldName"] = "deployment_stage"
-        error["reason"] = constants.INVALID_DOCK_DEPLOYMENT_STAGE_MESSAGE
-        errors.append(error)
+        errors.append(build_error("deployment_stage", constants.INVALID_DOCK_DEPLOYMENT_STAGE_MESSAGE))
 
     is_valid = dock_utils.is_valid_dock_firmware_version(dock_firmware_version)
     if not is_valid:
-        error = copy.deepcopy(constants.ERROR_DATA)
-        error["fieldName"] = "dock_firmware_version"
-        error["reason"] = constants.INVALID_DOCK_FIRMWARE_VERSION_MESSAGE
-        errors.append(error)
+        errors.append(build_error("dock_firmware_version", constants.INVALID_DOCK_FIRMWARE_VERSION_MESSAGE))
 
     if description.strip():
         is_valid, message = ia_utils.is_valid_string(description.strip())
         if not is_valid:
-            error = copy.deepcopy(constants.ERROR_DATA)
-            error["fieldName"] = "description"
-            error["reason"] = message
-            errors.append(error)
+            errors.append(build_error("description", message))
 
     if len(errors) > 0:
         error_response = copy.deepcopy(constants.ERROR)
@@ -218,76 +195,52 @@ def validate_before_update(mapper, connection, target):
     if "dock_id" in params_input:
         is_valid = dock_utils.is_non_empty_string(params_input.get("dock_id", ""))
         if not is_valid:
-            error = copy.deepcopy(constants.ERROR_DATA)
-            error["fieldName"] = "dock_id"
-            error["reason"] = constants.EMPTY_STRING_ERROR_MESSAGE
-            errors.append(error)
+            errors.append(build_error("dock_id", constants.EMPTY_STRING_ERROR_MESSAGE))
 
     if "client_id" in params_input:
         is_valid = ia_utils.is_valid_client(
             connection, params_input.get("client_id", "")
         )
         if not is_valid:
-            error = copy.deepcopy(constants.ERROR_DATA)
-            error["fieldName"] = "client_id"
-            error["reason"] = constants.INVALID_CLIENT_ID_MESSAGE
-            errors.append(error)
+            errors.append(build_error("client_id", constants.INVALID_CLIENT_ID_MESSAGE))
 
     if "warehouse_id" in params_input:
         is_valid = ia_utils.is_valid_warehouse(
             connection, params_input.get("warehouse_id", "")
         )
         if not is_valid:
-            error = copy.deepcopy(constants.ERROR_DATA)
-            error["fieldName"] = "warehouse_id"
-            error["reason"] = constants.INVALID_WAREHOUSE_ID_MESSAGE
-            errors.append(error)
+            errors.append(build_error("warehouse_id", constants.INVALID_WAREHOUSE_ID_MESSAGE))
 
     if "phase" in params_input:
         is_valid = dock_utils.is_valid_dock_phase(params_input.get("phase", ""))
         if not is_valid:
-            error = copy.deepcopy(constants.ERROR_DATA)
-            error["fieldName"] = "phase"
-            error["reason"] = constants.INVALID_DOCK_PHASE_MESSAGE
-            errors.append(error)
+            errors.append(build_error("phase", constants.INVALID_DOCK_PHASE_MESSAGE))
 
     if "phase_date" in params_input:
         is_valid, message = ia_utils.is_valid_date(params_input.get("phase_date", ""))
         if not is_valid:
-            error = copy.deepcopy(constants.ERROR_DATA)
-            error["fieldName"] = "phase_date"
-            error["reason"] = message
-            errors.append(error)
+            errors.append(build_error("phase_date", message))
 
     if "deployment_stage" in params_input:
         is_valid = dock_utils.is_valid_dock_deployment_stage(
             params_input.get("deployment_stage", "")
         )
         if not is_valid:
-            error = copy.deepcopy(constants.ERROR_DATA)
-            error["fieldName"] = "deployment_stage"
-            error["reason"] = constants.INVALID_DOCK_DEPLOYMENT_STAGE_MESSAGE
-            errors.append(error)
+            errors.append(build_error("deployment_stage", constants.INVALID_DOCK_DEPLOYMENT_STAGE_MESSAGE))
 
     if "dock_firmware_version" in params_input:
         is_valid = dock_utils.is_valid_dock_firmware_version(
             params_input.get("dock_firmware_version", "")
         )
         if not is_valid:
-            error = copy.deepcopy(constants.ERROR_DATA)
-            error["fieldName"] = "dock_firmware_version"
-            error["reason"] = constants.INVALID_DOCK_FIRMWARE_VERSION_MESSAGE
-            errors.append(error)
+            errors.append(build_error("dock_firmware_version", constants.INVALID_DOCK_FIRMWARE_VERSION_MESSAGE))
 
     if "description" in params_input:
         is_valid, message = ia_utils.is_valid_string(
             params_input.get("description", "").strip()
         )
         if not is_valid:
-            error = copy.deepcopy(constants.ERROR_DATA)
-            error["fieldName"] = "description"
-            error["reason"] = message
-            errors.append(error)
+            errors.append(build_error("description", message))
 
     if len(errors) > 0:
         error_response = copy.deepcopy(constants.ERROR)
