@@ -9,6 +9,7 @@ from sat_orm.pipeline_orm.job_function import JobFunction
 from sat_orm.pipeline_orm.settings import Setting
 from sat_orm.pipeline_orm.shifts import Shifts
 from sat_orm.pipeline_orm.casbin_rule import CasbinRule
+from sat_orm.pipeline_orm.external_admin_user import ExternalAdminUser
 
 
 def convert_date(date_input):
@@ -113,6 +114,19 @@ class IndustrialAthleteSchema(ModelSchema):
 
     class Meta:
         model = IndustrialAthlete
+        include_fk = True
+        include_relationships = True
+        load_instance = True
+
+
+class ExternalAdminUserSchema(ModelSchema):
+    warehouseId = fields.Function(lambda obj: obj.warehouse.id)
+    warehouse = fields.Function(lambda obj: obj.warehouse.name)
+    clientId = fields.Function(lambda obj: obj.client.id)
+    client = fields.Function(lambda obj: obj.client.name)
+
+    class Meta:
+        model = ExternalAdminUser
         include_fk = True
         include_relationships = True
         load_instance = True
