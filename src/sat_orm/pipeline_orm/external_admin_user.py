@@ -12,6 +12,7 @@ from sat_orm.pipeline_orm.warehouse import Warehouse
 from sat_orm.pipeline_orm.client import Client
 from sat_orm.pipeline_orm.pipeline_base import Base
 import sat_orm.constants as constants 
+from sat_orm.pipeline_orm.utilities.utils import build_error
 
 
 class ExternalAdminUser(Base):
@@ -154,10 +155,7 @@ def validate_role_before_update(mapper, connection, target):
 
     is_valid = target.role in constants.RBAC_VALID_ROLES
     if not is_valid:
-        error = copy.deepcopy(constants.ERROR_DATA)
-        error["fieldName"] = "role"
-        error["reason"] = constants.INVALID_ROLE_ERROR_MESSAGE
-        errors.append(error)
+        errors.append(build_error("role", constants.INVALID_ROLE_ERROR_MESSAGE))
 
     if len(errors) > 0:
         error_response = copy.deepcopy(constants.ERROR)

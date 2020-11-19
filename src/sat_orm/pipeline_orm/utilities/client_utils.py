@@ -1,5 +1,5 @@
 import sat_orm.constants as constants
-from sat_orm.pipeline_orm.utilities import ia_utils
+from sat_orm.pipeline_orm.utilities import utils
 from sat_orm.pipeline_orm.queries import client_queries
 
 
@@ -17,7 +17,7 @@ def is_valid_client_ia_name_format(field):
 
 
 def is_valid_client_name(connection, name, id=None):
-    is_valid, message = ia_utils.is_valid_string(name)
+    is_valid, message = utils.is_valid_string(name)
     if not is_valid:
         return False, message
 

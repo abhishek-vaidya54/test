@@ -3,6 +3,7 @@ import json
 from sqlalchemy import Column, String, Integer, event
 
 import sat_orm.constants as constants 
+from sat_orm.pipeline_orm.utilities.utils import build_error
 
 from sat_orm.pipeline_orm.pipeline_base import Base
 
@@ -30,24 +31,15 @@ def validate_before_insert(mapper, connection, target):
     
     is_valid = target.v0 in constants.RBAC_VALID_ROLES
     if not is_valid:
-        error = copy.deepcopy(constants.ERROR_DATA)
-        error["fieldName"] = "role"
-        error["reason"] = constants.INVALID_ROLE_ERROR_MESSAGE
-        errors.append(error)
+        errors.append(build_error("role", constants.INVALID_ROLE_ERROR_MESSAGE))
 
     is_valid = target.v1 in constants.RBAC_VALID_RESOURCES
     if not is_valid:
-        error = copy.deepcopy(constants.ERROR_DATA)
-        error["fieldName"] = "resource"
-        error["reason"] = constants.INVALID_RESOURCE_ERROR_MESSAGE
-        errors.append(error)
+        errors.append(build_error("resource", constants.INVALID_RESOURCE_ERROR_MESSAGE))
 
     is_valid = target.v2 in constants.RBAC_ACTION_VALUES.values()
     if not is_valid:
-        error = copy.deepcopy(constants.ERROR_DATA)
-        error["fieldName"] = "action"
-        error["reason"] = constants.INVALID_ACTION_ERROR_MESSAGE
-        errors.append(error)
+        errors.append(build_error("action", constants.INVALID_ACTION_ERROR_MESSAGE))
 
 
     if len(errors) > 0:

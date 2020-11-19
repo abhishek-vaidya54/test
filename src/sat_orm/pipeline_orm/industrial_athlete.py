@@ -26,7 +26,9 @@ from sqlalchemy.orm import relationship, validates
 # Local Application Imports
 from sat_orm.pipeline_orm.pipeline_base import Base
 import sat_orm.constants as constants
+from sat_orm.pipeline_orm.utilities import utils
 from sat_orm.pipeline_orm.utilities import ia_utils
+from sat_orm.pipeline_orm.utilities.utils import build_error
 
 
 class IndustrialAthlete(Base):
@@ -170,19 +172,13 @@ def validate_before_insert(mapper, connection, target):
         connection, param_input.get("firstName", ""), "First Name", target.client_id
     )
     if not is_valid:
-        error = copy.deepcopy(constants.ERROR_DATA)
-        error["fieldName"] = "firstName"
-        error["reason"] = message
-        errors.append(error)
+        errors.append(build_error("firstName", message))
 
     is_valid, message = ia_utils.is_valid_ia_first_last_name(
         connection, param_input.get("lastName", ""), "Last Name", target.client_id
     )
     if not is_valid:
-        error = copy.deepcopy(constants.ERROR_DATA)
-        error["fieldName"] = "lastName"
-        error["reason"] = message
-        errors.append(error)
+        errors.append(build_error("lastName", message))
 
     is_valid, message = ia_utils.is_valid_external_id(
         connection,
@@ -191,42 +187,27 @@ def validate_before_insert(mapper, connection, target):
         existing_ia_id=param_input.get("id"),
     )
     if not is_valid:
-        error = copy.deepcopy(constants.ERROR_DATA)
-        error["fieldName"] = "externalId"
-        error["reason"] = message
-        errors.append(error)
+        errors.append(build_error("externalId", message))
 
     is_valid = param_input.get("sex", "") in ("m", "f")
     if not is_valid:
-        sex_error = copy.deepcopy(constants.ERROR_DATA)
-        sex_error["fieldName"] = "sex"
-        sex_error["reason"] = constants.INVALID_PARAM_SEX_MESSAGE
-        errors.append(sex_error)
+        errors.append(build_error("sex", constants.INVALID_PARAM_SEX_MESSAGE))
 
     is_valid = ia_utils.is_valid_shift(
         connection, param_input.get("shiftId", ""), target.warehouse_id
     )
     if not is_valid:
-        error = copy.deepcopy(constants.ERROR_DATA)
-        error["fieldName"] = "shiftId"
-        error["reason"] = constants.INVALID_SHIFT_MESSAGE
-        errors.append(error)
+        errors.append(build_error("shiftId", constants.INVALID_SHIFT_MESSAGE))
 
     is_valid = ia_utils.is_valid_job_function(
         connection, param_input.get("jobFunctionId", ""), target.warehouse_id
     )
     if not is_valid:
-        error = copy.deepcopy(constants.ERROR_DATA)
-        error["fieldName"] = "jobFunctionId"
-        error["reason"] = constants.INVALID_JOB_FUNCTION_MESSAGE
-        errors.append(error)
+        errors.append(build_error("jobFunctionId", constants.INVALID_JOB_FUNCTION_MESSAGE))
 
-    is_valid, date_obj = ia_utils.is_valid_date(param_input.get("hireDate", ""))
+    is_valid, date_obj = utils.is_valid_date(param_input.get("hireDate", ""))
     if not is_valid:
-        hire_date_error = copy.deepcopy(constants.ERROR_DATA)
-        hire_date_error["fieldName"] = "hireDate"
-        hire_date_error["reason"] = constants.INVALID_DATE_MESSAGE
-        errors.append(hire_date_error)
+        errors.append(build_error("hireDate", constants.INVALID_DATE_MESSAGE))
 
     if len(errors) > 0:
         error_response = copy.deepcopy(constants.ERROR)
@@ -264,20 +245,14 @@ def validate_before_update(mapper, connection, target):
             connection, param_input.get("firstName", ""), "First Name", ia.client_id
         )
         if not is_valid:
-            error = copy.deepcopy(constants.ERROR_DATA)
-            error["fieldName"] = "firstName"
-            error["reason"] = message
-            errors.append(error)
+            errors.append(build_error("firstName", message))
 
     if "lastName" in param_input:
         is_valid, message = ia_utils.is_valid_ia_first_last_name(
             connection, param_input.get("lastName", ""), "Last Name", ia.client_id
         )
         if not is_valid:
-            error = copy.deepcopy(constants.ERROR_DATA)
-            error["fieldName"] = "lastName"
-            error["reason"] = message
-            errors.append(error)
+            errors.append(build_error("lastName", message))
 
     if "externalId" in param_input:
         is_valid, message = ia_utils.is_valid_external_id(
@@ -287,56 +262,38 @@ def validate_before_update(mapper, connection, target):
             existing_ia_id=param_input.get("id"),
         )
         if not is_valid:
-            error = copy.deepcopy(constants.ERROR_DATA)
-            error["fieldName"] = "externalId"
-            error["reason"] = message
-            errors.append(error)
+            errors.append(build_error("externalId", message))
 
     if "sex" in param_input:
         is_valid = param_input.get("sex", "") in ("m", "f")
         if not is_valid:
-            sex_error = copy.deepcopy(constants.ERROR_DATA)
-            sex_error["fieldName"] = "sex"
-            sex_error["reason"] = constants.INVALID_PARAM_SEX_MESSAGE
-            errors.append(sex_error)
+            errors.append(build_error("sex", constants.INVALID_PARAM_SEX_MESSAGE))
 
     if "shiftId" in param_input:
         is_valid = ia_utils.is_valid_shift(
             connection, param_input.get("shiftId", ""), ia.warehouse_id
         )
         if not is_valid:
-            error = copy.deepcopy(constants.ERROR_DATA)
-            error["fieldName"] = "shiftId"
-            error["reason"] = constants.INVALID_SHIFT_MESSAGE
-            errors.append(error)
+            errors.append(build_error("shiftId", constants.INVALID_SHIFT_MESSAGE))
 
     if "jobFunctionId" in param_input:
         is_valid = ia_utils.is_valid_job_function(
             connection, param_input.get("jobFunctionId", ""), ia.warehouse_id
         )
         if not is_valid:
-            error = copy.deepcopy(constants.ERROR_DATA)
-            error["fieldName"] = "jobFunctionId"
-            error["reason"] = constants.INVALID_JOB_FUNCTION_MESSAGE
-            errors.append(error)
+            errors.append(build_error("jobFunctionId", constants.INVALID_JOB_FUNCTION_MESSAGE))
 
     if "hireDate" in param_input:
-        is_valid, date_obj = ia_utils.is_valid_date(param_input.get("hireDate", ""))
+        is_valid, date_obj = utils.is_valid_date(param_input.get("hireDate", ""))
         if not is_valid:
-            hire_date_error = copy.deepcopy(constants.ERROR_DATA)
-            hire_date_error["fieldName"] = "hireDate"
-            hire_date_error["reason"] = constants.INVALID_DATE_MESSAGE
-            errors.append(hire_date_error)
+            errors.append(build_error("hireDate", constants.INVALID_DATE_MESSAGE))
 
     if "terminationDate" in param_input:
-        is_valid, date_obj = ia_utils.is_valid_date(
+        is_valid, date_obj = utils.is_valid_date(
             param_input.get("terminationDate", "")
         )
         if not is_valid:
-            hire_date_error = copy.deepcopy(constants.ERROR_DATA)
-            hire_date_error["fieldName"] = "terminationDate"
-            hire_date_error["reason"] = constants.INVALID_DATE_MESSAGE
-            errors.append(hire_date_error)
+            errors.append(build_error("terminationDate", constants.INVALID_DATE_MESSAGE))
 
     if len(errors) > 0:
         error_response = copy.deepcopy(constants.ERROR)

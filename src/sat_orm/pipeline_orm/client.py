@@ -41,8 +41,9 @@ from sat_orm.pipeline_orm.pipeline_base import Base
 from sat_orm.pipeline_orm.warehouse import Warehouse
 from sat_orm.pipeline_orm.industrial_athlete import IndustrialAthlete
 from sat_orm.pipeline_orm.utilities import client_utils
-from sat_orm.pipeline_orm.utilities import ia_utils
+from sat_orm.pipeline_orm.utilities import utils
 import sat_orm.constants as constants
+from sat_orm.pipeline_orm.utilities.utils import build_error
 
 
 class Client(Base):
@@ -159,48 +160,34 @@ def validate_before_update(mapper, connection, target):
             connection, params_input.get("name", ""), params_input.get("id", "")
         )
         if not is_valid:
-            error = copy.deepcopy(constants.ERROR_DATA)
-            error["fieldName"] = "name"
-            error["reason"] = message
-            errors.append(error)
+            errors.append(build_error("name", message))
 
     if "status" in params_input:
         is_valid = client_utils.is_valid_client_status(params_input.get("status", ""))
         if not is_valid:
-            error = copy.deepcopy(constants.ERROR_DATA)
-            error["fieldName"] = "status"
-            error["reason"] = constants.INVALID_CLIENT_STATUS_MESSAGE
-            errors.append(error)
+            errors.append(build_error("status", constants.INVALID_CLIENT_STATUS_MESSAGE))
 
     if "contracted_users" in params_input:
-        is_valid, message = ia_utils.is_valid_int(
+        is_valid, message = utils.is_valid_int(
             params_input.get("contracted_users", "")
         )
         if not is_valid:
-            error = copy.deepcopy(constants.ERROR_DATA)
-            error["fieldName"] = "contracted_users"
-            error["reason"] = message
-            errors.append(error)
+            errors.append(build_error("contracted_users", message))
 
     if "active_inactive_date" in params_input:
-        is_valid, date_obj = ia_utils.is_valid_date(
+        is_valid, date_obj = utils.is_valid_date(
             params_input.get("active_inactive_date", "")
         )
         if not is_valid:
-            error = copy.deepcopy(constants.ERROR_DATA)
-            error["fieldName"] = "active_inactive_date"
-            error["reason"] = constants.INVALID_DATE_MESSAGE
-            errors.append(error)
+            errors.append(build_error("active_inactive_date", constants.INVALID_DATE_MESSAGE))
 
     if "ia_name_format" in params_input:
         is_valid = client_utils.is_valid_client_ia_name_format(
             params_input.get("ia_name_format", "")
         )
         if not is_valid:
-            error = copy.deepcopy(constants.ERROR_DATA)
-            error["fieldName"] = "ia_name_format"
-            error["reason"] = constants.INVALID_CLIENT_IA_NAME_FORMAT_MESSAGE
-            errors.append(error)
+            errors.append(build_error("ia_name_format", 
+                constants.INVALID_CLIENT_IA_NAME_FORMAT_MESSAGE))
 
     if len(errors) > 0:
         error_response = copy.deepcopy(constants.ERROR)
@@ -226,48 +213,34 @@ def validate_before_insert(mapper, connection, target):
             connection, params_input.get("name", ""), params_input.get("id", "")
         )
         if not is_valid:
-            error = copy.deepcopy(constants.ERROR_DATA)
-            error["fieldName"] = "name"
-            error["reason"] = message
-            errors.append(error)
+            errors.append(build_error("name", message))
 
     if "status" in params_input:
         is_valid = client_utils.is_valid_client_status(params_input.get("status", ""))
         if not is_valid:
-            error = copy.deepcopy(constants.ERROR_DATA)
-            error["fieldName"] = "status"
-            error["reason"] = constants.INVALID_CLIENT_STATUS_MESSAGE
-            errors.append(error)
+            errors.append(build_error("status", constants.INVALID_CLIENT_STATUS_MESSAGE))
 
     if "contracted_users" in params_input:
-        is_valid, message = ia_utils.is_valid_int(
+        is_valid, message = utils.is_valid_int(
             params_input.get("contracted_users", "")
         )
         if not is_valid:
-            error = copy.deepcopy(constants.ERROR_DATA)
-            error["fieldName"] = "contracted_users"
-            error["reason"] = message
-            errors.append(error)
+            errors.append(build_error("contracted_users", message))
 
     if "active_inactive_date" in params_input:
-        is_valid, date_obj = ia_utils.is_valid_date(
+        is_valid, date_obj = utils.is_valid_date(
             params_input.get("active_inactive_date", "")
         )
         if not is_valid:
-            error = copy.deepcopy(constants.ERROR_DATA)
-            error["fieldName"] = "active_inactive_date"
-            error["reason"] = constants.INVALID_DATE_MESSAGE
-            errors.append(error)
+            errors.append(build_error("active_inactive_date", constants.INVALID_DATE_MESSAGE))
 
     if "ia_name_format" in params_input:
         is_valid = client_utils.is_valid_client_ia_name_format(
             params_input.get("ia_name_format", "")
         )
         if not is_valid:
-            error = copy.deepcopy(constants.ERROR_DATA)
-            error["fieldName"] = "ia_name_format"
-            error["reason"] = constants.INVALID_CLIENT_IA_NAME_FORMAT_MESSAGE
-            errors.append(error)
+            errors.append(build_error("ia_name_format", 
+                constants.INVALID_CLIENT_IA_NAME_FORMAT_MESSAGE))
 
     if len(errors) > 0:
         error_response = copy.deepcopy(constants.ERROR)

@@ -38,8 +38,10 @@ from sqlalchemy.orm import relationship, validates
 # Local Application Imports
 from sat_orm.pipeline_orm.pipeline_base import Base
 import sat_orm.constants as constants
+from sat_orm.pipeline_orm.utilities import utils
 from sat_orm.pipeline_orm.utilities import ia_utils
 from sat_orm.pipeline_orm.utilities import job_function_utils
+from sat_orm.pipeline_orm.utilities.utils import build_error
 
 
 class JobFunction(Base):
@@ -139,49 +141,31 @@ def validate_before_insert(mapper, connection, target):
     settings_id = params_input.get("settings_id", "")
     max_package_weight = params_input.get("max_package_weight", "")
 
-    is_valid, message = ia_utils.is_valid_string(name)
+    is_valid, message = utils.is_valid_string(name)
     if not is_valid:
-        error = copy.deepcopy(constants.ERROR_DATA)
-        error["fieldName"] = "name"
-        error["reason"] = message
-        errors.append(error)
+        errors.append(build_error("name", message))
 
     is_valid = ia_utils.is_valid_warehouse(connection, warehouse_id)
     if not is_valid:
-        error = copy.deepcopy(constants.ERROR_DATA)
-        error["fieldName"] = "warehouse_id"
-        error["reason"] = constants.INVALID_WAREHOUSE_ID_MESSAGE
-        errors.append(error)
+        errors.append(build_error("warehouse_id", constants.INVALID_WAREHOUSE_ID_MESSAGE))
 
     is_valid = ia_utils.is_valid_setting(connection, settings_id)
     if not is_valid:
-        error = copy.deepcopy(constants.ERROR_DATA)
-        error["fieldName"] = "settings_id"
-        error["reason"] = constants.INVALID_SETTINGS_ID_MESSAGE
-        errors.append(error)
+        errors.append(build_error("settings_id", constants.INVALID_SETTINGS_ID_MESSAGE))
 
     if group_administrator:
         is_valid = job_function_utils.is_valid_group_admin(group_administrator)
         if not is_valid:
-            error = copy.deepcopy(constants.ERROR_DATA)
-            error["fieldName"] = "group_administrator"
-            error["reason"] = constants.INVALID_GROUP_ADMIN_MESSAGE
-            errors.append(error)
+            errors.append(build_error("group_administrator", constants.INVALID_GROUP_ADMIN_MESSAGE))
 
     if description:
-        is_valid, message = ia_utils.is_valid_string(description)
+        is_valid, message = utils.is_valid_string(description)
         if not is_valid:
-            error = copy.deepcopy(constants.ERROR_DATA)
-            error["fieldName"] = "description"
-            error["reason"] = message
-            errors.append(error)
+            errors.append(build_error("description", message))
 
-    is_valid, message = ia_utils.is_valid_float(max_package_weight)
+    is_valid, message = utils.is_valid_float(max_package_weight)
     if not is_valid:
-        error = copy.deepcopy(constants.ERROR_DATA)
-        error["fieldName"] = "max_package_weight"
-        error["reason"] = message
-        errors.append(error)
+        errors.append(build_error("max_package_weight", message))
 
     if len(errors) > 0:
         error_response = copy.deepcopy(constants.ERROR)
@@ -208,62 +192,44 @@ def validate_before_update(mapper, connection, target):
     errors = []
 
     if "name" in params_input:
-        is_valid, message = ia_utils.is_valid_string(params_input.get("name", ""))
+        is_valid, message = utils.is_valid_string(params_input.get("name", ""))
         if not is_valid:
-            error = copy.deepcopy(constants.ERROR_DATA)
-            error["fieldName"] = "name"
-            error["reason"] = message
-            errors.append(error)
+            errors.append(build_error("name", message))
 
     if "warehouse_id" in params_input:
         is_valid = ia_utils.is_valid_warehouse(
             connection, params_input.get("warehouse_id", "")
         )
         if not is_valid:
-            error = copy.deepcopy(constants.ERROR_DATA)
-            error["fieldName"] = "warehouse_id"
-            error["reason"] = constants.INVALID_WAREHOUSE_ID_MESSAGE
-            errors.append(error)
+            errors.append(build_error("warehouse_id", constants.INVALID_WAREHOUSE_ID_MESSAGE))
 
     if "settings_id" in params_input:
         is_valid = ia_utils.is_valid_setting(
             connection, params_input.get("settings_id", "")
         )
         if not is_valid:
-            error = copy.deepcopy(constants.ERROR_DATA)
-            error["fieldName"] = "settings_id"
-            error["reason"] = constants.INVALID_SETTINGS_ID_MESSAGE
-            errors.append(error)
+            errors.append(build_error("settings_id", constants.INVALID_SETTINGS_ID_MESSAGE))
 
     if "group_administrator" in params_input:
         is_valid = job_function_utils.is_valid_group_admin(
             params_input.get("group_administrator", "")
         )
         if not is_valid:
-            error = copy.deepcopy(constants.ERROR_DATA)
-            error["fieldName"] = "group_administrator"
-            error["reason"] = constants.INVALID_GROUP_ADMIN_MESSAGE
-            errors.append(error)
+            errors.append(build_error("group_administrator", constants.INVALID_GROUP_ADMIN_MESSAGE))
 
     if "description" in params_input:
-        is_valid, message = ia_utils.is_valid_string(
+        is_valid, message = utils.is_valid_string(
             params_input.get("description", "")
         )
         if not is_valid:
-            error = copy.deepcopy(constants.ERROR_DATA)
-            error["fieldName"] = "description"
-            error["reason"] = message
-            errors.append(error)
+            errors.append(build_error("description", message))
 
     if "max_package_weight" in params_input:
-        is_valid, message = ia_utils.is_valid_float(
+        is_valid, message = utils.is_valid_float(
             params_input.get("max_package_weight", "")
         )
         if not is_valid:
-            error = copy.deepcopy(constants.ERROR_DATA)
-            error["fieldName"] = "max_package_weight"
-            error["reason"] = message
-            errors.append(error)
+            errors.append(build_error("max_package_weight", message))
 
     if len(errors) > 0:
         error_response = copy.deepcopy(constants.ERROR)
