@@ -6,11 +6,13 @@ from datetime import datetime, date
 
 import sat_orm.constants as constants
 
+
 def build_error(field_name, reason):
     error = copy.deepcopy(constants.ERROR_DATA)
     error["fieldName"] = field_name
     error["reason"] = reason
     return error
+
 
 def is_valid_date(date_input):
     """
@@ -28,6 +30,7 @@ def is_valid_date(date_input):
     except ValueError:
         return False, None
 
+
 def is_valid_string(string_input):
     """
     Helper method to check if input is a valid string
@@ -39,6 +42,7 @@ def is_valid_string(string_input):
     if re.match(constants.REGEX_STRING, string_input):
         return True, None
     return False, constants.INVALID_STRING_MESSAGE
+
 
 def is_valid_int(int_input):
     """
@@ -52,10 +56,11 @@ def is_valid_int(int_input):
     except ValueError:
         return False, constants.INVALID_INTEGER_MESSAGE
 
+
 def is_valid_float(float_input):
     """
-    Helper method to check if input is a valid integer
-    Return True if it is a valid int
+    Helper method to check if input is a valid float
+    Return True if it is a valid float
     Returns False if it is not valid
     """
     try:
@@ -63,3 +68,16 @@ def is_valid_float(float_input):
         return True, None
     except ValueError:
         return False, constants.INVALID_FLOAT_MESSAGE
+
+
+def is_valid_bool(bool_input):
+    """
+    Helper method to check if input is a valid boolean
+    Return True if it is a valid bool
+    Returns False if it is not valid
+    """
+    is_valid = isinstance(bool_input, bool)
+    if is_valid:
+        return True, None
+
+    return False, constants.INVALID_BOOLEAN_MESSAGE
