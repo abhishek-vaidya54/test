@@ -55,7 +55,7 @@ class ClientSchema(SQLAlchemyAutoSchema):
         load_instance = True
 
 class WarehouseSchema(SQLAlchemyAutoSchema):
-    client = fields.Nested(ClientSchema(only=()))
+    client = fields.Nested(ClientSchema(only=("id","name",)))
     client_id = fields.Function(lambda obj: obj.client.id)
     class Meta:
         model = Warehouse
