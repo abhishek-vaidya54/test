@@ -30,3 +30,17 @@ def is_valid_client_name(connection, name, id=None):
         return True, None
 
     return False, constants.DUPLICATE_CLIENT_NAME_MESSAGE
+
+def is_valid_client_id(connection, id):
+    """
+    Helper method to check if input is a valid Client ID
+    Return True if it is a valid int
+    Returns False if it is not valid
+    """
+    try:
+        is_valid = utils.is_valid_int(id)
+        if is_valid:
+            is_valid = client_queries.get_client_exists(connection, id)
+        return is_valid
+    except Exception as error:
+        return False

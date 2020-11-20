@@ -16,6 +16,8 @@ CLASSIFICATION:
 
 # Standard Library Import
 import datetime
+import copy
+import json
 
 # Third Party Import
 from sqlalchemy import (
@@ -29,11 +31,16 @@ from sqlalchemy import (
     Float,
     Boolean,
     Enum,
+    event,
 )
 from sqlalchemy.orm import relationship, validates
 
 # Local Application Import
 from sat_orm.pipeline_orm.pipeline_base import Base
+from sat_orm.pipeline_orm.utilities import warehouse_utils
+from sat_orm.pipeline_orm.utilities import client_utils
+from sat_orm.pipeline_orm.utilities import utils
+import sat_orm.constants as constants
 
 
 class Warehouse(Base):
@@ -152,3 +159,63 @@ class Warehouse(Base):
 #             'first_quarter_safety_score':self.first_quarter_safety_score,
 #             'median_safety_score':self.median_safety_score,
 #             'third_quarter_safety_score':self.third_quarter_safety_score
+
+@event.listens_for(Warehouse, "before_insert")
+def validate_before_insert(mapper, connection, target):
+    """
+    Event hook method that fires before insert 
+    to check if params are valid for inserting a single warehouse
+    """
+
+    params_input = {}
+    for key, value in target.as_dict().items():
+        if value is not None:
+            params_input[key] = value
+    errors = []
+
+    client_id = params_input.get("client_id", "")
+    name = params_input.get("name", "")
+    number_of_user_allocated = params_input.get("number_of_user_allocated", "")
+    industry = target.industry if target.industry else ""
+
+    is_valid, message = utils.is_valid_string(name)
+    if not is_valid:
+        errors.append(utils.build_error("name", message))
+
+    is_valid = client_utils.is_valid_client_id(connection, client_id)
+    if not is_valid:
+        errors.append(utils.build_error("client_id", constants.INVALID_CLIENT_ID_MESSAGE))
+
+    is_valid, message = utils.is_valid_string(industry)
+    if not is_valid:
+        errors.append(utils.build_error("industry", message))
+
+    if number_of_user_allocated:
+        is_valid, message = utils.is_valid_int(number_of_user_allocated)
+        if not is_valid:
+            errors.append(utils.build_error("number_of_user_allocated", message))
+
+    for key in ["city", "state", "country"]:
+        if key in params_input:
+            is_valid, message = utils.is_valid_string(params_input.get(key, ""))
+            if not is_valid:
+                errors.append(utils.build_error(key, message))
+    
+    for key in ["latitude", "longitude"]:
+        if key in params_input:
+            is_valid = warehouse_utils.is_valid_lat_long(key, params_input.get(key, ""))
+            if not is_valid:
+                errors.append(utils.build_error(key, constants.INVALID_LAT_LONG_MESSAGE[key]))
+
+    for key in ["lat_direction", "long_direction"]:
+        if key in params_input:
+            is_valid = warehouse_utils.is_valid_lat_long_direction(params_input.get(key, ""))
+            if not is_valid:
+                errors.append(utils.build_error(key, key + constants.INVALID_LAT_LONG_DIRECTION_MESSAGE))
+
+
+    if len(errors) > 0:
+        error_response = copy.deepcopy(constants.ERROR)
+        error_response["message"] = constants.INVALID_PARAMS_MESSAGE
+        error_response["errors"] = errors
+        raise Exception(json.dumps(error_response))
