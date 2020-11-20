@@ -186,6 +186,10 @@ RBAC_VALID_RESOURCES = (
     "jobfunctions",
     "roles",
     "bulkupload",
+    "groups",
+    "external_admin_user",
+    "settings",
+    "sensors",
 )
 
 RBAC_VALID_ACTIONS = ("read", "write", "update", "delete")
@@ -212,6 +216,10 @@ POLICY_WAREHOUSES_OBJ = "warehouses"
 POLICY_JOBFUNCTIONS_OBJ = "jobfunctions"
 POLICY_ROLES_OBJ = "roles"
 POLICY_BULK_UPLOAD_OBJ = "bulkupload"
+POLICY_GROUPS_OBJ = "groups"
+POLICY_EXTERNAL_ADMIN_USER_OBJ = "external_admin_user"
+POLICY_SETTINGS_OBJ = "settings"
+POLICY_SENSORS_OBJ = "sensors"
 
 
 # warehouse

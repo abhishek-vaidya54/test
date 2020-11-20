@@ -10,6 +10,7 @@ from sat_orm.pipeline_orm.settings import Setting
 from sat_orm.pipeline_orm.shifts import Shifts
 from sat_orm.pipeline_orm.casbin_rule import CasbinRule
 from sat_orm.pipeline_orm.external_admin_user import ExternalAdminUser
+from sat_orm.pipeline_orm.groups import Groups
 
 
 def convert_date(date_input):
@@ -59,11 +60,13 @@ class JobFunctionSchema(SQLAlchemyAutoSchema):
         include_relationships = True
         load_instance = True
 
+
 class CasbinRuleSchema(SQLAlchemyAutoSchema):
     class Meta:
         model = CasbinRule
         include_relationships = True
         load_instance = True
+
 
 class ClientSchema(SQLAlchemyAutoSchema):
     active_inactive_date = fields.Function(
@@ -127,6 +130,16 @@ class ExternalAdminUserSchema(ModelSchema):
 
     class Meta:
         model = ExternalAdminUser
+        include_fk = True
+        include_relationships = True
+        load_instance = True
+
+
+class GroupSchema(ModelSchema):
+    overrideSettings = fields.Function(lambda obj: bool(obj.override_settings))
+
+    class Meta:
+        model = Groups
         include_fk = True
         include_relationships = True
         load_instance = True
