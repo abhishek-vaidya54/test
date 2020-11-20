@@ -17,10 +17,11 @@ depends_on = None
 
 
 def upgrade():
-    op.add_column(
-        "external_admin_user",
-        sa.Column("is_active", sa.String(length=5), server_default="true"),
-    )
+    print("Skipping")
+    # op.add_column(
+    #     "external_admin_user",
+    #     sa.Column("is_active", sa.String(length=5), server_default="true"),
+    # )
 
 
 def downgrade():
