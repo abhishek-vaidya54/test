@@ -13,7 +13,7 @@ def build_error(field_name, reason):
     error["reason"] = reason
     return error
 
-
+  
 def is_valid_date(date_input):
     """
     Helper method to check if input is a valid date (MM/dd/YY)
@@ -30,7 +30,7 @@ def is_valid_date(date_input):
     except ValueError:
         return False, None
 
-
+      
 def is_valid_string(string_input):
     """
     Helper method to check if input is a valid string
@@ -61,8 +61,6 @@ def is_valid_float(float_input):
     """
     Helper method to check if input is a valid float
     Return True if it is a valid float
-    Returns False if it is not valid
-    """
     try:
         float(float_input)
         return True, None
@@ -81,3 +79,4 @@ def is_valid_bool(bool_input):
         return True, None
 
     return False, constants.INVALID_BOOLEAN_MESSAGE
+        return False, constants.INVALID_FLOAT_MESSAGE
