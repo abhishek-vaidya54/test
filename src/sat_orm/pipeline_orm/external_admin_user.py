@@ -12,7 +12,9 @@ from sat_orm.pipeline_orm.warehouse import Warehouse
 from sat_orm.pipeline_orm.client import Client
 from sat_orm.pipeline_orm.pipeline_base import Base
 import sat_orm.constants as constants 
-from sat_orm.pipeline_orm.utilities.utils import build_error
+from sat_orm.pipeline_orm.utilities import utils
+from sat_orm.pipeline_orm.utilities import client_utils
+from sat_orm.pipeline_orm.utilities import warehouse_utils
 
 
 class ExternalAdminUser(Base):
@@ -145,6 +147,46 @@ class ExternalAdminUser(Base):
         session.commit()
 
 
+@event.listens_for(ExternalAdminUser, "before_insert")
+def validate_role_before_insert(mapper, connection, target):
+    """
+    Event hook method that fires before insert 
+    to check if params are valid for inserting a single external_admin_user
+    """
+    params_input = {}
+    for key, value in target.as_dict().items():
+        if value is not None:
+            params_input[key] = value
+    errors = []
+
+    email = params_input.get("email", "").lower()
+    client_id = params_input.get("client_id", "")
+    warehouse_id = params_input.get("warehouse_id", "")
+    role = params_input.get("role", "")
+
+    is_valid = utils.is_valid_email(email)
+    if not is_valid:
+        errors.append(utils.build_error("email", constants.INVALID_EMAIL_ERROR_MESSAGE))
+
+    is_valid = client_utils.is_valid_client_id(connection, client_id)
+    if not is_valid:
+        errors.append(utils.build_error("client_id", constants.INVALID_CLIENT_ID_MESSAGE))
+
+    is_valid = warehouse_utils.is_valid_warehouse(connection, warehouse_id, client_id)
+    if not is_valid:
+        errors.append(utils.build_error("warehouse_id", constants.INVALID_WAREHOUSE_ID_MESSAGE))
+
+    if role:
+        is_valid = role in constants.CREATE_VALID_ROLES
+        if not is_valid:
+            errors.append(utils.build_error("role", constants.INVALID_ROLE_ERROR_MESSAGE))
+
+    if len(errors) > 0:
+        error_response = copy.deepcopy(constants.ERROR)
+        error_response["message"] = constants.INVALID_PARAMS_MESSAGE
+        error_response["errors"] = errors
+        raise Exception(json.dumps(error_response))
+
 @event.listens_for(ExternalAdminUser, "before_update")
 def validate_role_before_update(mapper, connection, target):
     """
@@ -155,7 +197,7 @@ def validate_role_before_update(mapper, connection, target):
 
     is_valid = target.role in constants.RBAC_VALID_ROLES
     if not is_valid:
-        errors.append(build_error("role", constants.INVALID_ROLE_ERROR_MESSAGE))
+        errors.append(utils.build_error("role", constants.INVALID_ROLE_ERROR_MESSAGE))
 
     if len(errors) > 0:
         error_response = copy.deepcopy(constants.ERROR)

@@ -30,3 +30,15 @@ def is_valid_warehouse_id(connection, id):
         return is_valid
     except:
         return False
+
+def is_valid_warehouse(connection, warehouse_id, client_id):
+    """
+    Validates a warehouse, checks if warehouse belongs to the client
+    Returns True if it is a valid warehouse
+    Returns False if it is not
+    """
+    try:
+        warehouse = warehouse_queries.get_warehouse(connection, warehouse_id, client_id)
+        return bool(warehouse)
+    except Exception as error:
+        return False

@@ -81,3 +81,11 @@ def is_valid_bool(bool_input):
         return True, None
 
     return False, constants.INVALID_BOOLEAN_MESSAGE
+
+def is_valid_email(email):
+    """
+    CHECKS FOR A VALID EMAIL
+    input - email
+    output - True if valid or False otherwise
+    """
+    return bool(re.match(constants.EMAIL_REGEX, email))
