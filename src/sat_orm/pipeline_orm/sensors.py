@@ -1,9 +1,23 @@
 import datetime
+import copy
+import json
 
-from sqlalchemy import ForeignKey, Column, String, Integer, Boolean, DateTime, desc
+from sqlalchemy import (
+    ForeignKey,
+    Column,
+    String,
+    Integer,
+    Boolean,
+    DateTime,
+    desc,
+    event,
+)
 from sqlalchemy.orm import relationship, validates
 
 from sat_orm.pipeline_orm.pipeline_base import Base
+import sat_orm.constants as constants
+from sat_orm.pipeline_orm.utilities import utils
+from sat_orm.pipeline_orm.utilities.utils import build_error
 
 
 class Sensors(Base):
@@ -56,9 +70,9 @@ class Sensors(Base):
     def as_dict(self):
         return {
             "id": self.id,
-            "serialNumber": self.serial_number,
-            "sensorId": self.sensor_id,
-            "stictionFlagged": self.stiction_flagged,
+            "serial_number": self.serial_number,
+            "sensor_id": self.sensor_id,
+            "stiction_flagged": self.stiction_flagged,
             "decommissioned": self.decommissioned,
         }
 
@@ -124,3 +138,82 @@ class Sensors(Base):
         sensor = Sensors.get_by_id(session, id)
         session.delete(sensor)
         session.commit()
+
+
+@event.listens_for(Sensors, "before_insert")
+def validate_before_insert(mapper, connection, target):
+    """
+    Helper method to check if params are valid for adding a single sensor
+    Input:
+        params_input: json containing data to be added for a single sensor.
+    """
+    params_input = {}
+    for key, value in target.as_dict().items():
+        if value is not None:
+            params_input[key] = value
+    errors = []
+
+    is_valid, message = utils.is_valid_string(params_input.get("serial_number", ""))
+    if not is_valid:
+        errors.append(build_error("serial_number", message))
+
+    if "sensor_id" in params_input:
+        is_valid, message = utils.is_valid_string(params_input.get("sensor_id", ""))
+        if not is_valid:
+            errors.append(build_error("sensor_id", message))
+
+    for key in ("stiction_flagged", "decommissioned"):
+        if key in params_input:
+            is_valid, message = utils.is_valid_zero_or_one(params_input.get(key, ""))
+            if not is_valid:
+                errors.append(build_error(key, message))
+
+    if len(errors) > 0:
+        error_response = copy.deepcopy(constants.ERROR)
+        error_response["message"] = constants.INVALID_PARAMS_MESSAGE
+        error_response["errors"] = errors
+        raise Exception(json.dumps(error_response))
+
+
+@event.listens_for(Sensors, "before_update")
+def validate_before_update(mapper, connection, target):
+    """
+    Helper method to check if params are valid for adding a single sensor
+    Input:
+        params_input: json containing data to be added for a single sensor.
+    """
+    params_input = {}
+    for key, value in target.as_dict().items():
+        if value is not None:
+            params_input[key] = value
+    errors = []
+
+    if "serial_number" in params_input:
+        is_valid, message = utils.is_valid_string(params_input.get("serial_number", ""))
+        if not is_valid:
+            errors.append(build_error("serial_number", message))
+
+    if "sensor_id" in params_input:
+        is_valid, message = utils.is_valid_string(params_input.get("sensor_id", ""))
+        if not is_valid:
+            errors.append(build_error("sensor_id", message))
+
+    if "stiction_flagged" in params_input:
+        is_valid, message = utils.is_valid_zero_or_one(
+            params_input.get("stiction_flagged", "")
+        )
+        if not is_valid:
+            errors.append(build_error("stiction_flagged", message))
+
+    if "decommissioned" in params_input:
+        is_valid, message = utils.is_valid_zero_or_one(
+            params_input.get("decommissioned", "")
+        )
+        if not is_valid:
+            errors.append(build_error("decommissioned", message))
+
+    if len(errors) > 0:
+        error_response = copy.deepcopy(constants.ERROR)
+        error_response["message"] = constants.INVALID_PARAMS_MESSAGE
+        error_response["errors"] = errors
+        raise Exception(json.dumps(error_response))
