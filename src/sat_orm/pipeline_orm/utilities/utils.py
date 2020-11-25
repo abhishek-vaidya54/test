@@ -1,4 +1,5 @@
 import copy
+import json
 from email.utils import parseaddr
 import re
 from datetime import datetime, date
@@ -13,6 +14,16 @@ def build_error(field_name, reason):
     error["reason"] = reason
     return error
 
+def check_errors_and_return(errors, message=constants.INVALID_PARAMS_MESSAGE):
+    """
+    Helper function that checks the errors array and
+    raises an exception if there is any error
+    """
+    if len(errors) > 0:
+        error_response = copy.deepcopy(constants.ERROR)
+        error_response["message"] = message
+        error_response["errors"] = errors
+        raise Exception(json.dumps(error_response))
 
 def is_valid_date(date_input):
     """
