@@ -1,6 +1,5 @@
 import datetime
-import copy
-import json
+
 
 from sqlalchemy import (
     ForeignKey,
@@ -17,7 +16,7 @@ from sqlalchemy.orm import relationship, validates
 from sat_orm.pipeline_orm.pipeline_base import Base
 import sat_orm.constants as constants
 from sat_orm.pipeline_orm.utilities import utils
-from sat_orm.pipeline_orm.utilities.utils import build_error
+from sat_orm.pipeline_orm.utilities.utils import build_error, check_errors_and_return
 
 
 class Sensors(Base):
@@ -168,11 +167,7 @@ def validate_before_insert(mapper, connection, target):
             if not is_valid:
                 errors.append(build_error(key, message))
 
-    if len(errors) > 0:
-        error_response = copy.deepcopy(constants.ERROR)
-        error_response["message"] = constants.INVALID_PARAMS_MESSAGE
-        error_response["errors"] = errors
-        raise Exception(json.dumps(error_response))
+    check_errors_and_return(errors)
 
 
 @event.listens_for(Sensors, "before_update")
@@ -212,8 +207,4 @@ def validate_before_update(mapper, connection, target):
         if not is_valid:
             errors.append(build_error("decommissioned", message))
 
-    if len(errors) > 0:
-        error_response = copy.deepcopy(constants.ERROR)
-        error_response["message"] = constants.INVALID_PARAMS_MESSAGE
-        error_response["errors"] = errors
-        raise Exception(json.dumps(error_response))
+    check_errors_and_return(errors)
