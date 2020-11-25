@@ -1,5 +1,3 @@
-import copy
-import json
 
 from sqlalchemy import Column, Integer, String, JSON, DateTime, event
 from sqlalchemy.dialects.mysql import TINYINT
@@ -8,9 +6,8 @@ from sqlalchemy.sql import text
 
 # Local Application Imports
 from sat_orm.pipeline_orm.pipeline_base import Base
-import sat_orm.constants as constants
 from sat_orm.pipeline_orm.utilities import utils
-from sat_orm.pipeline_orm.utilities.utils import build_error
+from sat_orm.pipeline_orm.utilities.utils import build_error, check_errors_and_return
 
 
 class Groups(Base):
@@ -63,8 +60,4 @@ def validate_before_insert(mapper, connection, target):
     if not is_valid:
         errors.append(build_error("overrideSettings", message))
 
-    if len(errors) > 0:
-        error_response = copy.deepcopy(constants.ERROR)
-        error_response["message"] = constants.INVALID_PARAMS_MESSAGE
-        error_response["errors"] = errors
-        raise Exception(json.dumps(error_response))
+    check_errors_and_return(errors)

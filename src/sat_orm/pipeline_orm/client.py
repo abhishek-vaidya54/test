@@ -18,8 +18,6 @@ CLASSIFICATION:
 
 # Standard Library Imports
 import datetime
-import copy
-import json
 
 # Third Party imports
 from sqlalchemy import (
@@ -43,7 +41,7 @@ from sat_orm.pipeline_orm.industrial_athlete import IndustrialAthlete
 from sat_orm.pipeline_orm.utilities import client_utils
 from sat_orm.pipeline_orm.utilities import utils
 import sat_orm.constants as constants
-from sat_orm.pipeline_orm.utilities.utils import build_error
+from sat_orm.pipeline_orm.utilities.utils import build_error, check_errors_and_return
 
 
 class Client(Base):
@@ -189,11 +187,7 @@ def validate_before_update(mapper, connection, target):
             errors.append(build_error("ia_name_format", 
                 constants.INVALID_CLIENT_IA_NAME_FORMAT_MESSAGE))
 
-    if len(errors) > 0:
-        error_response = copy.deepcopy(constants.ERROR)
-        error_response["message"] = constants.INVALID_PARAMS_MESSAGE
-        error_response["errors"] = errors
-        raise Exception(json.dumps(error_response))
+    check_errors_and_return(errors)
 
 @event.listens_for(Client, "before_insert")
 def validate_before_insert(mapper, connection, target):
@@ -242,11 +236,7 @@ def validate_before_insert(mapper, connection, target):
             errors.append(build_error("ia_name_format", 
                 constants.INVALID_CLIENT_IA_NAME_FORMAT_MESSAGE))
 
-    if len(errors) > 0:
-        error_response = copy.deepcopy(constants.ERROR)
-        error_response["message"] = constants.INVALID_PARAMS_MESSAGE
-        error_response["errors"] = errors
-        raise Exception(json.dumps(error_response))
+    check_errors_and_return(errors)
 
 
 def insert(session, data):
