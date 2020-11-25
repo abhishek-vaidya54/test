@@ -1,4 +1,5 @@
 import copy
+import json
 from email.utils import parseaddr
 import re
 from datetime import datetime, date
@@ -13,6 +14,16 @@ def build_error(field_name, reason):
     error["reason"] = reason
     return error
 
+def check_errors_and_return(errors, message=constants.INVALID_PARAMS_MESSAGE):
+    """
+    Helper function that checks the errors array and
+    raises an exception if there is any error
+    """
+    if len(errors) > 0:
+        error_response = copy.deepcopy(constants.ERROR)
+        error_response["message"] = message
+        error_response["errors"] = errors
+        raise Exception(json.dumps(error_response))
 
 def is_valid_date(date_input):
     """
@@ -61,7 +72,6 @@ def is_valid_float(float_input):
     """
     Helper method to check if input is a valid float
     Return True if it is a valid float
-    Returns False if it is not valid
     """
     try:
         float(float_input)
@@ -78,6 +88,13 @@ def is_valid_bool(bool_input):
     """
     is_valid = isinstance(bool_input, bool)
     if is_valid:
+        return True, None
+
+    return False, constants.INVALID_BOOLEAN_MESSAGE
+
+
+def is_valid_zero_or_one(param_input):
+    if param_input in ("0", "1"):
         return True, None
 
     return False, constants.INVALID_BOOLEAN_MESSAGE

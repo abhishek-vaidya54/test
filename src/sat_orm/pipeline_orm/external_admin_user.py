@@ -1,7 +1,5 @@
 # Standard Library Imports
 import datetime
-import copy
-import json
 
 # Third Party Imports
 from sqlalchemy import ForeignKey, Column, String, Integer, DateTime, desc, event
@@ -12,7 +10,7 @@ from sat_orm.pipeline_orm.warehouse import Warehouse
 from sat_orm.pipeline_orm.client import Client
 from sat_orm.pipeline_orm.pipeline_base import Base
 import sat_orm.constants as constants 
-from sat_orm.pipeline_orm.utilities.utils import build_error
+from sat_orm.pipeline_orm.utilities.utils import build_error, check_errors_and_return
 
 
 class ExternalAdminUser(Base):
@@ -157,8 +155,4 @@ def validate_role_before_update(mapper, connection, target):
     if not is_valid:
         errors.append(build_error("role", constants.INVALID_ROLE_ERROR_MESSAGE))
 
-    if len(errors) > 0:
-        error_response = copy.deepcopy(constants.ERROR)
-        error_response["message"] = constants.INVALID_PARAMS_MESSAGE
-        error_response["errors"] = errors
-        raise Exception(json.dumps(error_response))
+    check_errors_and_return(errors)
