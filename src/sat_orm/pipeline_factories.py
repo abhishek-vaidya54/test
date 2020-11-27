@@ -142,8 +142,26 @@ class ShiftsFactory(factory.alchemy.SQLAlchemyModelFactory):
 
 class SettingsFactory(factory.alchemy.SQLAlchemyModelFactory):
     id = factory.Sequence(lambda n: n)
-    target_type = str(uuid.uuid4())
-    target_id = factory.Sequence(lambda n: n)
+    target_type = "warehouse"
+    target_id = 1
+    value = {
+        "hapticEnabled": True,
+        "athleteEnabled": True,
+        "showEngagement": True,
+        "hapticBendNumber": 100,
+        "hapticFeedbackGap": 100,
+        "hapticBendPercentile": 100,
+        "hapticFeedbackWindow": 100,
+        "hapticSingleBendWindow": 100,
+        "hapticSagAngleThreshold": 100,
+        "showHapticModal": True,
+        "showBaselineModal": True,
+        "showSafetyScoreModal": True,
+        "handsFree": True,
+        "showSafetyJudgement": True,
+        "eulaVersion": 100,
+        "enagementEnabled": True,
+    }
 
     class Meta:
         model = Setting
@@ -175,18 +193,15 @@ class JobFunctionFactory(factory.alchemy.SQLAlchemyModelFactory):
 
 class IndustrialAthleteFactory(factory.alchemy.SQLAlchemyModelFactory):
     id = factory.Sequence(lambda n: n)
-    client_id = ClientFactory.id
     client = factory.SubFactory(ClientFactory)
-    warehouse_id = WarehouseFactory.id
     warehouse = factory.SubFactory(WarehouseFactory)
-    job_function_id = JobFunctionFactory.id
     job_function = factory.SubFactory(JobFunctionFactory)
-    shift_id = ShiftsFactory.id
     shifts = factory.SubFactory(ShiftsFactory)
     gender = factory.fuzzy.FuzzyChoice(["f", "m"])
     first_name = factory.Faker("first_name")
     last_name = factory.Faker("last_name")
     external_id = str(uuid.uuid4())
+    hire_date = datetime.datetime.now()
 
     class Meta:
         model = IndustrialAthlete
