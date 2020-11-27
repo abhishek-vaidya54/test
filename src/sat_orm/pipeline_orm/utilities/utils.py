@@ -1,5 +1,6 @@
 import copy
 import json
+import os
 from email.utils import parseaddr
 import re
 from datetime import datetime, date
@@ -14,6 +15,7 @@ def build_error(field_name, reason):
     error["reason"] = reason
     return error
 
+
 def check_errors_and_return(errors, message=constants.INVALID_PARAMS_MESSAGE):
     """
     Helper function that checks the errors array and
@@ -24,6 +26,7 @@ def check_errors_and_return(errors, message=constants.INVALID_PARAMS_MESSAGE):
         error_response["message"] = message
         error_response["errors"] = errors
         raise Exception(json.dumps(error_response))
+
 
 def is_valid_date(date_input):
     """
@@ -98,3 +101,13 @@ def is_valid_zero_or_one(param_input):
         return True, None
 
     return False, constants.INVALID_BOOLEAN_MESSAGE
+
+
+def get_database_names():
+    pipeline = os.environ.get("PIPELINE_CONNECTION_STRING", None)
+    dockv5 = os.environ.get("DOCKV5_CONNECTION_STRING", None)
+
+    return {
+        "pipeline": pipeline.split("/")[-1] if pipeline else None,
+        "dockv5": dockv5.split("/")[-1] if pipeline else None,
+    }
