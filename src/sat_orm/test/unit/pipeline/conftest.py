@@ -27,6 +27,12 @@ def pytest_configure(config):
         "markers", "test_inserts: mark tests to run only database insert actions"
     )
     config.addinivalue_line(
+        "markers", "test_updates: mark tests to run only database update actions"
+    )
+    config.addinivalue_line(
+        "markers", "test_delete: mark tests to run only database delete actions"
+    )
+    config.addinivalue_line(
         "markers", "orm_base: mark tests to run only sqlalchemy base module test"
     )
     config.addinivalue_line(
@@ -40,7 +46,7 @@ def pytest_configure(config):
     )
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="module")
 def test_session():
     is_created, error = create_test_pipeline()
     if is_created:
@@ -119,7 +125,7 @@ def test_session():
 
 
 # Random Database Objects
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="module")
 def get_external_admin_user(test_session):
     user = ExternalAdminUserFactory(role="superuser")
     athlete_upload_status = AthleteUploadStatusFactory(
@@ -147,6 +153,17 @@ def get_external_admin_user(test_session):
         )
 
     return user
+
+
+@pytest.fixture(scope="function")
+def create_external_admin_user_params(get_external_admin_user):
+    temp_user = ExternalAdminUserFactory.build()
+    return {
+        "email": temp_user.email,
+        "username": temp_user.username,
+        "client_id": get_external_admin_user.client_id,
+        "warehouse_id": get_external_admin_user.warehouse_id,
+    }
 
 
 # @pytest.fixture(scope="session")
