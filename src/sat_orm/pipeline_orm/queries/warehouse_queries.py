@@ -29,5 +29,6 @@ def get_warehouse_exists(connection, warehouse_id):
     """
     warehouse = connection.execute(
         "SELECT * FROM pipeline.warehouse WHERE id={}".format(warehouse_id)
-    ).scalar()
+    ).fetchone()
+
     return warehouse
