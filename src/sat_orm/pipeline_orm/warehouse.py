@@ -160,11 +160,80 @@ class Warehouse(Base):
 #             'median_safety_score':self.median_safety_score,
 #             'third_quarter_safety_score':self.third_quarter_safety_score
 
+
 @event.listens_for(Warehouse, "before_insert")
 def validate_before_insert(mapper, connection, target):
     """
-    Event hook method that fires before insert 
+    Event hook method that fires before insert
     to check if params are valid for inserting a single warehouse
+    """
+
+    params_input = {}
+    for key, value in target.as_dict().items():
+        if value is not None:
+            params_input[key] = value
+    errors = []
+
+    client_id = params_input.get("client_id", "")
+    name = params_input.get("name", "")
+    number_of_user_allocated = (
+        target.number_of_user_allocated if target.number_of_user_allocated else ""
+    )
+    industry = target.industry if target.industry else ""
+
+    is_valid, message = utils.is_valid_string(name)
+    if not is_valid:
+        errors.append(utils.build_error("name", message))
+
+    is_valid = client_utils.is_valid_client_id(connection, client_id)
+    if not is_valid:
+        errors.append(
+            utils.build_error("client_id", constants.INVALID_CLIENT_ID_MESSAGE)
+        )
+
+    is_valid, message = utils.is_valid_string(industry)
+    if not is_valid:
+        errors.append(utils.build_error("industry", message))
+
+    if number_of_user_allocated:
+        is_valid, message = utils.is_valid_int(number_of_user_allocated)
+        if not is_valid:
+            errors.append(utils.build_error("number_of_user_allocated", message))
+
+    for key in ["city", "state", "country"]:
+        if getattr(target, key, None) is not "":
+            is_valid, message = utils.is_valid_string(getattr(target, key, ""))
+            if not is_valid:
+                errors.append(utils.build_error(key, message))
+
+    for key in ["latitude", "longitude"]:
+        if getattr(target, key, None) is not None:
+            is_valid = warehouse_utils.is_valid_lat_long(key, getattr(target, key, ""))
+            if not is_valid:
+                errors.append(
+                    utils.build_error(key, constants.INVALID_LAT_LONG_MESSAGE[key])
+                )
+
+    for key in ["lat_direction", "long_direction"]:
+        if getattr(target, key, None) is not None:
+            is_valid = warehouse_utils.is_valid_lat_long_direction(
+                getattr(target, key, "")
+            )
+            if not is_valid:
+                errors.append(
+                    utils.build_error(
+                        key, key + constants.INVALID_LAT_LONG_DIRECTION_MESSAGE
+                    )
+                )
+
+    utils.check_errors_and_return(errors)
+
+
+@event.listens_for(Warehouse, "before_update")
+def validate_before_update(mapper, connection, target):
+    """
+    Event hook method that fires before update
+    to check if params are valid for updating a single warehouse
     """
 
     params_input = {}
@@ -178,40 +247,62 @@ def validate_before_insert(mapper, connection, target):
     number_of_user_allocated = params_input.get("number_of_user_allocated", "")
     industry = target.industry if target.industry else ""
 
-    is_valid, message = utils.is_valid_string(name)
+    is_valid = warehouse_utils.is_valid_warehouse_id(
+        connection, params_input.get("id", "")
+    )
     if not is_valid:
-        errors.append(utils.build_error("name", message))
+        errors.append(utils.build_error("id", constants.MISSING_ID_MESSAGE))
 
-    is_valid = client_utils.is_valid_client_id(connection, client_id)
-    if not is_valid:
-        errors.append(utils.build_error("client_id", constants.INVALID_CLIENT_ID_MESSAGE))
+    if "name" in params_input:
+        is_valid, message = utils.is_valid_string(params_input.get("name", ""))
+        if not is_valid:
+            errors.append(utils.build_error("name", message))
 
-    is_valid, message = utils.is_valid_string(industry)
-    if not is_valid:
-        errors.append(utils.build_error("industry", message))
+    if "client_id" in params_input:
+        is_valid = client_utils.is_valid_client_id(
+            connection, params_input.get("client_id", "")
+        )
+        if not is_valid:
+            errors.append(
+                utils.build_error("client_id", constants.INVALID_CLIENT_ID_MESSAGE)
+            )
 
-    if number_of_user_allocated:
-        is_valid, message = utils.is_valid_int(number_of_user_allocated)
+    if getattr(target, "industry", ""):
+        is_valid, message = utils.is_valid_string(getattr(target, "industry"))
+        if not is_valid:
+            errors.append(utils.build_error("industry", message))
+
+    if getattr(target, "number_of_user_allocated", ""):
+        is_valid, message = utils.is_valid_int(
+            params_input.get("number_of_user_allocated", "")
+        )
         if not is_valid:
             errors.append(utils.build_error("number_of_user_allocated", message))
 
     for key in ["city", "state", "country"]:
-        if key in params_input:
-            is_valid, message = utils.is_valid_string(params_input.get(key, ""))
+        if getattr(target, key, None) is not None:
+            is_valid, message = utils.is_valid_string(getattr(target, key))
             if not is_valid:
                 errors.append(utils.build_error(key, message))
-    
+
     for key in ["latitude", "longitude"]:
-        if key in params_input:
-            is_valid = warehouse_utils.is_valid_lat_long(key, params_input.get(key, ""))
+        if getattr(target, key, None) is not None:
+            is_valid = warehouse_utils.is_valid_lat_long(key, getattr(target, key, ""))
             if not is_valid:
-                errors.append(utils.build_error(key, constants.INVALID_LAT_LONG_MESSAGE[key]))
+                errors.append(
+                    utils.build_error(key, constants.INVALID_LAT_LONG_MESSAGE[key])
+                )
 
     for key in ["lat_direction", "long_direction"]:
-        if key in params_input:
-            is_valid = warehouse_utils.is_valid_lat_long_direction(params_input.get(key, ""))
+        if getattr(target, key, None) is not None:
+            is_valid = warehouse_utils.is_valid_lat_long_direction(
+                getattr(target, key, "")
+            )
             if not is_valid:
-                errors.append(utils.build_error(key, key + constants.INVALID_LAT_LONG_DIRECTION_MESSAGE))
-
+                errors.append(
+                    utils.build_error(
+                        key, key + constants.INVALID_LAT_LONG_DIRECTION_MESSAGE
+                    )
+                )
 
     utils.check_errors_and_return(errors)
