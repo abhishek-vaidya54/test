@@ -9,6 +9,8 @@ from sat_orm.pipeline_orm.job_function import JobFunction
 from sat_orm.pipeline_orm.settings import Setting
 from sat_orm.pipeline_orm.shifts import Shifts
 from sat_orm.pipeline_orm.casbin_rule import CasbinRule
+from sat_orm.pipeline_orm.external_admin_user import ExternalAdminUser
+from sat_orm.pipeline_orm.groups import Groups
 
 
 def convert_date(date_input):
@@ -40,8 +42,21 @@ class SettingSchema(SQLAlchemyAutoSchema):
         include_relationships = True
         load_instance = True
 
+class ClientSchema(SQLAlchemyAutoSchema):
+    active_inactive_date = fields.Function(
+        lambda obj: convert_date(obj.active_inactive_date)
+        if obj.active_inactive_date
+        else None
+    )
+
+    class Meta:
+        model = Client
+        include_relationships = True
+        load_instance = True
 
 class WarehouseSchema(SQLAlchemyAutoSchema):
+    client = fields.Nested(ClientSchema(only=("id","name",)))
+    client_id = fields.Function(lambda obj: obj.client.id)
     class Meta:
         model = Warehouse
         include_relationships = True
@@ -58,23 +73,13 @@ class JobFunctionSchema(SQLAlchemyAutoSchema):
         include_relationships = True
         load_instance = True
 
+
 class CasbinRuleSchema(SQLAlchemyAutoSchema):
     class Meta:
         model = CasbinRule
         include_relationships = True
         load_instance = True
 
-class ClientSchema(SQLAlchemyAutoSchema):
-    active_inactive_date = fields.Function(
-        lambda obj: convert_date(obj.active_inactive_date)
-        if obj.active_inactive_date
-        else None
-    )
-
-    class Meta:
-        model = Client
-        include_relationships = True
-        load_instance = True
 
 
 # class CustomDateField(fields.Field):
@@ -113,6 +118,29 @@ class IndustrialAthleteSchema(ModelSchema):
 
     class Meta:
         model = IndustrialAthlete
+        include_fk = True
+        include_relationships = True
+        load_instance = True
+
+
+class ExternalAdminUserSchema(ModelSchema):
+    warehouseId = fields.Function(lambda obj: obj.warehouse.id)
+    warehouse = fields.Function(lambda obj: obj.warehouse.name)
+    clientId = fields.Function(lambda obj: obj.client.id)
+    client = fields.Function(lambda obj: obj.client.name)
+
+    class Meta:
+        model = ExternalAdminUser
+        include_fk = True
+        include_relationships = True
+        load_instance = True
+
+
+class GroupSchema(ModelSchema):
+    overrideSettings = fields.Function(lambda obj: bool(obj.override_settings))
+
+    class Meta:
+        model = Groups
         include_fk = True
         include_relationships = True
         load_instance = True
