@@ -1,5 +1,6 @@
 # Standard Library
 import os
+import random
 
 # Third Party Import
 import pytest
@@ -148,6 +149,25 @@ def get_external_admin_user(test_session):
 
     return user
 
+@pytest.fixture(scope="function")
+def get_industrial_athlete(get_external_admin_user, test_session):
+    ia_list = (
+        test_session.query(IndustrialAthlete)
+        .filter_by(warehouse_id=get_external_admin_user.warehouse_id)
+        .filter_by(client_id=get_external_admin_user.client_id)
+        .all()
+    )
+    random_ia = random.choice(ia_list)
+    return random_ia
+
+
+@pytest.fixture(scope="function")
+def get_setting_type_athlete(get_industrial_athlete):
+    """ Builds settings from the Factories module"""
+    ia = get_industrial_athlete
+    return SettingsFactory.create(
+        target_type = "industrial_athlete",
+        target_id = ia.id)
 
 # @pytest.fixture(scope="session")
 # def env():
