@@ -213,8 +213,8 @@ def validate_before_insert(mapper, connection, target):
             if not is_valid:
                 errors.append(utils.build_error(key, key + constants.INVALID_LAT_LONG_DIRECTION_MESSAGE))
 
-
     utils.check_errors_and_return(errors)
+
 
 @event.listens_for(Warehouse, "before_update")
 def validate_before_update(mapper, connection, target):
@@ -285,6 +285,5 @@ def validate_before_update(mapper, connection, target):
             )
             if not is_valid:
                 errors.append(utils.build_error(key, key + constants.INVALID_LAT_LONG_DIRECTION_MESSAGE))
-
 
     utils.check_errors_and_return(errors)
