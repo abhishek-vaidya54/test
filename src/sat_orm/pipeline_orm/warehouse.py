@@ -242,11 +242,6 @@ def validate_before_update(mapper, connection, target):
             params_input[key] = value
     errors = []
 
-    client_id = params_input.get("client_id", "")
-    name = params_input.get("name", "")
-    number_of_user_allocated = params_input.get("number_of_user_allocated", "")
-    industry = target.industry if target.industry else ""
-
     is_valid = warehouse_utils.is_valid_warehouse_id(
         connection, params_input.get("id", "")
     )
