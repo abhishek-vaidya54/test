@@ -109,5 +109,5 @@ def get_database_names():
 
     return {
         "pipeline": pipeline.split("/")[-1] if pipeline else None,
-        "dockv5": dockv5.split("/")[-1] if pipeline else None,
+        "dockv5": dockv5.split("/")[-1] if dockv5 else None,
     }

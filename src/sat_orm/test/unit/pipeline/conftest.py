@@ -10,6 +10,19 @@ from sqlalchemy.orm import sessionmaker
 from sat_orm.pipeline_factories import *
 from sat_orm.pipeline import *
 from sat_orm.test.test_database.test_database_setup import create_test_pipeline
+# import sat_orm.constants as constants
+from sat_orm.constants import (
+    LOGZIO_REQUIRED_KEYS,
+    VALID_CLIENT_STATUSES,
+    VALID_SHIFT_TIMEZONES,
+    VALID_CLIENT_IA_NAME_FORMATS,
+    RBAC_VALID_ROLES,
+    RBAC_VALID_RESOURCES,
+    RBAC_VALID_ACTIONS,
+    VALID_CSV_STRING,
+    INVALID_CSV_STRING_MISSING_HEADER,
+)
+
 
 os.environ["ENV_NAME"] = "test"
 
@@ -211,7 +224,231 @@ def get_external_admin_user(test_session):
 #     return WarehouseFactory.build()
 
 
-# @pytest.fixture(scope="function")
-# def client_factory(request):
-#     """ Builds clients from the Factories module"""
-#     return ClientFactory.build()
+@pytest.fixture(scope="function")
+def client_factory(request):
+    """ Builds clients from the Factories module"""
+    return ClientFactory.create()
+
+
+@pytest.fixture(scope="function")
+def invalid_string_space_front():
+    return " invalid"
+
+@pytest.fixture(scope="function")
+def random_string():
+    """
+    Return a random string
+    """
+    return str(uuid.uuid4())
+
+@pytest.fixture(scope="function")
+def valid_int():
+    return "0"
+
+@pytest.fixture(scope="function")
+def valid_date():
+    return "12/31/2020"
+
+@pytest.fixture(scope="function")
+def valid_datetime():
+    return "2020-12-01 10:49:00"
+
+@pytest.fixture(scope="function")
+def invalid_int():
+    return "zero"
+
+@pytest.fixture(scope="function")
+def valid_context():
+    return {}
+
+
+@pytest.fixture(scope="function")
+def invalid_event():
+    return {"username": ""}
+
+
+# Mock /athletes (GET) Fields Param
+@pytest.fixture(scope="function")
+def missing_fields():
+    return []
+
+
+@pytest.fixture(scope="function")
+def shift_fields():
+    return ["shift"]
+
+
+@pytest.fixture(scope="function")
+def job_function_fields():
+    return ["jobFunction"]
+
+
+@pytest.fixture(scope="function")
+def shift_job_function_fields():
+    return ["shift", "jobFunction"]
+
+
+# Mock /athletes (POST) Params
+@pytest.fixture(scope="function")
+def m_valid_sex():
+    return "m"
+
+
+@pytest.fixture(scope="function")
+def f_valid_sex():
+    return "f"
+
+
+@pytest.fixture(scope="function")
+def invalid_sex():
+    return "M"
+
+
+@pytest.fixture(scope="function")
+def valid_date():
+    return "12/31/2020"
+
+
+@pytest.fixture(scope="function")
+def invalid_date():
+    return "31/12/202"
+
+
+@pytest.fixture(scope="function")
+def valid_string():
+    return "09aA().-"
+
+
+@pytest.fixture(scope="function")
+def valid_first_name():
+    return "John"
+
+
+@pytest.fixture(scope="function")
+def valid_last_name():
+    return "Doe"
+
+
+@pytest.fixture(scope="function")
+def invalid_string_space_front():
+    return " invalid"
+
+
+@pytest.fixture(scope="function")
+def invalid_string_space_back():
+    return "invalid "
+
+
+@pytest.fixture(scope="function")
+def invalid_string_invalid_chars():
+    return "!@#$%^&**"
+
+
+@pytest.fixture(scope="function")
+def valid_int():
+    return "0"
+
+
+@pytest.fixture(scope="function")
+def valid_int_negative():
+    return "-1"
+
+
+@pytest.fixture(scope="function")
+def valid_int_positive():
+    return "1"
+
+
+@pytest.fixture(scope="function")
+def invalid_int():
+    return "zero"
+
+@pytest.fixture(scope="function")
+def valid_client_post_event(
+    get_external_admin_user, random_string, valid_int, valid_date
+):
+    """
+    Valid client post event
+    """
+    return {
+        "username": get_external_admin_user.username,
+        "name": random_string,
+        "status": random.choice(VALID_CLIENT_STATUSES),
+        "contracted_users": valid_int,
+        "active_inactive_date": valid_date,
+        "ia_name_format": random.choice(VALID_CLIENT_IA_NAME_FORMATS),
+    }
+
+@pytest.fixture(scope="function")
+def invalid_client_post_event(
+    get_external_admin_user, invalid_string_space_front, invalid_int
+):
+    """
+    Invalid client post event
+    """
+    return {
+        "id": get_external_admin_user.client_id,
+        "username": get_external_admin_user.username,
+        "name": invalid_string_space_front,
+        "status": invalid_string_space_front,
+        "contracted_users": invalid_int,
+        "active_inactive_date": invalid_date,
+        "firstname_format": invalid_string_space_front,
+        "lastname_format": invalid_string_space_front,
+    }
+
+@pytest.fixture(scope="function")
+def valid_client_put_event(
+    get_external_admin_user, random_string, valid_int, valid_datetime
+):
+    """
+    Valid client put event
+    """
+    return {
+            "client_id": get_external_admin_user.client_id,
+            "name": random_string,
+            "status": random.choice(VALID_CLIENT_STATUSES),
+            "contracted_users": valid_int,
+            "active_inactive_date": valid_datetime,
+            "ia_name_format": random.choice(VALID_CLIENT_IA_NAME_FORMATS),
+        }
+
+@pytest.fixture(scope="function")
+def invalid_client_put_event(
+    get_external_admin_user, invalid_string_space_front, invalid_int
+):
+    """
+    Invalid client put event
+    """
+    return {
+            "client_id": get_external_admin_user.client_id,
+            "name": invalid_string_space_front,
+            "status": invalid_string_space_front,
+            "contracted_users": invalid_int,
+            "active_inactive_date": invalid_date,
+            "enableProcessing": invalid_int
+
+        }
+
+@pytest.fixture(scope="function")
+def valid_client_delete_event(
+    get_external_admin_user,client_factory
+):
+    """
+    Valid client delete event
+    """
+    return {
+            "client_id": client_factory.id,
+        }
+
+@pytest.fixture(scope="function")
+def invalid_client_delete_event(
+    get_external_admin_user, invalid_int
+):
+    """
+    Invalid client delete event
+    """
+    return {
+            "client_id": invalid_int,
+
+        }
