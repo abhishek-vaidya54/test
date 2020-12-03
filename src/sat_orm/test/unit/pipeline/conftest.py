@@ -1,5 +1,6 @@
 # Standard Library
 import os
+import random
 
 # Third Party Import
 import pytest
@@ -10,6 +11,7 @@ from sqlalchemy.orm import sessionmaker
 from sat_orm.pipeline_factories import *
 from sat_orm.pipeline import *
 from sat_orm.test.test_database.test_database_setup import create_test_pipeline
+from sat_orm import constants
 
 os.environ["ENV_NAME"] = "test"
 
@@ -168,6 +170,71 @@ def create_external_admin_user_params(get_external_admin_user):
         "client_id": get_external_admin_user.client_id,
         "warehouse_id": get_external_admin_user.warehouse_id,
     }
+
+
+@pytest.fixture(scope="function")
+def get_random_shift(test_session, get_external_admin_user):
+    shifts = (
+        test_session.query(Shifts)
+        .filter_by(warehouse_id=get_external_admin_user.warehouse_id)
+        .all()
+    )
+    return random.choice(shifts)
+
+
+@pytest.fixture(scope="function")
+def invalid_int():
+    return "invalid int"
+
+
+@pytest.fixture(scope="function")
+def invalid_string():
+    return "@/;#$%^&*()"
+
+
+@pytest.fixture(scope="function")
+def valid_string():
+    return "abcd-ABCD"
+
+
+@pytest.fixture(scope="function")
+def valid_timezone():
+    return random.choice(constants.VALID_SHIFT_TIMEZONES)
+
+
+@pytest.fixture(scope="function")
+def valid_datetime():
+    return "2018-06-19 14:51:35"
+
+
+@pytest.fixture(scope="function")
+def valid_shift_fields():
+    return random.choices(
+        [
+            "id",
+            "name",
+            "warehouse_id",
+            "shift_start",
+            "shift_end",
+            "timezone",
+            "group_administrator",
+        ]
+    )
+
+
+@pytest.fixture(scope="function")
+def valid_external_admin_user_fields():
+    return random.choices(
+        [
+            "id",
+            "username",
+            "email",
+            "client_id",
+            "warehouse_id",
+            "role",
+            "is_active",
+        ]
+    )
 
 
 # @pytest.fixture(scope="session")
