@@ -96,6 +96,15 @@ def is_valid_bool(bool_input):
     return False, constants.INVALID_BOOLEAN_MESSAGE
 
 
+def is_valid_email(email):
+    """
+    CHECKS FOR A VALID EMAIL
+    input - email
+    output - True if valid or False otherwise
+    """
+    return bool(re.match(constants.EMAIL_REGEX, email))
+
+
 def is_valid_zero_or_one(param_input):
     if param_input in ("0", "1"):
         return True, None
@@ -109,5 +118,5 @@ def get_database_names():
 
     return {
         "pipeline": pipeline.split("/")[-1] if pipeline else None,
-        "dockv5": dockv5.split("/")[-1] if pipeline else None,
+        "dockv5": dockv5.split("/")[-1] if dockv5 else None,
     }
