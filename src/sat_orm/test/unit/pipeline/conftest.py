@@ -169,6 +169,14 @@ def create_external_admin_user_params(get_external_admin_user):
         "warehouse_id": get_external_admin_user.warehouse_id,
     }
 
+@pytest.fixture(scope="function")
+def invalid_int():
+    return "zero"
+
+@pytest.fixture(scope="function")
+def get_warehouse_from_db(test_session):
+    """ Creates warehouse from the Factories module"""
+    return WarehouseFactory.create()
 
 # @pytest.fixture(scope="session")
 # def env():
