@@ -65,6 +65,7 @@ def test_session():
             AthleteUploadStatusFactory._meta.sqlalchemy_session = session
             ImportedIndustrialAthleteFactory._meta.sqlalchemy_session = session
             CasbinRuleFactory._meta.sqlalchemy_session = session
+            GroupsFactory._meta.sqlalchemy_session = session
             # Reset the factory id values to greater than the records to avoid duplicate id errors
             client = session.query(func.max(Client.id)).first()
             warehouse = session.query(func.max(Warehouse.id)).first()
@@ -78,6 +79,7 @@ def test_session():
             ).first()
             imported_ia = session.query(func.max(ImportedIndustrialAthlete.id)).first()
             casbin_rule = session.query(func.max(CasbinRule.id)).first()
+            group = session.query(func.max(Groups.id)).first()
             client_max_id = 1
             warehouse_max_id = 1
             shift_max_id = 1
@@ -88,6 +90,7 @@ def test_session():
             athlete_upload_status_max_id = 1
             imported_id_max_id = 1
             casbin_rule_max_id = 1
+            group_max_id = 1
             if client[0] is not None:
                 client_max_id = client[0] + 1
             if warehouse[0] is not None:
@@ -108,6 +111,8 @@ def test_session():
                 imported_id_max_id = imported_ia[0] + 1
             if casbin_rule[0] is not None:
                 casbin_rule_max_id = casbin_rule[0] + 1
+            if group[0] is not None:
+                group_max_id = group[0] + 1
             ClientFactory.reset_sequence(client_max_id)
             WarehouseFactory.reset_sequence(warehouse_max_id)
             ShiftsFactory.reset_sequence(shift_max_id)
@@ -118,6 +123,7 @@ def test_session():
             AthleteUploadStatusFactory.reset_sequence(athlete_upload_status_max_id)
             ImportedIndustrialAthleteFactory.reset_sequence(imported_id_max_id)
             CasbinRuleFactory.reset_sequence(casbin_rule_max_id)
+            GroupsFactory.reset_sequence(group_max_id)
 
             yield session
     else:
@@ -165,6 +171,10 @@ def create_external_admin_user_params(get_external_admin_user):
         "warehouse_id": get_external_admin_user.warehouse_id,
     }
 
+@pytest.fixture(scope="function")
+def get_group_from_db(test_session):
+    """ Creates group from the Factories module"""
+    return GroupsFactory.create()
 
 # @pytest.fixture(scope="session")
 # def env():
