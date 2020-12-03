@@ -246,6 +246,10 @@ def valid_int():
     return "0"
 
 @pytest.fixture(scope="function")
+def invalid_int():
+    return "zero"
+
+@pytest.fixture(scope="function")
 def valid_date():
     return "12/31/2020"
 
@@ -254,65 +258,8 @@ def valid_datetime():
     return "2020-12-01 10:49:00"
 
 @pytest.fixture(scope="function")
-def invalid_int():
-    return "zero"
-
-@pytest.fixture(scope="function")
-def valid_context():
-    return {}
-
-
-@pytest.fixture(scope="function")
-def invalid_event():
-    return {"username": ""}
-
-
-# Mock /athletes (GET) Fields Param
-@pytest.fixture(scope="function")
-def missing_fields():
-    return []
-
-
-@pytest.fixture(scope="function")
-def shift_fields():
-    return ["shift"]
-
-
-@pytest.fixture(scope="function")
-def job_function_fields():
-    return ["jobFunction"]
-
-
-@pytest.fixture(scope="function")
-def shift_job_function_fields():
-    return ["shift", "jobFunction"]
-
-
-# Mock /athletes (POST) Params
-@pytest.fixture(scope="function")
-def m_valid_sex():
-    return "m"
-
-
-@pytest.fixture(scope="function")
-def f_valid_sex():
-    return "f"
-
-
-@pytest.fixture(scope="function")
-def invalid_sex():
-    return "M"
-
-
-@pytest.fixture(scope="function")
-def valid_date():
-    return "12/31/2020"
-
-
-@pytest.fixture(scope="function")
 def invalid_date():
     return "31/12/202"
-
 
 @pytest.fixture(scope="function")
 def valid_string():
@@ -332,36 +279,6 @@ def valid_last_name():
 @pytest.fixture(scope="function")
 def invalid_string_space_front():
     return " invalid"
-
-
-@pytest.fixture(scope="function")
-def invalid_string_space_back():
-    return "invalid "
-
-
-@pytest.fixture(scope="function")
-def invalid_string_invalid_chars():
-    return "!@#$%^&**"
-
-
-@pytest.fixture(scope="function")
-def valid_int():
-    return "0"
-
-
-@pytest.fixture(scope="function")
-def valid_int_negative():
-    return "-1"
-
-
-@pytest.fixture(scope="function")
-def valid_int_positive():
-    return "1"
-
-
-@pytest.fixture(scope="function")
-def invalid_int():
-    return "zero"
 
 @pytest.fixture(scope="function")
 def valid_client_post_event(
@@ -432,7 +349,7 @@ def invalid_client_put_event(
 
 @pytest.fixture(scope="function")
 def valid_client_delete_event(
-    get_external_admin_user,client_factory
+    client_factory
 ):
     """
     Valid client delete event
@@ -443,7 +360,7 @@ def valid_client_delete_event(
 
 @pytest.fixture(scope="function")
 def invalid_client_delete_event(
-    get_external_admin_user, invalid_int
+    invalid_int
 ):
     """
     Invalid client delete event

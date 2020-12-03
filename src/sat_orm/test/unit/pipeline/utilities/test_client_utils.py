@@ -1,6 +1,5 @@
 import pytest
 from sat_orm.pipeline_orm.utilities import client_utils
-from sat_orm.pipeline_orm import client
 import random
 from sat_orm.constants import (
     VALID_CLIENT_IA_NAME_FORMATS)

@@ -1,12 +1,10 @@
 from sat_orm.pipeline_orm.marshmallow.schemas import ClientSchema
-from sat_orm.pipeline import Client
 
-def test_client_schema_valid(test_session):
+def test_client_schema_valid(client_factory, test_session):
     """
         checks marshmallow schema with correct keys
         Input: client table first row and client table selected columns
     """
-    client = test_session.query(Client).first()
     keys = [
             "id",
             "name",
@@ -17,17 +15,16 @@ def test_client_schema_valid(test_session):
             "db_created_at",
             "db_modified_at"
         ]
-    result = ClientSchema(only=keys).dump(client)
+    result = ClientSchema(only=keys).dump(client_factory)
     for key in keys:
         assert result[key]
 
-def test_client_schema_invalid(test_session):
+def test_client_schema_invalid(client_factory, test_session):
     """
         checks marshmallow schema with missing id key
         Input: client table first row and client table selected columns except id
         Output: True if id not in result
     """
-    client = test_session.query(Client).first()
     keys = [
             "name",
             "status",
@@ -37,5 +34,5 @@ def test_client_schema_invalid(test_session):
             "db_created_at",
             "db_modified_at"
         ]
-    result = ClientSchema(only=keys).dump(client)
+    result = ClientSchema(only=keys).dump(client_factory)
     assert "id" not in result
