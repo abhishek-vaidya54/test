@@ -1,7 +1,6 @@
 import pytest
 import sat_orm.pipeline_orm.queries.client_queries as client_queries
 
-# get_client_by_id
 def test_get_client_by_id_success(get_external_admin_user, test_session):
     """
         Checks if method returns correct client
