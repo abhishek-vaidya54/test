@@ -42,8 +42,21 @@ class SettingSchema(SQLAlchemyAutoSchema):
         include_relationships = True
         load_instance = True
 
+class ClientSchema(SQLAlchemyAutoSchema):
+    active_inactive_date = fields.Function(
+        lambda obj: convert_date(obj.active_inactive_date)
+        if obj.active_inactive_date
+        else None
+    )
+
+    class Meta:
+        model = Client
+        include_relationships = True
+        load_instance = True
 
 class WarehouseSchema(SQLAlchemyAutoSchema):
+    client = fields.Nested(ClientSchema(only=("id","name",)))
+    client_id = fields.Function(lambda obj: obj.client.id)
     class Meta:
         model = Warehouse
         include_relationships = True
@@ -52,8 +65,8 @@ class WarehouseSchema(SQLAlchemyAutoSchema):
 
 class JobFunctionSchema(SQLAlchemyAutoSchema):
     warehouse = fields.Nested(WarehouseSchema(only=("id", "name")))
-    warehouse_id = fields.Function(lambda obj: obj.warehouse.id)
-    settings_id = fields.Function(lambda obj: obj.settings.id)
+    warehouse_id = fields.Function(lambda obj: obj.warehouse.id if obj.warehouse else None)
+    settings_id = fields.Function(lambda obj: obj.settings.id if obj.settings else None)
 
     class Meta:
         model = JobFunction
@@ -67,18 +80,6 @@ class CasbinRuleSchema(SQLAlchemyAutoSchema):
         include_relationships = True
         load_instance = True
 
-
-class ClientSchema(SQLAlchemyAutoSchema):
-    active_inactive_date = fields.Function(
-        lambda obj: convert_date(obj.active_inactive_date)
-        if obj.active_inactive_date
-        else None
-    )
-
-    class Meta:
-        model = Client
-        include_relationships = True
-        load_instance = True
 
 
 # class CustomDateField(fields.Field):

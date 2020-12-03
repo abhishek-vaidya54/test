@@ -84,8 +84,10 @@ class WarehouseFactory(factory.alchemy.SQLAlchemyModelFactory):
     state = factory.fuzzy.FuzzyText(length=12)
     country = factory.fuzzy.FuzzyText(length=12)
     industry = factory.fuzzy.FuzzyText(length=20)
-    latitude = factory.fuzzy.FuzzyFloat(30, 120)
-    longitude = factory.fuzzy.FuzzyFloat(30, 120)
+    latitude = factory.fuzzy.FuzzyFloat(-90, 90)
+    longitude = factory.fuzzy.FuzzyFloat(-180, 180)
+    lat_direction = factory.fuzzy.FuzzyChoice(["N", "S", "E", "W"])
+    long_direction = factory.fuzzy.FuzzyChoice(["N", "S", "E", "W"])
     # @factory.post_generation
     # def job_functions(self,create,extracted,**kwargs):
     #     if extracted is None:
