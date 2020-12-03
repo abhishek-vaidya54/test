@@ -37,6 +37,24 @@ def test_external_admin_user_validate_client_id():
     assert "client_id cannot be Null" in str(exc_info.value)
 
 
+@pytest.mark.test_return_type
+def test_external_admin_user_as_dict_returns_dictionary():
+    """ Checks the return value of as_dict is a dictionary"""
+    user = ExternalAdminUser()
+    assert isinstance(user.as_dict(), dict)
+
+
+@pytest.mark.test_return_type
+def test_external_admin_user___eq___returns_true(test_session, get_external_admin_user):
+    """ Checks the return value of __eq__ is a True"""
+    user = (
+        test_session.query(ExternalAdminUser)
+        .filter_by(id=get_external_admin_user.id)
+        .first()
+    )
+    assert user.__eq__(get_external_admin_user)
+
+
 @pytest.mark.relationships
 def test_external_admin_user_client_relationship(test_session, get_external_admin_user):
     """ Test to see if relationship works correctly """
