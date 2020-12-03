@@ -127,28 +127,32 @@ def test_session():
 # Random Database Objects
 @pytest.fixture(scope="module")
 def get_external_admin_user(test_session):
-    user = ExternalAdminUserFactory(role="superuser")
+    client = ClientFactory()
+    warehouse = WarehouseFactory(client=client)
+    user = ExternalAdminUserFactory(
+        role="superuser", client=client, warehouse=warehouse
+    )
     athlete_upload_status = AthleteUploadStatusFactory(
         username=user.username, client_id=user.client_id
     )
 
     for i in range(4):
-        new_jf = JobFunctionFactory(warehouse=user.warehouse)
-        new_shift = ShiftsFactory(warehouse=user.warehouse)
-        new_ia = IndustrialAthleteFactory(
-            client=user.client,
-            warehouse=user.warehouse,
+        new_jf = JobFunctionFactory(warehouse=warehouse)
+        new_shift = ShiftsFactory(warehouse=warehouse)
+        IndustrialAthleteFactory(
+            client=client,
+            warehouse=warehouse,
             shifts=new_shift,
             job_function=new_jf,
         )
-        new_imported_ia = ImportedIndustrialAthleteFactory(
+        ImportedIndustrialAthleteFactory(
             athlete_upload_status=athlete_upload_status,
             client_id=user.client_id,
             warehouse_id=user.warehouse_id,
             shift_id=new_shift.id,
             job_function_id=new_jf.id,
         )
-        new_upload_status = AthleteUploadStatusFactory(
+        AthleteUploadStatusFactory(
             client_id=user.client_id, username=user.username, processed=100, total=100
         )
 
