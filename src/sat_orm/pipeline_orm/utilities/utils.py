@@ -96,6 +96,15 @@ def is_valid_bool(bool_input):
     return False, constants.INVALID_BOOLEAN_MESSAGE
 
 
+def is_valid_email(email):
+    """
+    CHECKS FOR A VALID EMAIL
+    input - email
+    output - True if valid or False otherwise
+    """
+    return bool(re.match(constants.EMAIL_REGEX, email))
+
+
 def is_valid_zero_or_one(param_input):
     if param_input in ("0", "1"):
         return True, None

@@ -1,5 +1,6 @@
 # Standard Library
 import os
+import random
 
 # Third Party Import
 import pytest
@@ -11,6 +12,7 @@ import copy
 from sat_orm.pipeline_factories import *
 from sat_orm.pipeline import *
 from sat_orm.test.test_database.test_database_setup import create_test_pipeline
+from sat_orm import constants
 
 os.environ["ENV_NAME"] = "test"
 
@@ -28,6 +30,12 @@ def pytest_configure(config):
         "markers", "test_inserts: mark tests to run only database insert actions"
     )
     config.addinivalue_line(
+        "markers", "test_updates: mark tests to run only database update actions"
+    )
+    config.addinivalue_line(
+        "markers", "test_delete: mark tests to run only database delete actions"
+    )
+    config.addinivalue_line(
         "markers", "orm_base: mark tests to run only sqlalchemy base module test"
     )
     config.addinivalue_line(
@@ -41,7 +49,7 @@ def pytest_configure(config):
     )
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="module")
 def test_session():
     is_created, error = create_test_pipeline()
     if is_created:
@@ -120,34 +128,114 @@ def test_session():
 
 
 # Random Database Objects
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="module")
 def get_external_admin_user(test_session):
-    user = ExternalAdminUserFactory(role="superuser")
+    client = ClientFactory()
+    warehouse = WarehouseFactory(client=client)
+    user = ExternalAdminUserFactory(
+        role="superuser", client=client, warehouse=warehouse
+    )
     athlete_upload_status = AthleteUploadStatusFactory(
         username=user.username, client_id=user.client_id
     )
 
     for i in range(4):
-        new_jf = JobFunctionFactory(warehouse=user.warehouse)
-        new_shift = ShiftsFactory(warehouse=user.warehouse)
-        new_ia = IndustrialAthleteFactory(
-            client=user.client,
-            warehouse=user.warehouse,
+        new_jf = JobFunctionFactory(warehouse=warehouse)
+        new_shift = ShiftsFactory(warehouse=warehouse)
+        IndustrialAthleteFactory(
+            client=client,
+            warehouse=warehouse,
             shifts=new_shift,
             job_function=new_jf,
         )
-        new_imported_ia = ImportedIndustrialAthleteFactory(
+        ImportedIndustrialAthleteFactory(
             athlete_upload_status=athlete_upload_status,
             client_id=user.client_id,
             warehouse_id=user.warehouse_id,
             shift_id=new_shift.id,
             job_function_id=new_jf.id,
         )
-        new_upload_status = AthleteUploadStatusFactory(
+        AthleteUploadStatusFactory(
             client_id=user.client_id, username=user.username, processed=100, total=100
         )
 
     return user
+
+
+@pytest.fixture(scope="function")
+def create_external_admin_user_params(get_external_admin_user):
+    temp_user = ExternalAdminUserFactory.build()
+    return {
+        "email": temp_user.email,
+        "username": temp_user.username,
+        "client_id": get_external_admin_user.client_id,
+        "warehouse_id": get_external_admin_user.warehouse_id,
+    }
+
+
+@pytest.fixture(scope="function")
+def get_random_shift(test_session, get_external_admin_user):
+    shifts = (
+        test_session.query(Shifts)
+        .filter_by(warehouse_id=get_external_admin_user.warehouse_id)
+        .all()
+    )
+    return random.choice(shifts)
+
+
+@pytest.fixture(scope="function")
+def invalid_int():
+    return "invalid int"
+
+
+@pytest.fixture(scope="function")
+def invalid_string():
+    return "@/;#$%^&*()"
+
+
+@pytest.fixture(scope="function")
+def valid_string():
+    return "abcd-ABCD"
+
+
+@pytest.fixture(scope="function")
+def valid_timezone():
+    return random.choice(constants.VALID_SHIFT_TIMEZONES)
+
+
+@pytest.fixture(scope="function")
+def valid_datetime():
+    return "2018-06-19 14:51:35"
+
+
+@pytest.fixture(scope="function")
+def valid_shift_fields():
+    return random.choices(
+        [
+            "id",
+            "name",
+            "warehouse_id",
+            "shift_start",
+            "shift_end",
+            "timezone",
+            "group_administrator",
+        ]
+    )
+
+
+@pytest.fixture(scope="function")
+def valid_external_admin_user_fields():
+    return random.choices(
+        [
+            "id",
+            "username",
+            "email",
+            "client_id",
+            "warehouse_id",
+            "role",
+            "is_active",
+        ]
+    )
 
 
 # @pytest.fixture(scope="session")
