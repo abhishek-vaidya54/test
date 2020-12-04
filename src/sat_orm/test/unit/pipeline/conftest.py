@@ -216,6 +216,15 @@ def get_warehouse_from_db(test_session):
     """ Creates warehouse from the Factories module"""
     return WarehouseFactory.create()
 
+@pytest.fixture(scope="function")
+def valid_email():
+    return "abc@def.ghi"
+
+@pytest.fixture(scope="function")
+def get_job_function_from_db(test_session):
+    """ Creates a JobFunction From the Factory"""
+    return JobFunctionFactory.create()
+
 # @pytest.fixture(scope="session")
 # def env():
 #     """ Grab environment variables"""
