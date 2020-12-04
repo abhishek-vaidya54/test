@@ -51,7 +51,15 @@ class Warehouse(Base):
         onupdate=datetime.datetime.utcnow,
         nullable=False,
     )
-    app_restart_at = Column(DateTime, nullable=True)
+    app_restart_at = Column(
+        DateTime,
+        server_default=str(
+            datetime.datetime.utcnow().replace(
+                hour=0, minute=0, second=0, microsecond=0
+            )
+        ),
+        nullable=False,
+    )
     prefered_timezone = Column(String(100), server_default="UTC", nullable=False)
     algo_version = Column(Integer, nullable=True)
     display_names = Column(Boolean, nullable=False)
