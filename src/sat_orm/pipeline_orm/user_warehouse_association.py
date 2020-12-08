@@ -26,25 +26,23 @@ from sqlalchemy.orm import relationship
 from sat_orm.pipeline_orm.pipeline_base import Base
 import sat_orm.constants as constants
 
-class UserWarehouseAssociation(Base):
-    __tablename__ = 'user_warehouse_association'
-    
-    external_admin_user_id = Column(Integer, ForeignKey('external_admin_user.id'), primary_key=True)
-    warehouse_id = Column(Integer, ForeignKey('warehouse.id'), primary_key=True)
-    
-    external_admin_user = relationship(
-        'ExternalAdminUser',
-        uselist=True,
-        backref='warehouses')
-    warehouse = relationship(
-        'Warehouse',
-        uselist=True,
-        backref='external_admin_users')
 
-    db_created_at = Column(
-        DateTime,
-        default=datetime.datetime.utcnow,
-        nullable=False)
+class UserWarehouseAssociation(Base):
+    __tablename__ = "user_warehouse_association"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+
+    external_admin_user_id = Column(
+        Integer, ForeignKey("external_admin_user.id"), primary_key=True
+    )
+    warehouse_id = Column(Integer, ForeignKey("warehouse.id"), primary_key=True)
+
+    external_admin_user = relationship(
+        "ExternalAdminUser", uselist=False, backref="warehouses"
+    )
+    warehouse = relationship("Warehouse", uselist=False, backref="external_admin_users")
+
+    db_created_at = Column(DateTime, default=datetime.datetime.utcnow, nullable=False)
     db_modified_at = Column(
         DateTime,
         default=datetime.datetime.utcnow,
