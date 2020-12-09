@@ -30,15 +30,15 @@ import sat_orm.constants as constants
 class UserWarehouseAssociation(Base):
     __tablename__ = "user_warehouse_association"
 
-    id = Column(Integer, primary_key=True, autoincrement=True)
-
     external_admin_user_id = Column(
         Integer, ForeignKey("external_admin_user.id"), primary_key=True
     )
     warehouse_id = Column(Integer, ForeignKey("warehouse.id"), primary_key=True)
 
     external_admin_user = relationship(
-        "ExternalAdminUser", uselist=False, backref="warehouses"
+        "ExternalAdminUser",
+        uselist=False,
+        back_populates="warehouses",
     )
     warehouse = relationship("Warehouse", uselist=False, backref="external_admin_users")
 
