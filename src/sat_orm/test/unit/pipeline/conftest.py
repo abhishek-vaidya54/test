@@ -6,7 +6,8 @@ import random
 import pytest
 from sqlalchemy import create_engine, func
 from sqlalchemy.orm import sessionmaker
-
+import time
+import copy
 # Local Application Import
 from sat_orm.pipeline_factories import *
 from sat_orm.pipeline import *
@@ -278,7 +279,7 @@ def valid_external_admin_user_fields():
 # @pytest.fixture(scope="function")
 # def industrial_athlete_factory():
 #     """ Builds an IndustrialAthlete From the Factory"""
-#     return IndustrialAthleteFactory.build()
+#     return IndustrialAthleteFactory.create()
 
 
 # @pytest.fixture(scope="function")
@@ -302,4 +303,105 @@ def valid_external_admin_user_fields():
 # @pytest.fixture(scope="function")
 # def client_factory(request):
 #     """ Builds clients from the Factories module"""
-#     return ClientFactory.build()
+#     return ClientFactory.create()
+
+@pytest.fixture(scope="function")
+def settings_factory(request):
+    """ Builds settings from the Factories module"""
+    return SettingsFactory.create()
+
+@pytest.fixture(scope="function")
+def valid_string():
+    return "09aA().-"
+
+@pytest.fixture(scope="function")
+def invalid_string_space_front():
+    return " invalid"
+
+@pytest.fixture(scope="function")
+def current_timestamp():
+    millis = int(round(time.time() * 1000))
+    return str(millis)
+
+@pytest.fixture(scope="function")
+def m_valid_sex():
+    return "m"
+
+@pytest.fixture(scope="function")
+def valid_date():
+    return "12/31/2020"
+
+@pytest.fixture(scope="function")
+def valid_first_name():
+    return "John"
+
+@pytest.fixture(scope="function")
+def valid_last_name():
+    return "Doe"
+
+@pytest.fixture(scope="function")
+def invalid_id():
+    return 0
+
+@pytest.fixture(scope="function")
+def valid_ia_put_body(
+    get_external_admin_user,
+    valid_string,
+    invalid_string_space_front,
+    current_timestamp,
+    m_valid_sex,
+    valid_date,
+    valid_first_name,
+    valid_last_name,
+    test_session
+):
+    warehouse_id = get_external_admin_user.warehouse_id
+    ia_list = (
+        test_session.query(IndustrialAthlete)
+        .filter_by(warehouse_id=warehouse_id)
+        .filter_by(client_id=get_external_admin_user.client_id)
+        .all()
+    )
+    random_ia = random.choice(ia_list)
+
+    job_function = random.choice(
+        test_session.query(JobFunction).filter_by(warehouse_id=warehouse_id).all()
+    )
+    shift = random.choice(
+        test_session.query(Shifts).filter_by(warehouse_id=warehouse_id).all()
+    )
+
+    return {
+        "username": get_external_admin_user.username,
+        "id": random_ia.id,
+        "firstName": valid_first_name,
+        "lastName": valid_last_name,
+        "externalId": current_timestamp,
+        "sex": m_valid_sex,
+        "sexChangeDate": valid_date,
+        "shiftId": shift.id,
+        "jobFunctionId": job_function.id,
+        "jobFunctionChangeDate": valid_date,
+        "hireDate": valid_date,
+        "clientId": shift.warehouse.client_id,
+        "warehouseId": warehouse_id,
+        "terminationDate": valid_date,
+    }
+
+@pytest.fixture(scope="function")
+def invalid_athletes_put_body_invalid_first_name(
+    valid_ia_put_body, invalid_string_space_front
+):
+    invalid_first_name = copy.deepcopy(valid_ia_put_body)
+    invalid_first_name.pop("username")
+    invalid_first_name["firstName"] = invalid_string_space_front
+    return invalid_first_name
+
+@pytest.fixture(scope="function")
+def invalid_athletes_put_body_invalid_last_name(
+    valid_ia_put_body, invalid_string_space_front
+):
+    invalid_last_name = copy.deepcopy(valid_ia_put_body)
+    invalid_last_name.pop("username")
+    invalid_last_name["lastName"] = invalid_string_space_front
+    return invalid_last_name
