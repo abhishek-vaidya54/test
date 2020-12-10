@@ -27,6 +27,7 @@ from sat_orm.pipeline import (
     ImportedIndustrialAthlete,
     AthleteUploadStatus,
     CasbinRule,
+    Groups,
 )
 
 
@@ -283,4 +284,15 @@ class CasbinRuleFactory(factory.alchemy.SQLAlchemyModelFactory):
 
     class Meta:
         model = CasbinRule
+        sqlalchemy_session_persistence = "commit"
+
+class GroupsFactory(factory.alchemy.SQLAlchemyModelFactory):
+    id = factory.Sequence(lambda n: n)
+    title = factory.fuzzy.FuzzyText(length=255)
+    description = factory.fuzzy.FuzzyText(length=45)
+    override_settings = factory.fuzzy.FuzzyChoice([True, False])
+
+  
+    class Meta:
+        model = Groups
         sqlalchemy_session_persistence = "commit"
