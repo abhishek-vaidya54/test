@@ -100,7 +100,7 @@ class Sensors(Base):
 
     @staticmethod
     def get_by_sensor_id(session, sensor_id):
-        sensor = session.query(Sensors).filter_by(id=sensor_id).first()
+        sensor = session.query(Sensors).filter_by(sensor_id=sensor_id).first()
         return sensor
 
     @staticmethod

@@ -1,3 +1,6 @@
+from sat_orm.pipeline_orm.utilities import utils
+
+
 def get_setting(connection, settings_id):
     """
     Helper method to retrieve the Warehouse object from the database
@@ -23,9 +26,10 @@ def get_target_by_id(connection, target_type, target_id):
     Output:
         target: The target object retrieved from the database
     """
+    db = utils.get_database_names()["pipeline"]
     target = connection.execute(
-        "SELECT * FROM pipeline.{} WHERE id={}".format(
-            target_type if target_type != "group" else "groups", target_id
+        "SELECT * FROM {}.{} WHERE id={}".format(
+            db, target_type if target_type != "group" else "groups", target_id
         )
     ).fetchone()
 

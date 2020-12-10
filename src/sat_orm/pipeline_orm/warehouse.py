@@ -156,18 +156,19 @@ class Warehouse(Base):
             "utc_op_day_start": self.utc_op_day_start,
             "week_start": self.week_start,
             "update_engagement": self.update_engagement,
+            "number_of_user_allocated": self.number_of_user_allocated,
+            "city": self.city,
+            "state": self.state,
+            "country": self.country,
+            "industry": self.industry,
+            "latitude": self.latitude,
+            "longitude": self.longitude,
+            "lat_direction": self.lat_direction,
+            "long_direction": self.long_direction,
         }
 
     def __repr__(self):
         return str(self.as_dict())
-
-
-# 'standard_score':self.standard_score,
-#             'min_safety_score':self.min_safety_score,
-#             'max_safety_score':self.max_safety_score,
-#             'first_quarter_safety_score':self.first_quarter_safety_score,
-#             'median_safety_score':self.median_safety_score,
-#             'third_quarter_safety_score':self.third_quarter_safety_score
 
 
 @event.listens_for(Warehouse, "before_insert")
