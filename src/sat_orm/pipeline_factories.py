@@ -28,6 +28,7 @@ from sat_orm.pipeline import (
     AthleteUploadStatus,
     CasbinRule,
     Sensors,
+    Groups,
 )
 
 
@@ -286,13 +287,25 @@ class CasbinRuleFactory(factory.alchemy.SQLAlchemyModelFactory):
         model = CasbinRule
         sqlalchemy_session_persistence = "commit"
 
+
 class SensorsFactory(factory.alchemy.SQLAlchemyModelFactory):
     id = factory.Sequence(lambda n: n)
     serial_number = factory.fuzzy.FuzzyText(length=45)
     sensor_id = factory.fuzzy.FuzzyText(length=45)
-    stiction_flagged = factory.fuzzy.FuzzyChoice(['0','1'])
-    decommissioned = factory.fuzzy.FuzzyChoice(['0','1'])
+    stiction_flagged = factory.fuzzy.FuzzyChoice(["0", "1"])
+    decommissioned = factory.fuzzy.FuzzyChoice(["0", "1"])
 
     class Meta:
         model = Sensors
+        sqlalchemy_session_persistence = "commit"
+
+
+class GroupsFactory(factory.alchemy.SQLAlchemyModelFactory):
+    id = factory.Sequence(lambda n: n)
+    title = factory.fuzzy.FuzzyText(length=255)
+    description = factory.fuzzy.FuzzyText(length=45)
+    override_settings = factory.fuzzy.FuzzyChoice([True, False])
+
+    class Meta:
+        model = Groups
         sqlalchemy_session_persistence = "commit"

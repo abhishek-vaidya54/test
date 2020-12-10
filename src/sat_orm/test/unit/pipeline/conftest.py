@@ -6,10 +6,39 @@ import random
 import pytest
 from sqlalchemy import create_engine, func
 from sqlalchemy.orm import sessionmaker
+import time
+import copy
 
 # Local Application Import
-from sat_orm.pipeline_factories import *
-from sat_orm.pipeline import *
+from sat_orm.pipeline_factories import (
+    ClientFactory,
+    WarehouseFactory,
+    ShiftsFactory,
+    SettingsFactory,
+    JobFunctionFactory,
+    IndustrialAthleteFactory,
+    ExternalAdminUserFactory,
+    AthleteUploadStatusFactory,
+    ImportedIndustrialAthleteFactory,
+    CasbinRuleFactory,
+    SensorsFactory,
+    GroupsFactory,
+)
+from sat_orm.pipeline import (
+    get_session,
+    Client,
+    Warehouse,
+    Shifts,
+    Setting,
+    IndustrialAthlete,
+    ExternalAdminUser,
+    JobFunction,
+    ImportedIndustrialAthlete,
+    AthleteUploadStatus,
+    CasbinRule,
+    Sensors,
+    Groups,
+)
 from sat_orm.test.test_database.test_database_setup import create_test_pipeline
 from sat_orm import constants
 
@@ -68,6 +97,8 @@ def test_session():
             ImportedIndustrialAthleteFactory._meta.sqlalchemy_session = session
             CasbinRuleFactory._meta.sqlalchemy_session = session
             SensorsFactory._meta.sqlalchemy_session = session
+            GroupsFactory._meta.sqlalchemy_session = session
+
             # Reset the factory id values to greater than the records to avoid duplicate id errors
             client = session.query(func.max(Client.id)).first()
             warehouse = session.query(func.max(Warehouse.id)).first()
@@ -82,6 +113,8 @@ def test_session():
             imported_ia = session.query(func.max(ImportedIndustrialAthlete.id)).first()
             casbin_rule = session.query(func.max(CasbinRule.id)).first()
             sensors = session.query(func.max(Sensors.id)).first()
+            group = session.query(func.max(Groups.id)).first()
+
             client_max_id = 1
             warehouse_max_id = 1
             shift_max_id = 1
@@ -93,6 +126,8 @@ def test_session():
             imported_id_max_id = 1
             casbin_rule_max_id = 1
             sensors_max_id = 1
+            group_max_id = 1
+
             if client[0] is not None:
                 client_max_id = client[0] + 1
             if warehouse[0] is not None:
@@ -115,6 +150,9 @@ def test_session():
                 casbin_rule_max_id = casbin_rule[0] + 1
             if sensors[0] is not None:
                 sensors_max_id = sensors[0] + 1
+            if group[0] is not None:
+                group_max_id = group[0] + 1
+
             ClientFactory.reset_sequence(client_max_id)
             WarehouseFactory.reset_sequence(warehouse_max_id)
             ShiftsFactory.reset_sequence(shift_max_id)
@@ -126,6 +164,7 @@ def test_session():
             ImportedIndustrialAthleteFactory.reset_sequence(imported_id_max_id)
             CasbinRuleFactory.reset_sequence(casbin_rule_max_id)
             SensorsFactory.reset_sequence(sensors_max_id)
+            GroupsFactory.reset_sequence(group_max_id)
 
             yield session
     else:
@@ -166,6 +205,7 @@ def get_external_admin_user(test_session):
 
     return user
 
+
 @pytest.fixture(scope="function")
 def get_industrial_athlete(get_external_admin_user, test_session):
     ia_list = (
@@ -182,9 +222,8 @@ def get_industrial_athlete(get_external_admin_user, test_session):
 def get_setting_type_athlete(get_industrial_athlete):
     """ Builds settings from the Factories module"""
     ia = get_industrial_athlete
-    return SettingsFactory.create(
-        target_type = "industrial_athlete",
-        target_id = ia.id)
+    return SettingsFactory.create(target_type="industrial_athlete", target_id=ia.id)
+
 
 @pytest.fixture(scope="function")
 def get_sensor_object(test_session):
@@ -192,11 +231,13 @@ def get_sensor_object(test_session):
     """ Builds sensors from the Factories module"""
     return SensorsFactory.build()
 
+
 @pytest.fixture(scope="function")
 def get_sensor_from_db(test_session):
     """ Builds sensors from the Factories module"""
     session = test_session
     return SensorsFactory.create()
+
 
 @pytest.fixture(scope="function")
 def create_external_admin_user_params(get_external_admin_user):
@@ -208,14 +249,23 @@ def create_external_admin_user_params(get_external_admin_user):
         "warehouse_id": get_external_admin_user.warehouse_id,
     }
 
+
 @pytest.fixture(scope="function")
 def invalid_int():
     return "zero"
+
 
 @pytest.fixture(scope="function")
 def get_warehouse_from_db(test_session):
     """ Creates warehouse from the Factories module"""
     return WarehouseFactory.create()
+
+
+@pytest.fixture(scope="function")
+def get_group_from_db(test_session):
+    """ Creates group from the Factories module"""
+    return GroupsFactory.create()
+
 
 @pytest.fixture(scope="function")
 def get_random_shift(test_session, get_external_admin_user):
@@ -323,7 +373,7 @@ def valid_external_admin_user_fields():
 # @pytest.fixture(scope="function")
 # def industrial_athlete_factory():
 #     """ Builds an IndustrialAthlete From the Factory"""
-#     return IndustrialAthleteFactory.build()
+#     return IndustrialAthleteFactory.create()
 
 
 # @pytest.fixture(scope="function")
@@ -347,4 +397,117 @@ def valid_external_admin_user_fields():
 # @pytest.fixture(scope="function")
 # def client_factory(request):
 #     """ Builds clients from the Factories module"""
-#     return ClientFactory.build()
+#     return ClientFactory.create()
+
+
+@pytest.fixture(scope="function")
+def settings_factory(request):
+    """ Builds settings from the Factories module"""
+    return SettingsFactory.create()
+
+
+@pytest.fixture(scope="function")
+def valid_string():
+    return "09aA().-"
+
+
+@pytest.fixture(scope="function")
+def invalid_string_space_front():
+    return " invalid"
+
+
+@pytest.fixture(scope="function")
+def current_timestamp():
+    millis = int(round(time.time() * 1000))
+    return str(millis)
+
+
+@pytest.fixture(scope="function")
+def m_valid_sex():
+    return "m"
+
+
+@pytest.fixture(scope="function")
+def valid_date():
+    return "12/31/2020"
+
+
+@pytest.fixture(scope="function")
+def valid_first_name():
+    return "John"
+
+
+@pytest.fixture(scope="function")
+def valid_last_name():
+    return "Doe"
+
+
+@pytest.fixture(scope="function")
+def invalid_id():
+    return 0
+
+
+@pytest.fixture(scope="function")
+def valid_ia_put_body(
+    get_external_admin_user,
+    valid_string,
+    invalid_string_space_front,
+    current_timestamp,
+    m_valid_sex,
+    valid_date,
+    valid_first_name,
+    valid_last_name,
+    test_session,
+):
+    warehouse_id = get_external_admin_user.warehouse_id
+    ia_list = (
+        test_session.query(IndustrialAthlete)
+        .filter_by(warehouse_id=warehouse_id)
+        .filter_by(client_id=get_external_admin_user.client_id)
+        .all()
+    )
+    random_ia = random.choice(ia_list)
+
+    job_function = random.choice(
+        test_session.query(JobFunction).filter_by(warehouse_id=warehouse_id).all()
+    )
+    shift = random.choice(
+        test_session.query(Shifts).filter_by(warehouse_id=warehouse_id).all()
+    )
+
+    return {
+        "username": get_external_admin_user.username,
+        "id": random_ia.id,
+        "firstName": valid_first_name,
+        "lastName": valid_last_name,
+        "externalId": current_timestamp,
+        "sex": m_valid_sex,
+        "sexChangeDate": valid_date,
+        "shiftId": shift.id,
+        "jobFunctionId": job_function.id,
+        "jobFunctionChangeDate": valid_date,
+        "hireDate": valid_date,
+        "clientId": shift.warehouse.client_id,
+        "warehouseId": warehouse_id,
+        "terminationDate": valid_date,
+    }
+
+
+@pytest.fixture(scope="function")
+def invalid_athletes_put_body_invalid_first_name(
+    valid_ia_put_body, invalid_string_space_front
+):
+    invalid_first_name = copy.deepcopy(valid_ia_put_body)
+    invalid_first_name.pop("username")
+    invalid_first_name["firstName"] = invalid_string_space_front
+    return invalid_first_name
+
+
+@pytest.fixture(scope="function")
+def invalid_athletes_put_body_invalid_last_name(
+    valid_ia_put_body, invalid_string_space_front
+):
+    invalid_last_name = copy.deepcopy(valid_ia_put_body)
+    invalid_last_name.pop("username")
+    invalid_last_name["lastName"] = invalid_string_space_front
+    return invalid_last_name
