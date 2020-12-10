@@ -259,7 +259,7 @@ def insert(session, data):
         return 0
     else:
         client = Client(
-            name=data["name"], enable_processing=data["enableProcessing"], prefix=""
+            name=data["name"], enable_processing=data["enableProcessing"], prefix="",status=data["status"],contracted_users=data['contracted_users']
         )
         session.add(client)
         session.commit()
@@ -293,7 +293,6 @@ def update(session, data):
     else:
         return 0
 
-
 def delete(session, data):
     """
     Description
@@ -304,6 +303,7 @@ def delete(session, data):
         data: {key: value} dictionary
     """
     response = {}
+    response['error'] = None
     client_id = data["client_id"]
 
     client_has_warehouse = has_warehouse(session, client_id)
