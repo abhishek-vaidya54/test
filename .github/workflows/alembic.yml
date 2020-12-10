@@ -1,0 +1,48 @@
+name: Alembic Migrations
+
+on: 
+  workflow_dispatch:
+    inputs:
+      databaseUri:
+        description: 'Database URI'
+        required: true
+      revisionId:
+        description: 'Revision ID'
+        required: true
+        default: 'head'
+
+jobs:
+  alembic-upgrade:
+    name: Alembic Migrations
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python: [3.8]
+  
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v2
+
+      - name: Save inputs as environment variables
+        env:
+          INPUT_DATABASE_URI: github.event.inputs.databaseUri
+          INPUT_REVISION_ID: github.event.inputs.revisionId
+      
+      - name: Connect to VPN
+        uses: golfzaptw/action-connect-ovpn@master
+        id: connect_vpn
+        with:
+          FILE_OVPN: '.github/vpn/config.ovpn'
+          PING_URL: '127.0.0.1'
+
+      - name:  Install dependencies
+        run: pip install -r .github/requirements.txt
+
+      - name: Determine which Alembic revision to jump to
+        run: python .github/alembic_revision.py
+
+      - name: Check VPN Connection Status
+        run: echo ${{  steps.connect_vpn.outputs.STATUS  }}
+
+      - name: Kill VPN Connection
+        run: killall openvpn
