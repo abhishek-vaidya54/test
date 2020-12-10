@@ -67,6 +67,7 @@ def test_session():
             AthleteUploadStatusFactory._meta.sqlalchemy_session = session
             ImportedIndustrialAthleteFactory._meta.sqlalchemy_session = session
             CasbinRuleFactory._meta.sqlalchemy_session = session
+            SensorsFactory._meta.sqlalchemy_session = session
             # Reset the factory id values to greater than the records to avoid duplicate id errors
             client = session.query(func.max(Client.id)).first()
             warehouse = session.query(func.max(Warehouse.id)).first()
@@ -80,6 +81,7 @@ def test_session():
             ).first()
             imported_ia = session.query(func.max(ImportedIndustrialAthlete.id)).first()
             casbin_rule = session.query(func.max(CasbinRule.id)).first()
+            sensors = session.query(func.max(Sensors.id)).first()
             client_max_id = 1
             warehouse_max_id = 1
             shift_max_id = 1
@@ -90,6 +92,7 @@ def test_session():
             athlete_upload_status_max_id = 1
             imported_id_max_id = 1
             casbin_rule_max_id = 1
+            sensors_max_id = 1
             if client[0] is not None:
                 client_max_id = client[0] + 1
             if warehouse[0] is not None:
@@ -110,6 +113,8 @@ def test_session():
                 imported_id_max_id = imported_ia[0] + 1
             if casbin_rule[0] is not None:
                 casbin_rule_max_id = casbin_rule[0] + 1
+            if sensors[0] is not None:
+                sensors_max_id = sensors[0] + 1
             ClientFactory.reset_sequence(client_max_id)
             WarehouseFactory.reset_sequence(warehouse_max_id)
             ShiftsFactory.reset_sequence(shift_max_id)
@@ -120,6 +125,7 @@ def test_session():
             AthleteUploadStatusFactory.reset_sequence(athlete_upload_status_max_id)
             ImportedIndustrialAthleteFactory.reset_sequence(imported_id_max_id)
             CasbinRuleFactory.reset_sequence(casbin_rule_max_id)
+            SensorsFactory.reset_sequence(sensors_max_id)
 
             yield session
     else:
@@ -160,6 +166,37 @@ def get_external_admin_user(test_session):
 
     return user
 
+@pytest.fixture(scope="function")
+def get_industrial_athlete(get_external_admin_user, test_session):
+    ia_list = (
+        test_session.query(IndustrialAthlete)
+        .filter_by(warehouse_id=get_external_admin_user.warehouse_id)
+        .filter_by(client_id=get_external_admin_user.client_id)
+        .all()
+    )
+    random_ia = random.choice(ia_list)
+    return random_ia
+
+
+@pytest.fixture(scope="function")
+def get_setting_type_athlete(get_industrial_athlete):
+    """ Builds settings from the Factories module"""
+    ia = get_industrial_athlete
+    return SettingsFactory.create(
+        target_type = "industrial_athlete",
+        target_id = ia.id)
+
+@pytest.fixture(scope="function")
+def get_sensor_object(test_session):
+    session = test_session
+    """ Builds sensors from the Factories module"""
+    return SensorsFactory.build()
+
+@pytest.fixture(scope="function")
+def get_sensor_from_db(test_session):
+    """ Builds sensors from the Factories module"""
+    session = test_session
+    return SensorsFactory.create()
 
 @pytest.fixture(scope="function")
 def create_external_admin_user_params(get_external_admin_user):
@@ -171,6 +208,14 @@ def create_external_admin_user_params(get_external_admin_user):
         "warehouse_id": get_external_admin_user.warehouse_id,
     }
 
+@pytest.fixture(scope="function")
+def invalid_int():
+    return "zero"
+
+@pytest.fixture(scope="function")
+def get_warehouse_from_db(test_session):
+    """ Creates warehouse from the Factories module"""
+    return WarehouseFactory.create()
 
 @pytest.fixture(scope="function")
 def get_random_shift(test_session, get_external_admin_user):
