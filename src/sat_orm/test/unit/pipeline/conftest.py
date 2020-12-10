@@ -255,22 +255,6 @@ def get_sensor_from_db(test_session):
 
 
 @pytest.fixture(scope="function")
-def create_external_admin_user_params(get_external_admin_user):
-    temp_user = ExternalAdminUserFactory.build()
-    return {
-        "email": temp_user.email,
-        "username": temp_user.username,
-        "client_id": get_external_admin_user.client_id,
-        "warehouse_id": get_external_admin_user.warehouse_id,
-    }
-
-
-@pytest.fixture(scope="function")
-def invalid_int():
-    return "zero"
-
-
-@pytest.fixture(scope="function")
 def get_warehouse_from_db(test_session):
     """ Creates warehouse from the Factories module"""
     return WarehouseFactory.create()
@@ -280,6 +264,12 @@ def get_warehouse_from_db(test_session):
 def get_group_from_db(test_session):
     """ Creates group from the Factories module"""
     return GroupsFactory.create()
+
+
+@pytest.fixture(scope="function")
+def get_job_function_from_db(test_session):
+    """ Creates a JobFunction From the Factory"""
+    return JobFunctionFactory.create()
 
 
 @pytest.fixture(scope="function")
@@ -293,8 +283,26 @@ def get_random_shift(test_session, get_external_admin_user):
 
 
 @pytest.fixture(scope="function")
+def valid_int():
+    return "0"
+
+
+@pytest.fixture(scope="function")
 def invalid_int():
     return "invalid int"
+
+
+@pytest.fixture(scope="function")
+def random_string():
+    """
+    Return a random string
+    """
+    return str(uuid.uuid4())
+
+
+@pytest.fixture(scope="function")
+def valid_string():
+    return "09aA().-"
 
 
 @pytest.fixture(scope="function")
@@ -303,13 +311,59 @@ def invalid_string():
 
 
 @pytest.fixture(scope="function")
+def invalid_string_space_front():
+    return " invalid"
+
+
+@pytest.fixture(scope="function")
 def valid_timezone():
     return random.choice(constants.VALID_SHIFT_TIMEZONES)
 
 
 @pytest.fixture(scope="function")
+def current_timestamp():
+    millis = int(round(time.time() * 1000))
+    return str(millis)
+
+
+@pytest.fixture(scope="function")
+def m_valid_sex():
+    return "m"
+
+
+@pytest.fixture(scope="function")
+def valid_date():
+    return "12/31/2020"
+
+
+@pytest.fixture(scope="function")
+def invalid_date():
+    return "31/12/202"
+
+
+@pytest.fixture(scope="function")
 def valid_datetime():
-    return "2018-06-19 14:51:35"
+    return "2020-12-01 10:49:00"
+
+
+@pytest.fixture(scope="function")
+def valid_first_name():
+    return "John"
+
+
+@pytest.fixture(scope="function")
+def valid_last_name():
+    return "Doe"
+
+
+@pytest.fixture(scope="function")
+def invalid_id():
+    return 0
+
+
+@pytest.fixture(scope="function")
+def valid_email():
+    return "abc@def.ghi"
 
 
 @pytest.fixture(scope="function")
@@ -342,72 +396,15 @@ def valid_external_admin_user_fields():
     )
 
 
-# @pytest.fixture(scope="session")
-# def env():
-#     """ Grab environment variables"""
-#     variables = {}
-#     variables["CONNECTION"] = os.environ.get("PIPELINE_CONNECTION_STRING", 0)
-#     if variables["CONNECTION"]:
-#         return variables["CONNECTION"]
-#     else:
-#         raise Exception(
-#             'Please make sure Environment variables are set: export CONNECTION_STRING="db://username:password@host/database"'
-#         )
-
-
-# @pytest.fixture(scope="module")
-# def engine(env):
-#     """ Database engine created using the environment variable fixture"""
-#     engine = create_engine(env)
-#     return engine
-
-
-# @pytest.fixture(scope="module")
-# def session(engine):
-#     """ Database Session created from db connection fixture"""
-#     connection = engine.connect()
-#     transaction = connection.begin()
-#     Session = sessionmaker(bind=connection)
-#     session = Session()
-#     ClientFactory._meta.sqlalchemy_session = session
-#     WarehouseFactory._meta.sqlalchemy_session = session
-#     ShiftsFactory._meta.sqlalchemy_session = session
-#     JobFunctionFactory._meta.sqlalchemy_session = session
-#     IndustrialAthleteFactory._meta.sqlalchemy_session = session
-#     yield session
-#     session.close()
-#     transaction.rollback()
-#     connection.close()
-
-
-# @pytest.fixture(scope="function")
-# def industrial_athlete_factory():
-#     """ Builds an IndustrialAthlete From the Factory"""
-#     return IndustrialAthleteFactory.create()
-
-
-# @pytest.fixture(scope="function")
-# def job_function_factory():
-#     """ Builds a JobFunction From the Factory"""
-#     return JobFunctionFactory.build()
-
-
-# @pytest.fixture(scope="function")
-# def shift_factory():
-#     """ Builds a Shift From the Factory"""
-#     return ShiftsFactory.build()
-
-
-# @pytest.fixture(scope="function")
-# def warehouse_factory():
-#     """ Builds a Warehouse From the Factory"""
-#     return WarehouseFactory.build()
-
-
-# @pytest.fixture(scope="function")
-# def client_factory(request):
-#     """ Builds clients from the Factories module"""
-#     return ClientFactory.create()
+@pytest.fixture(scope="function")
+def create_external_admin_user_params(get_external_admin_user):
+    temp_user = ExternalAdminUserFactory.build()
+    return {
+        "email": temp_user.email,
+        "username": temp_user.username,
+        "client_id": get_external_admin_user.client_id,
+        "warehouse_id": get_external_admin_user.warehouse_id,
+    }
 
 
 @pytest.fixture(scope="function")
@@ -420,75 +417,6 @@ def settings_factory(request):
 def client_factory(request):
     """ Builds clients from the Factories module"""
     return ClientFactory.create()
-
-
-@pytest.fixture(scope="function")
-def invalid_string_space_front():
-    return " invalid"
-
-
-@pytest.fixture(scope="function")
-def current_timestamp():
-    millis = int(round(time.time() * 1000))
-    return str(millis)
-
-
-@pytest.fixture(scope="function")
-def m_valid_sex():
-    return "m"
-
-
-@pytest.fixture(scope="function")
-def random_string():
-    """
-    Return a random string
-    """
-    return str(uuid.uuid4())
-
-
-@pytest.fixture(scope="function")
-def valid_int():
-    return "0"
-
-
-@pytest.fixture(scope="function")
-def invalid_int():
-    return "zero"
-
-
-@pytest.fixture(scope="function")
-def valid_date():
-    return "12/31/2020"
-
-
-@pytest.fixture(scope="function")
-def valid_datetime():
-    return "2020-12-01 10:49:00"
-
-
-@pytest.fixture(scope="function")
-def invalid_date():
-    return "31/12/202"
-
-
-@pytest.fixture(scope="function")
-def valid_string():
-    return "09aA().-"
-
-
-@pytest.fixture(scope="function")
-def valid_first_name():
-    return "John"
-
-
-@pytest.fixture(scope="function")
-def valid_last_name():
-    return "Doe"
-
-
-@pytest.fixture(scope="function")
-def invalid_id():
-    return 0
 
 
 @pytest.fixture(scope="function")
@@ -555,10 +483,6 @@ def invalid_athletes_put_body_invalid_last_name(
     invalid_last_name.pop("username")
     invalid_last_name["lastName"] = invalid_string_space_front
     return invalid_last_name
-
-
-def invalid_string_space_front():
-    return " invalid"
 
 
 @pytest.fixture(scope="function")

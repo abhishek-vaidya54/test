@@ -11,6 +11,7 @@ from sat_orm.pipeline_orm.shifts import Shifts
 from sat_orm.pipeline_orm.casbin_rule import CasbinRule
 from sat_orm.pipeline_orm.external_admin_user import ExternalAdminUser
 from sat_orm.pipeline_orm.groups import Groups
+from sat_orm.pipeline_orm.user_warehouse_association import UserWarehouseAssociation
 
 
 def convert_date(date_input):
@@ -42,6 +43,7 @@ class SettingSchema(SQLAlchemyAutoSchema):
         include_relationships = True
         load_instance = True
 
+
 class ClientSchema(SQLAlchemyAutoSchema):
     active_inactive_date = fields.Function(
         lambda obj: convert_date(obj.active_inactive_date)
@@ -54,9 +56,18 @@ class ClientSchema(SQLAlchemyAutoSchema):
         include_relationships = True
         load_instance = True
 
+
 class WarehouseSchema(SQLAlchemyAutoSchema):
-    client = fields.Nested(ClientSchema(only=("id","name",)))
+    client = fields.Nested(
+        ClientSchema(
+            only=(
+                "id",
+                "name",
+            )
+        )
+    )
     client_id = fields.Function(lambda obj: obj.client.id)
+
     class Meta:
         model = Warehouse
         include_relationships = True
@@ -65,7 +76,9 @@ class WarehouseSchema(SQLAlchemyAutoSchema):
 
 class JobFunctionSchema(SQLAlchemyAutoSchema):
     warehouse = fields.Nested(WarehouseSchema(only=("id", "name")))
-    warehouse_id = fields.Function(lambda obj: obj.warehouse.id if obj.warehouse else None)
+    warehouse_id = fields.Function(
+        lambda obj: obj.warehouse.id if obj.warehouse else None
+    )
     settings_id = fields.Function(lambda obj: obj.settings.id if obj.settings else None)
 
     class Meta:
@@ -79,7 +92,6 @@ class CasbinRuleSchema(SQLAlchemyAutoSchema):
         model = CasbinRule
         include_relationships = True
         load_instance = True
-
 
 
 # class CustomDateField(fields.Field):
@@ -108,13 +120,22 @@ class IndustrialAthleteSchema(ModelSchema):
     sex = fields.Function(lambda obj: obj.gender)
     warehouseId = fields.Function(lambda obj: obj.warehouse_id)
     shiftId = fields.Function(lambda obj: obj.shift_id)
+    shift = fields.Function(lambda obj: obj.shifts.name if obj.shifts else None)
     jobFunctionId = fields.Function(lambda obj: obj.job_function_id)
+    jobFunction = fields.Function(
+        lambda obj: obj.job_function.name if obj.job_function else None
+    )
     hireDate = fields.Function(
         lambda obj: convert_date(obj.hire_date) if obj.hire_date else None
     )
     terminationDate = fields.Function(
         lambda obj: convert_date(obj.termination_date) if obj.termination_date else None
     )
+
+    @post_dump(pass_many=True)
+    def add_fields(self, data, many, **kwargs):
+        data["warehouse"] = data["warehouse"]["name"] if data["warehouse"] else None
+        return data
 
     class Meta:
         model = IndustrialAthlete
@@ -123,11 +144,31 @@ class IndustrialAthleteSchema(ModelSchema):
         load_instance = True
 
 
+class UserWarehouseAssociationSchema(ModelSchema):
+    warehouse = fields.Nested(WarehouseSchema(only=("id", "name")))
+
+    class Meta:
+        model = UserWarehouseAssociation
+        include_fk = True
+        include_relationships = True
+        load_instance = True
+
+
 class ExternalAdminUserSchema(ModelSchema):
     warehouseId = fields.Function(lambda obj: obj.warehouse.id)
     warehouse = fields.Function(lambda obj: obj.warehouse.name)
+    warehouses = fields.Nested(
+        UserWarehouseAssociationSchema(only=("warehouse",)), many=True
+    )
     clientId = fields.Function(lambda obj: obj.client.id)
     client = fields.Function(lambda obj: obj.client.name)
+
+    @post_dump(pass_many=True)
+    def unwind_warehouses(self, data, many, **kwargs):
+        data["warehouses"] = [
+            warehouse["warehouse"] for warehouse in data["warehouses"]
+        ]
+        return data
 
     class Meta:
         model = ExternalAdminUser

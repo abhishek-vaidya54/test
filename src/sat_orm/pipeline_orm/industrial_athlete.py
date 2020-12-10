@@ -18,7 +18,16 @@ import datetime
 
 
 # Third Party Imports
-from sqlalchemy import ForeignKey, Column, String, Integer, Boolean, DateTime, desc, event
+from sqlalchemy import (
+    ForeignKey,
+    Column,
+    String,
+    Integer,
+    Boolean,
+    DateTime,
+    desc,
+    event,
+)
 from sqlalchemy.orm import relationship, validates
 
 
@@ -202,7 +211,9 @@ def validate_before_insert(mapper, connection, target):
         connection, param_input.get("jobFunctionId", ""), target.warehouse_id
     )
     if not is_valid:
-        errors.append(build_error("jobFunctionId", constants.INVALID_JOB_FUNCTION_MESSAGE))
+        errors.append(
+            build_error("jobFunctionId", constants.INVALID_JOB_FUNCTION_MESSAGE)
+        )
 
     is_valid, date_obj = utils.is_valid_date(param_input.get("hireDate", ""))
     if not is_valid:
@@ -276,7 +287,9 @@ def validate_before_update(mapper, connection, target):
             connection, param_input.get("jobFunctionId", ""), ia.warehouse_id
         )
         if not is_valid:
-            errors.append(build_error("jobFunctionId", constants.INVALID_JOB_FUNCTION_MESSAGE))
+            errors.append(
+                build_error("jobFunctionId", constants.INVALID_JOB_FUNCTION_MESSAGE)
+            )
 
     if "hireDate" in param_input:
         is_valid, date_obj = utils.is_valid_date(param_input.get("hireDate", ""))
@@ -284,11 +297,11 @@ def validate_before_update(mapper, connection, target):
             errors.append(build_error("hireDate", constants.INVALID_DATE_MESSAGE))
 
     if "terminationDate" in param_input:
-        is_valid, date_obj = utils.is_valid_date(
-            param_input.get("terminationDate", "")
-        )
+        is_valid, date_obj = utils.is_valid_date(param_input.get("terminationDate", ""))
         if not is_valid:
-            errors.append(build_error("terminationDate", constants.INVALID_DATE_MESSAGE))
+            errors.append(
+                build_error("terminationDate", constants.INVALID_DATE_MESSAGE)
+            )
 
     check_errors_and_return(errors)
 
