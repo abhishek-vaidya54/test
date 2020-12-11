@@ -68,13 +68,13 @@ def is_valid_client(connection, client_id):
     return bool(client)
 
 
-def is_valid_warehouse(connection, warehouse_id):
+def is_valid_warehouse(connection, warehouse_id, client_id=None):
     """
     Validates a warehouse, checks if warehouse belongs to the client
     Returns True if it is a valid warehouse
     Returns False if it is not
     """
-    warehouse = warehouse_queries.get_warehouse(connection, warehouse_id)
+    warehouse = warehouse_queries.get_warehouse(connection, warehouse_id, client_id)
     return bool(warehouse)
 
 

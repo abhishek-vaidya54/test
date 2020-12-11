@@ -44,6 +44,8 @@ INVALID_JOB_FUNCTION_MESSAGE = "Invalid job function"
 
 INVALID_SHIFT_MESSAGE = "Invalid shift"
 
+INVALID_WAREHOUSE_MESSAGE = "Invalid warehouse"
+
 INVALID_DUPLICATE_EXTERNAL_ID_MESSAGE = "Duplicate external ID."
 
 INVALID_REQUEST = "Invalid request."
