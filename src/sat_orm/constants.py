@@ -217,7 +217,7 @@ RBAC_VALID_RESOURCES = (
     "roles",
     "bulkupload",
     "groups",
-    "external_admin_user",
+    "users",
     "settings",
     "sensors",
 )
@@ -247,7 +247,7 @@ POLICY_JOBFUNCTIONS_OBJ = "jobfunctions"
 POLICY_ROLES_OBJ = "roles"
 POLICY_BULK_UPLOAD_OBJ = "bulkupload"
 POLICY_GROUPS_OBJ = "groups"
-POLICY_EXTERNAL_ADMIN_USER_OBJ = "external_admin_user"
+POLICY_EXTERNAL_ADMIN_USER_OBJ = "users"
 POLICY_SETTINGS_OBJ = "settings"
 POLICY_SENSORS_OBJ = "sensors"
 
