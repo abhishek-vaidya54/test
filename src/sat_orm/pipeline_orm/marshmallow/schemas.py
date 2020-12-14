@@ -134,7 +134,7 @@ class IndustrialAthleteSchema(ModelSchema):
 
     @post_dump(pass_many=True)
     def add_fields(self, data, many, **kwargs):
-        data["warehouse"] = data["warehouse"]["name"] if data["warehouse"] else None
+        data["warehouse"] = data["warehouse"]["name"] if data.get("warehouse") else None
         return data
 
     class Meta:
