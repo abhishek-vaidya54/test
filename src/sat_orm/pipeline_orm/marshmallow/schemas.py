@@ -108,13 +108,22 @@ class IndustrialAthleteSchema(ModelSchema):
     sex = fields.Function(lambda obj: obj.gender)
     warehouseId = fields.Function(lambda obj: obj.warehouse_id)
     shiftId = fields.Function(lambda obj: obj.shift_id)
+    shift = fields.Function(lambda obj: obj.shifts.name if obj.shifts else None)
     jobFunctionId = fields.Function(lambda obj: obj.job_function_id)
+    jobFunction = fields.Function(
+        lambda obj: obj.job_function.name if obj.job_function else None
+    )
     hireDate = fields.Function(
         lambda obj: convert_date(obj.hire_date) if obj.hire_date else None
     )
     terminationDate = fields.Function(
         lambda obj: convert_date(obj.termination_date) if obj.termination_date else None
     )
+
+    @post_dump(pass_many=True)
+    def add_fields(self, data, many, **kwargs):
+        data["warehouse"] = data["warehouse"]["name"] if data["warehouse"] else None
+        return data
 
     class Meta:
         model = IndustrialAthlete
