@@ -285,3 +285,12 @@ IA_NAME_FORMATS = {
 }
 
 INVALID_IA_NAME_FORMAT_MESSAGE = "Invalid First Name/Last Name format; should be : "
+
+
+VALID_IA_HEIGHT_UNITS = ("INCH", "CM")
+
+VALID_IA_WEIGHT_UNITS = ("LBS", "KG")
+
+INVALID_IA_HEIGHT_UNIT_MESSAGE = "Invalid height unit; Should be one of INCH or CM."
+
+INVALID_IA_WEIGHT_UNIT_MESSAGE = "Invalid weight unit; Should be one of LBS or KG."
