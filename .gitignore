@@ -10,3 +10,4 @@ htmlcov
 *.zip
 sat_orm.egg-info
 build/
+dist/

@@ -22,4 +22,6 @@ from sat_orm.pipeline_orm.bulk_upload_log import BulkUploadLog
 from sat_orm.pipeline_orm.casbin_rule import CasbinRule
 from sat_orm.pipeline_orm.groups import Groups
 
+from sat_orm.pipeline_orm.marshmallow import schemas as Schemas
+
 __Version__ = "0.2.4"

@@ -16,13 +16,27 @@ CLASSIFICATION:
 # Standard Library Imports
 import datetime
 
+
 # Third Party Imports
-from sqlalchemy import ForeignKey, Column, String, Integer, Boolean, DateTime, desc
+from sqlalchemy import (
+    ForeignKey,
+    Column,
+    String,
+    Integer,
+    Boolean,
+    DateTime,
+    desc,
+    event,
+)
 from sqlalchemy.orm import relationship, validates
 
 
 # Local Application Imports
 from sat_orm.pipeline_orm.pipeline_base import Base
+import sat_orm.constants as constants
+from sat_orm.pipeline_orm.utilities import utils
+from sat_orm.pipeline_orm.utilities import ia_utils
+from sat_orm.pipeline_orm.utilities.utils import build_error, check_errors_and_return
 
 
 class IndustrialAthlete(Base):
@@ -55,7 +69,7 @@ class IndustrialAthlete(Base):
     group_id = Column(Integer, ForeignKey("groups.id"), nullable=True)
     job_function_change_date = Column(DateTime, nullable=True)
     gender_change_date = Column(DateTime, nullable=True)
-    is_active = Column(Boolean, nullable=True, server_default=None)
+    # is_active = Column(Boolean, nullable=True, server_default=None)
 
     # Table Relationships
     client = relationship("Client", back_populates="industrial_athletes", uselist=False)
@@ -127,14 +141,16 @@ class IndustrialAthlete(Base):
     def as_dict(self):
         return {
             "id": self.id,
-            "client_id": self.client_id,
-            "warehouse_id": self.warehouse_id,
-            "job_function_id": self.job_function_id,
-            "shift_id": self.shift_id,
-            "first_name": self.first_name,
-            "last_name": self.last_name,
-            "gender": self.gender,
-            "external_id": self.external_id,
+            "firstName": self.first_name,
+            "lastName": self.last_name,
+            "externalId": self.external_id,
+            "sex": self.gender,
+            "shiftId": self.shift_id,
+            "jobFunctionId": self.job_function_id,
+            "clientId": self.client_id,
+            "warehouseId": self.warehouse_id,
+            "hireDate": self.hire_date,
+            "terminationDate": self.termination_date,
             "db_created_at": self.db_created_at,
             "db_modified_at": self.db_modified_at,
         }
@@ -144,6 +160,150 @@ class IndustrialAthlete(Base):
 
     def __len__(self):
         return len(self.as_dict())
+
+
+@event.listens_for(IndustrialAthlete, "before_insert")
+def validate_before_insert(mapper, connection, target):
+    """
+    Helper method to check if params are valid for adding a single athlete
+    Input:
+        param_input: json containing data to be added for a single athlete.
+        warehouse_id: warehouse ID to validate job function
+    """
+    param_input = {}
+    for key, value in target.as_dict().items():
+        if value is not None:
+            param_input[key] = value
+    errors = []
+
+    is_valid, message = ia_utils.is_valid_ia_first_last_name(
+        connection, param_input.get("firstName", ""), "First Name", target.client_id
+    )
+    if not is_valid:
+        errors.append(build_error("firstName", message))
+
+    is_valid, message = ia_utils.is_valid_ia_first_last_name(
+        connection, param_input.get("lastName", ""), "Last Name", target.client_id
+    )
+    if not is_valid:
+        errors.append(build_error("lastName", message))
+
+    is_valid, message = ia_utils.is_valid_external_id(
+        connection,
+        target,
+        param_input.get("externalId", ""),
+        existing_ia_id=param_input.get("id"),
+    )
+    if not is_valid:
+        errors.append(build_error("externalId", message))
+
+    is_valid = param_input.get("sex", "") in ("m", "f")
+    if not is_valid:
+        errors.append(build_error("sex", constants.INVALID_PARAM_SEX_MESSAGE))
+
+    is_valid = ia_utils.is_valid_shift(
+        connection, param_input.get("shiftId", ""), target.warehouse_id
+    )
+    if not is_valid:
+        errors.append(build_error("shiftId", constants.INVALID_SHIFT_MESSAGE))
+
+    is_valid = ia_utils.is_valid_job_function(
+        connection, param_input.get("jobFunctionId", ""), target.warehouse_id
+    )
+    if not is_valid:
+        errors.append(
+            build_error("jobFunctionId", constants.INVALID_JOB_FUNCTION_MESSAGE)
+        )
+
+    is_valid, date_obj = utils.is_valid_date(param_input.get("hireDate", ""))
+    if not is_valid:
+        errors.append(build_error("hireDate", constants.INVALID_DATE_MESSAGE))
+
+    check_errors_and_return(errors)
+
+
+@event.listens_for(IndustrialAthlete, "before_update")
+def validate_before_update(mapper, connection, target):
+    """
+    Helper method to check if params are valid for updating a single athlete
+    Input:
+        param_input: json containing data to be updated for a single athlete.
+                        id field MUST be inside.
+        warehouse_id: warehouse ID to validate job function
+    Output:
+        Return [True, None] if all params are valid.
+        Returns [False, Errors] if there are params which are not valid
+    """
+    param_input = {}
+    for key, value in target.as_dict().items():
+        if value is not None:
+            param_input[key] = value
+
+    errors = []
+
+    # Athlete ID is required
+    ia = connection.execute(
+        "SELECT * FROM industrial_athlete WHERE id={}".format(target.id)
+    ).fetchone()
+
+    if "firstName" in param_input:
+        is_valid, message = ia_utils.is_valid_ia_first_last_name(
+            connection, param_input.get("firstName", ""), "First Name", ia.client_id
+        )
+        if not is_valid:
+            errors.append(build_error("firstName", message))
+
+    if "lastName" in param_input:
+        is_valid, message = ia_utils.is_valid_ia_first_last_name(
+            connection, param_input.get("lastName", ""), "Last Name", ia.client_id
+        )
+        if not is_valid:
+            errors.append(build_error("lastName", message))
+
+    if "externalId" in param_input:
+        is_valid, message = ia_utils.is_valid_external_id(
+            connection,
+            ia,
+            param_input.get("externalId", ""),
+            existing_ia_id=param_input.get("id"),
+        )
+        if not is_valid:
+            errors.append(build_error("externalId", message))
+
+    if "sex" in param_input:
+        is_valid = param_input.get("sex", "") in ("m", "f")
+        if not is_valid:
+            errors.append(build_error("sex", constants.INVALID_PARAM_SEX_MESSAGE))
+
+    if "shiftId" in param_input:
+        is_valid = ia_utils.is_valid_shift(
+            connection, param_input.get("shiftId", ""), ia.warehouse_id
+        )
+        if not is_valid:
+            errors.append(build_error("shiftId", constants.INVALID_SHIFT_MESSAGE))
+
+    if "jobFunctionId" in param_input:
+        is_valid = ia_utils.is_valid_job_function(
+            connection, param_input.get("jobFunctionId", ""), ia.warehouse_id
+        )
+        if not is_valid:
+            errors.append(
+                build_error("jobFunctionId", constants.INVALID_JOB_FUNCTION_MESSAGE)
+            )
+
+    if "hireDate" in param_input:
+        is_valid, date_obj = utils.is_valid_date(param_input.get("hireDate", ""))
+        if not is_valid:
+            errors.append(build_error("hireDate", constants.INVALID_DATE_MESSAGE))
+
+    if "terminationDate" in param_input:
+        is_valid, date_obj = utils.is_valid_date(param_input.get("terminationDate", ""))
+        if not is_valid:
+            errors.append(
+                build_error("terminationDate", constants.INVALID_DATE_MESSAGE)
+            )
+
+    check_errors_and_return(errors)
 
 
 def get_all_athletes(session):

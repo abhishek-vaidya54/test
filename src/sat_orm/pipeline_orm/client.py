@@ -30,6 +30,7 @@ from sqlalchemy import (
     PrimaryKeyConstraint,
     UniqueConstraint,
     Boolean,
+    event,
 )
 from sqlalchemy.orm import relationship, validates
 
@@ -37,6 +38,10 @@ from sqlalchemy.orm import relationship, validates
 from sat_orm.pipeline_orm.pipeline_base import Base
 from sat_orm.pipeline_orm.warehouse import Warehouse
 from sat_orm.pipeline_orm.industrial_athlete import IndustrialAthlete
+from sat_orm.pipeline_orm.utilities import client_utils
+from sat_orm.pipeline_orm.utilities import utils
+import sat_orm.constants as constants
+from sat_orm.pipeline_orm.utilities.utils import build_error, check_errors_and_return
 
 
 class Client(Base):
@@ -118,29 +123,135 @@ class Client(Base):
         return {
             "id": self.id,
             "name": self.name,
+            "status": self.status,
+            "contracted_users": self.contracted_users,
+            "active_inactive_date": self.active_inactive_date,
+            "ia_name_format": self.ia_name_format,
             "db_created_at": self.db_created_at,
             "db_modified_at": self.db_modified_at,
-            "prefix": self.prefix,
-            "enable_processing": self.enable_processing,
         }
 
     def __repr__(self):
         return str(self.as_dict())
 
 
+@event.listens_for(Client, "before_update")
+def validate_before_update(mapper, connection, target):
+    """
+    Helper method to check if params are valid for updating a single client
+    Input:
+        param_input: json containing data to be updated for a single client.
+                        id field MUST be inside.
+    Output:
+        Return [True, None] if all params are valid.
+        Returns [False, Errors] if there are params which are not valid
+    """
+    params_input = {}
+    for key, value in target.as_dict().items():
+        if value is not None:
+            params_input[key] = value
+
+    errors = []
+
+    if "name" in params_input:
+        is_valid, message = client_utils.is_valid_client_name(
+            connection, params_input.get("name", ""), params_input.get("id", "")
+        )
+        if not is_valid:
+            errors.append(build_error("name", message))
+
+    if "status" in params_input:
+        is_valid = client_utils.is_valid_client_status(params_input.get("status", ""))
+        if not is_valid:
+            errors.append(build_error("status", constants.INVALID_CLIENT_STATUS_MESSAGE))
+
+    if "contracted_users" in params_input:
+        is_valid, message = utils.is_valid_int(
+            params_input.get("contracted_users", "")
+        )
+        if not is_valid:
+            errors.append(build_error("contracted_users", message))
+
+    if "active_inactive_date" in params_input:
+        is_valid, date_obj = utils.is_valid_date(
+            params_input.get("active_inactive_date", "")
+        )
+        if not is_valid:
+            errors.append(build_error("active_inactive_date", constants.INVALID_DATE_MESSAGE))
+
+    if "ia_name_format" in params_input:
+        is_valid = client_utils.is_valid_client_ia_name_format(
+            params_input.get("ia_name_format", "")
+        )
+        if not is_valid:
+            errors.append(build_error("ia_name_format", 
+                constants.INVALID_CLIENT_IA_NAME_FORMAT_MESSAGE))
+
+    check_errors_and_return(errors)
+
+@event.listens_for(Client, "before_insert")
+def validate_before_insert(mapper, connection, target):
+    """
+    Event hook method that fires before insert 
+    to check if params are valid for inserting a single client
+    """
+    params_input = {}
+    for key, value in target.as_dict().items():
+        if value is not None:
+            params_input[key] = value
+
+    errors = []
+
+    if "name" in params_input:
+        is_valid, message = client_utils.is_valid_client_name(
+            connection, params_input.get("name", ""), params_input.get("id", "")
+        )
+        if not is_valid:
+            errors.append(build_error("name", message))
+
+    if "status" in params_input:
+        is_valid = client_utils.is_valid_client_status(params_input.get("status", ""))
+        if not is_valid:
+            errors.append(build_error("status", constants.INVALID_CLIENT_STATUS_MESSAGE))
+
+    if "contracted_users" in params_input:
+        is_valid, message = utils.is_valid_int(
+            params_input.get("contracted_users", "")
+        )
+        if not is_valid:
+            errors.append(build_error("contracted_users", message))
+
+    if "active_inactive_date" in params_input:
+        is_valid, date_obj = utils.is_valid_date(
+            params_input.get("active_inactive_date", "")
+        )
+        if not is_valid:
+            errors.append(build_error("active_inactive_date", constants.INVALID_DATE_MESSAGE))
+
+    if "ia_name_format" in params_input:
+        is_valid = client_utils.is_valid_client_ia_name_format(
+            params_input.get("ia_name_format", "")
+        )
+        if not is_valid:
+            errors.append(build_error("ia_name_format", 
+                constants.INVALID_CLIENT_IA_NAME_FORMAT_MESSAGE))
+
+    check_errors_and_return(errors)
+
+
 def insert(session, data):
     """
-        Description
-            checks to see if client_id is in table,
-            if it is, then only update the none primary key items.
-            else return 0.
+    Description
+        checks to see if client_id is in table,
+        if it is, then only update the none primary key items.
+        else return 0.
 
-        params
-            session: sqlalchemy.orm.session.Session
-            data: {key: value} dictionary
+    params
+        session: sqlalchemy.orm.session.Session
+        data: {key: value} dictionary
 
-        return
-            Returns client id and commits to database
+    return
+        Returns client id and commits to database
     """
     client_id = data["id"]
     client_in_table = session.query(Client).filter_by(id=client_id).first()
@@ -158,17 +269,17 @@ def insert(session, data):
 
 def update(session, data):
     """
-        Description
-            checks to see if client_id is in table,
-            if it is, then only update the none primary key items.
-            else return 0.
+    Description
+        checks to see if client_id is in table,
+        if it is, then only update the none primary key items.
+        else return 0.
 
-        params
-            session: sqlalchemy.orm.session.Session
-            data: {key: value} dictionary
+    params
+        session: sqlalchemy.orm.session.Session
+        data: {key: value} dictionary
 
-        return
-            Returns client id and commits to database
+    return
+        Returns client id and commits to database
     """
     client_id = data["client_id"]
     client_in_table = session.query(Client).filter_by(id=client_id).first()
@@ -185,12 +296,12 @@ def update(session, data):
 
 def delete(session, data):
     """
-        Description
-            Deletes a client by the id.
+    Description
+        Deletes a client by the id.
 
-        params
-            session: sqlalchemy.orm.session.Session
-            data: {key: value} dictionary
+    params
+        session: sqlalchemy.orm.session.Session
+        data: {key: value} dictionary
     """
     response = {}
     client_id = data["client_id"]
@@ -223,16 +334,16 @@ def delete(session, data):
 
 def has_warehouse(session, client_id):
     """
-        Description
-            Checks if there is any warehouse associated with the client.
+    Description
+        Checks if there is any warehouse associated with the client.
 
-        params
-            session: sqlalchemy.orm.session.Session
-            client_id: Integer
+    params
+        session: sqlalchemy.orm.session.Session
+        client_id: Integer
 
-        returns
-            True: When there is a warehouse which belongs to the client
-            False: When there is no warehouse which belongs to the client
+    returns
+        True: When there is a warehouse which belongs to the client
+        False: When there is no warehouse which belongs to the client
     """
     client_has_warehouse = (
         session.query(Warehouse).filter_by(client_id=client_id).first()
@@ -245,16 +356,16 @@ def has_warehouse(session, client_id):
 
 def has_athlete(session, client_id):
     """
-        Description
-            Checks if there is any athlete associated with the client.
+    Description
+        Checks if there is any athlete associated with the client.
 
-        params
-            session: sqlalchemy.orm.session.Session
-            client_id: Integer
+    params
+        session: sqlalchemy.orm.session.Session
+        client_id: Integer
 
-        returns
-            True: When there is a athlete which belongs to the client
-            False: When there is no athlete which belongs to the client
+    returns
+        True: When there is a athlete which belongs to the client
+        False: When there is no athlete which belongs to the client
     """
     client_has_athlete = (
         session.query(IndustrialAthlete).filter_by(client_id=client_id).first()
