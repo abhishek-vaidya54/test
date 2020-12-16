@@ -17,12 +17,17 @@ CLASSIFICATION:
 # Standard Library Imports
 import datetime
 
+
 # Third Party Imports
-from sqlalchemy import ForeignKey, Column, Integer, DateTime, Text, String
+from sqlalchemy import ForeignKey, Column, Integer, DateTime, Text, String, event
 from sqlalchemy.orm import relationship, validates
 
 # Local Application Import
 from sat_orm.pipeline_orm.pipeline_base import Base
+import sat_orm.constants as constants
+from sat_orm.pipeline_orm.utilities import shift_utils
+from sat_orm.pipeline_orm.utilities import job_function_utils
+from sat_orm.pipeline_orm.utilities.utils import build_error, check_errors_and_return
 
 
 class Shifts(Base):
@@ -102,3 +107,94 @@ class Shifts(Base):
     def __repr__(self):
         return str(self.as_dict())
 
+
+@event.listens_for(Shifts, "before_insert")
+def validate_before_insert(mapper, connection, target):
+    """
+    Event hook to check if params are valid for adding a single shift
+    """
+    param_input = {}
+    for key, value in target.as_dict().items():
+        if value is not None:
+            param_input[key] = value
+    errors = []
+    # Name
+    is_valid, message = shift_utils.is_valid_string(param_input.get("name", ""))
+    if not is_valid:
+        errors.append(build_error("name", message))
+    # Warehouse ID
+    is_valid = shift_utils.is_valid_warehouse(
+        connection, param_input.get("warehouseId", "")
+    )
+    if not is_valid:
+        errors.append(build_error("warehouse_id", constants.INVALID_WAREHOUSE_ID_MESSAGE))
+    # Shift start
+    is_valid, message = shift_utils.is_valid_time(param_input.get("shiftStart", ""))
+    if not is_valid:
+        errors.append(build_error("shift_start", constants.INVALID_DATE_MESSAGE))
+    # Shift end
+    is_valid, message = shift_utils.is_valid_time(param_input.get("shiftEnd", ""))
+    if not is_valid:
+        errors.append(build_error("shift_end", constants.INVALID_DATE_MESSAGE))
+    # Timezone
+    is_valid = shift_utils.is_valid_shift_timezone(target.timezone)
+    if not is_valid:
+        errors.append(build_error("timezone", constants.INVALID_SHIFT_TIMEZONE_MESSAGE))
+    # Group admin
+    is_valid = job_function_utils.is_valid_group_admin(
+        param_input.get("group_administrator", "")
+    )
+    if not is_valid:
+        errors.append(build_error("group_administrator", constants.INVALID_GROUP_ADMIN_MESSAGE))
+
+    check_errors_and_return(errors)
+
+
+@event.listens_for(Shifts, "before_update")
+def validate_before_update(mapper, connection, target):
+    """
+    Event hook to check if params are valid for updating a single shift
+    """
+    param_input = {}
+    for key, value in target.as_dict().items():
+        if value is not None:
+            param_input[key] = value
+
+    errors = []
+
+    # Name
+    if "name" in param_input:
+        is_valid, message = shift_utils.is_valid_string(param_input.get("name", ""))
+        if not is_valid:
+            errors.append(build_error("name", message))
+    # Warehouse ID
+    if "warehouseId" in param_input:
+        is_valid = shift_utils.is_valid_warehouse(
+            connection, param_input.get("warehouseId", "")
+        )
+        if not is_valid:
+            errors.append(build_error("warehouse_id", constants.INVALID_WAREHOUSE_ID_MESSAGE))
+    # Shift start
+    if "shiftStart" in param_input:
+        is_valid, message = shift_utils.is_valid_time(param_input.get("shiftStart", ""))
+        if not is_valid:
+            errors.append(build_error("shift_start", constants.INVALID_DATE_MESSAGE))
+    # Shift end
+    if "shiftEnd" in param_input:
+        is_valid, message = shift_utils.is_valid_time(param_input.get("shiftEnd", ""))
+        if not is_valid:
+            errors.append(build_error("shift_end", constants.INVALID_DATE_MESSAGE))
+    # Timezone
+    if target.timezone:
+        is_valid = shift_utils.is_valid_shift_timezone(target.timezone)
+        if not is_valid:
+            errors.append(build_error("timezone", constants.INVALID_SHIFT_TIMEZONE_MESSAGE))
+    # Group admin
+    if "group_administrator" in param_input:
+        is_valid = job_function_utils.is_valid_group_admin(
+            param_input.get("group_administrator", "")
+        )
+        if not is_valid:
+            errors.append(build_error("group_administrator", constants.INVALID_GROUP_ADMIN_MESSAGE))
+
+    check_errors_and_return(errors)
