@@ -1,6 +1,0 @@
-on: 
-  workflow_dispatch:
-    inputs:
-      dbURI:
-        description: 'Database URI'     
-        required: true
