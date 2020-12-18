@@ -22,7 +22,6 @@ def get_warehouse(connection, warehouse_id, client_id=None):
                 db, warehouse_id, client_id
             )
         ).fetchone()
-        print("Wa1 ", warehouse)
 
     return warehouse
 
