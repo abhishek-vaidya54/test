@@ -30,6 +30,9 @@ jobs:
           FILE_OVPN: '.github/vpn/config.ovpn'
           PING_URL: '127.0.0.1'
 
+      - name: Check VPN Connection Status
+        run: echo ${{  steps.connect_vpn.outputs.STATUS  }}
+
       - name:  Install dependencies
         run: pip install -r .github/requirements.txt
 
@@ -39,8 +42,6 @@ jobs:
           INPUT_REVISION_ID: github.event.inputs.revisionId
         run: python .github/alembic_revision.py
 
-      - name: Check VPN Connection Status
-        run: echo ${{  steps.connect_vpn.outputs.STATUS  }}
-
       - name: Kill VPN Connection
         run: killall openvpn
+
