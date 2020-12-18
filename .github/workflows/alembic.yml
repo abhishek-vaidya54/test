@@ -22,11 +22,6 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v2
-
-      - name: Save inputs as environment variables
-        env:
-          INPUT_DATABASE_URI: github.event.inputs.databaseUri
-          INPUT_REVISION_ID: github.event.inputs.revisionId
       
       - name: Connect to VPN
         uses: golfzaptw/action-connect-ovpn@master
@@ -39,6 +34,9 @@ jobs:
         run: pip install -r .github/requirements.txt
 
       - name: Determine which Alembic revision to jump to
+        env:
+          INPUT_DATABASE_URI: github.event.inputs.databaseUri
+          INPUT_REVISION_ID: github.event.inputs.revisionId
         run: python .github/alembic_revision.py
 
       - name: Check VPN Connection Status
