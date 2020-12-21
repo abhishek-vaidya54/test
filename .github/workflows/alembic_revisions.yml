@@ -25,6 +25,9 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v2
+
+      - name: Install Open VPN
+        run: sudo apt-get install openvpn
       
       - name: Connect to VPN
         uses: golfzaptw/action-connect-ovpn@master
