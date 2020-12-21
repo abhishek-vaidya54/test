@@ -110,14 +110,14 @@ def find_out_whether_revision_is_upgrade_or_downgrade(INPUT_REVISION_ID, current
         raise Exception(f'"{INPUT_REVISION_ID}" is not a vaild revision ID')
     if current_revision_id_index == -1:
         raise Exception(f'Current revision ID "{current_revision_id}" not contained in history')
-    if INPUT_REVISION_ID_index > current_revision_id_index:
+    if INPUT_REVISION_ID_index < current_revision_id_index:
         return Direction.UPGRADE
     if INPUT_REVISION_ID_index == current_revision_id_index:
         return Direction.UP_TO_DATE
-    if INPUT_REVISION_ID_index < current_revision_id_index:
+    if INPUT_REVISION_ID_index > current_revision_id_index:
         return Direction.DOWNGRADE
 
-def go_in_that_direction_to_that_revision(direction, INPUT_REVISION_ID):
+def go_in_that_direction_to_that_revision(direction, INPUT_REVISION_ID, database, subaccount):
     """
         Run the actual alembic migration
     """
@@ -126,7 +126,7 @@ def go_in_that_direction_to_that_revision(direction, INPUT_REVISION_ID):
     elif direction is Direction.DOWNGRADE:
         run(f'alembic downgrade {INPUT_REVISION_ID}')
     else:
-        print(f'{database} database running in {subaccount} subaccount is already on revision {current_revision_id}')
+        print(f'{database} database running in {subaccount} subaccount is already on revision {INPUT_REVISION_ID}')
 
 def main():
     """
@@ -142,7 +142,7 @@ def main():
     else:
         direction =\
             find_out_whether_revision_is_upgrade_or_downgrade(INPUT_REVISION_ID, current_revision_id)
-    go_in_that_direction_to_that_revision(direction, INPUT_REVISION_ID)
+    go_in_that_direction_to_that_revision(direction, INPUT_REVISION_ID, database, subaccount)
 
 if __name__ == "__main__":
     main()
