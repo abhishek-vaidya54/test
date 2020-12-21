@@ -1,6 +1,9 @@
 name: Alembic Migrations
 
 on: 
+  push:
+    branches:
+      - alembic-release
   workflow_dispatch:
     inputs:
       databaseUri:
