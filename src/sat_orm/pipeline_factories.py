@@ -28,6 +28,7 @@ from sat_orm.pipeline import (
     AthleteUploadStatus,
     CasbinRule,
     Sensors,
+    UserWarehouseAssociation,
 )
 
 
@@ -229,6 +230,15 @@ class ExternalAdminUserFactory(factory.alchemy.SQLAlchemyModelFactory):
         sqlalchemy_session_persistence = "commit"
 
 
+class UserWarehouseAssociationFactory(factory.alchemy.SQLAlchemyModelFactory):
+    external_admin_user = factory.SubFactory(ExternalAdminUserFactory)
+    warehouse = factory.SubFactory(WarehouseFactory)
+
+    class Meta:
+        model = UserWarehouseAssociation
+        sqlalchemy_session_persistence = "commit"
+
+
 class AthleteUploadStatusFactory(factory.alchemy.SQLAlchemyModelFactory):
     id = factory.Sequence(lambda n: n)
     username = str(uuid.uuid4())
@@ -286,12 +296,13 @@ class CasbinRuleFactory(factory.alchemy.SQLAlchemyModelFactory):
         model = CasbinRule
         sqlalchemy_session_persistence = "commit"
 
+
 class SensorsFactory(factory.alchemy.SQLAlchemyModelFactory):
     id = factory.Sequence(lambda n: n)
     serial_number = factory.fuzzy.FuzzyText(length=45)
     sensor_id = factory.fuzzy.FuzzyText(length=45)
-    stiction_flagged = factory.fuzzy.FuzzyChoice(['0','1'])
-    decommissioned = factory.fuzzy.FuzzyChoice(['0','1'])
+    stiction_flagged = factory.fuzzy.FuzzyChoice(["0", "1"])
+    decommissioned = factory.fuzzy.FuzzyChoice(["0", "1"])
 
     class Meta:
         model = Sensors
