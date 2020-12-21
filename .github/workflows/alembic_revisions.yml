@@ -50,7 +50,7 @@ jobs:
         env:
           INPUT_DATABASE_URI: github.event.inputs.databaseUri
           INPUT_REVISION_ID: github.event.inputs.revisionId
-        run: python .github/alembic_revision.py
+        run: python .github/alembic_revisions.py
 
       - name: Kill VPN Connection
         run: killall openvpn
