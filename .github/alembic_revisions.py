@@ -34,9 +34,8 @@ def load_inputs():
         Read the inputs from environemnt variables set by the GitHub workflow
     """
     INPUT_DATABASE_URI = os.environ.get('INPUT_DATABASE_URI')
-    MAPPED_DATABASE_URI = os.environ.get('MAPPED_DATABASE_URI')
     INPUT_REVISION_ID = os.environ.get('INPUT_REVISION_ID')
-    return INPUT_DATABASE_URI, MAPPED_DATABASE_URI, INPUT_REVISION_ID
+    return INPUT_DATABASE_URI, INPUT_REVISION_ID
 
 def parse_INPUT_DATABASE_URI_to_get_database_and_subaccount(INPUT_DATABASE_URI):
     """
@@ -67,6 +66,8 @@ def parse_INPUT_DATABASE_URI_to_get_database_and_subaccount(INPUT_DATABASE_URI):
     else:
         if len(host.split('.')) > 1:
             subaccount = host.split('.')[1]
+    if not database:
+        raise Exception('Schema is unspedified')
     return subaccount, database
 
 def find_what_the_current_revision_is(subaccount, database):
@@ -134,9 +135,7 @@ def main():
         Main function that drives the program.  Reads the inputs and determines
         the necessary action to take to run the alembic migration
     """
-    INPUT_DATABASE_URI, MAPPED_DATABASE_URI, INPUT_REVISION_ID = load_inputs()
-    if INPUT_DATABASE_URI == 'default for branch':
-        INPUT_DATABASE_URI = MAPPED_DATABASE_URI
+    INPUT_DATABASE_URI, INPUT_REVISION_ID = load_inputs()
     subaccount, database =\
         parse_INPUT_DATABASE_URI_to_get_database_and_subaccount(INPUT_DATABASE_URI)
     current_revision_id = find_what_the_current_revision_is(subaccount, database)

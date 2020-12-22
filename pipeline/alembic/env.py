@@ -45,7 +45,7 @@ def get_url():
         dev_db = os.environ.get('DEV_PIPELINE_DB_URI')
         staging_db = os.environ.get('STAGING_PIPELINE_DB_URI')
         prod_db = os.environ.get('PROD_PIPELINE_DB_URI')
-        uri_interim = staging_db
+        uri_interim = local_db
     print("database URI:", uri_interim)
     return uri_interim
 

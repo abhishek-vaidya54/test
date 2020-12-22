@@ -7,6 +7,8 @@ on:
         description: 'Database URI'
         required: true
         default: 'default for branch'
+      databaseSchema:
+        description: 'Schema (ex: pipeline, dock, dockEvents).  Leave blank if inputting custom URI'
       revisionId:
         description: 'Revision ID'
         required: true
@@ -52,7 +54,13 @@ jobs:
           INPUT_DATABASE_URI: github.event.inputs.databaseUri
           INPUT_REVISION_ID: github.event.inputs.revisionId
         run: |
-          export MAPPED_DATABASE_URI=`echo ${{  secrets.CONNECTION_STRINGS_MAP  }} | jq .${#/refs/heads/}`
+          # Map branch to appropriate default database URI
+          MAPPED_DATABASE_URI=`echo ${{  secrets.CONNECTION_STRINGS_MAP  }} | jq .${#/refs/heads/}`
+
+          # Builds the correct INPUT_DATABASE_URI if necessary
+          if [ "${INPUT_DATABASE_URI}" == "default for branch" ]; then; INPUT_DATABASE_URI="${MAPPED_DATABASE_URI}/${INPUT_DATABASESCHEMA}"; fi
+          export "${INPUT_DATABASE_URI}"
+
           python .github/alembic_revisions.py
 
       - name: Kill VPN Connection
