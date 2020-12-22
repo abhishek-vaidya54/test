@@ -8,6 +8,7 @@
 5. In the third input, specify the alembic revision ID you would like the database to have at completion.
 6. Click Run workflow
 
+## Screenshot
 ![Workflow Screenshot](workflow_screenshot.png)
 
 ## Notes
@@ -32,3 +33,6 @@
 4. ### `Current revision ID "<REVISION ID>" not contained in history`
 
    The revision ID currently in the database does not match any of the revision ID's found in the versions subfolder.  You can see all revision ID's by running `alembic history` from the command line.
+
+## References
+* [Alembic Tutorial](https://alembic.sqlalchemy.org/en/latest/tutorial.html)
