@@ -1,3 +1,6 @@
+from sat_orm.pipeline_orm.utilities import utils
+
+
 def get_warehouse(connection, warehouse_id, client_id=None):
     """
     Helper method to retrieve the Warehouse object from the database
@@ -7,17 +10,21 @@ def get_warehouse(connection, warehouse_id, client_id=None):
     Output:
         warehouse: The Warehouse object retrieved from the database
     """
+    db = utils.get_database_names()["pipeline"]
     warehouse = {}
     if client_id is None:
         warehouse = connection.execute(
-            "SELECT * FROM pipeline.warehouse WHERE id={}".format(warehouse_id)
+            "SELECT * FROM {}.warehouse WHERE id={}".format(db, warehouse_id)
         ).fetchone()
     else:
         warehouse = connection.execute(
-            "SELECT * FROM pipeline.warehouse WHERE id={} AND client_id={}".format(warehouse_id, client_id)
+            "SELECT * FROM {}.warehouse WHERE id={} AND client_id={}".format(
+                db, warehouse_id, client_id
+            )
         ).fetchone()
 
     return warehouse
+
 
 def get_warehouse_exists(connection, warehouse_id):
     """
@@ -27,8 +34,9 @@ def get_warehouse_exists(connection, warehouse_id):
     Output:
         warehouse: The warehouse object retrieved from the database
     """
+    db = utils.get_database_names()["pipeline"]
     warehouse = connection.execute(
-        "SELECT * FROM pipeline.warehouse WHERE id={}".format(warehouse_id)
+        "SELECT * FROM {}.warehouse WHERE id={}".format(db, warehouse_id)
     ).fetchone()
 
     return warehouse

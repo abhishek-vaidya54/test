@@ -8,8 +8,9 @@ from sqlalchemy.orm import relationship, validates
 # Local Application Imports
 from sat_orm.pipeline_orm.warehouse import Warehouse
 from sat_orm.pipeline_orm.client import Client
+from sat_orm.pipeline_orm.user_warehouse_association import UserWarehouseAssociation
 from sat_orm.pipeline_orm.pipeline_base import Base
-import sat_orm.constants as constants 
+import sat_orm.constants as constants
 from sat_orm.pipeline_orm.utilities import utils
 from sat_orm.pipeline_orm.utilities import client_utils
 from sat_orm.pipeline_orm.utilities import warehouse_utils
@@ -26,6 +27,8 @@ class ExternalAdminUser(Base):
 
     warehouse_id = Column(Integer, ForeignKey("warehouse.id"), nullable=False)
     warehouse = relationship(Warehouse, backref=__tablename__)
+
+    warehouses = relationship(UserWarehouseAssociation, back_populates=__tablename__)
 
     client_id = Column(Integer, ForeignKey("client.id"), nullable=False)
     client = relationship(Client, backref=__tablename__)
@@ -149,7 +152,7 @@ class ExternalAdminUser(Base):
 @event.listens_for(ExternalAdminUser, "before_insert")
 def validate_role_before_insert(mapper, connection, target):
     """
-    Event hook method that fires before insert 
+    Event hook method that fires before insert
     to check if params are valid for inserting a single external_admin_user
     """
     params_input = {}
@@ -173,7 +176,9 @@ def validate_role_before_insert(mapper, connection, target):
 
     is_valid = warehouse_utils.is_valid_warehouse(connection, warehouse_id, client_id)
     if not is_valid:
-        errors.append(build_error("warehouse_id", constants.INVALID_WAREHOUSE_ID_MESSAGE))
+        errors.append(
+            build_error("warehouse_id", constants.INVALID_WAREHOUSE_ID_MESSAGE)
+        )
 
     if role:
         is_valid = role in constants.CREATE_VALID_ROLES
@@ -182,10 +187,11 @@ def validate_role_before_insert(mapper, connection, target):
 
     check_errors_and_return(errors)
 
+
 @event.listens_for(ExternalAdminUser, "before_update")
 def validate_role_before_update(mapper, connection, target):
     """
-    Event hook method that fires before role update to check if 
+    Event hook method that fires before role update to check if
     role is valid
     """
     errors = []
