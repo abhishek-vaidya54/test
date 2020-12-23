@@ -75,6 +75,7 @@ class Client(Base):
         nullable=False,
         default="LBS",
     )
+    show_ex_id_in_app = Column(Boolean, nullable=True, default=False)
 
     # Table Constraints
     PrimaryKeyConstraint("id")
