@@ -9,6 +9,7 @@ from sqlalchemy.orm import relationship, validates
 from sat_orm.pipeline_orm.warehouse import Warehouse
 from sat_orm.pipeline_orm.client import Client
 from sat_orm.pipeline_orm.user_warehouse_association import UserWarehouseAssociation
+from sat_orm.pipeline_orm.user_role_association import UserRoleAssociation
 from sat_orm.pipeline_orm.pipeline_base import Base
 import sat_orm.constants as constants
 from sat_orm.pipeline_orm.utilities import utils
@@ -34,6 +35,8 @@ class ExternalAdminUser(Base):
     client = relationship(Client, backref=__tablename__)
 
     role = Column(String(20), nullable=True, server_default="manager")
+    roles = relationship(UserRoleAssociation, back_populates=__tablename__)
+
     is_active = Column(String(5), server_default="true")
 
     db_created_at = Column(DateTime, default=datetime.datetime.utcnow, nullable=False)
