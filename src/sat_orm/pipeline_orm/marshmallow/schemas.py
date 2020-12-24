@@ -12,6 +12,7 @@ from sat_orm.pipeline_orm.casbin_rule import CasbinRule
 from sat_orm.pipeline_orm.external_admin_user import ExternalAdminUser
 from sat_orm.pipeline_orm.groups import Groups
 from sat_orm.pipeline_orm.user_warehouse_association import UserWarehouseAssociation
+from sat_orm.pipeline_orm.user_role_association import UserRoleAssociation
 
 
 def convert_date(date_input):
@@ -154,19 +155,43 @@ class UserWarehouseAssociationSchema(ModelSchema):
         load_instance = True
 
 
+class UserRoleAssociationSchema(ModelSchema):
+    class Meta:
+        model = UserRoleAssociation
+        include_fk = True
+        include_relationships = True
+        load_instance = True
+
+
 class ExternalAdminUserSchema(ModelSchema):
     warehouseId = fields.Function(lambda obj: obj.warehouse.id)
     warehouse = fields.Function(lambda obj: obj.warehouse.name)
     warehouses = fields.Nested(
         UserWarehouseAssociationSchema(only=("warehouse",)), many=True
     )
+    role = fields.Function(lambda obj: (obj.role or "manager"))
+    roles = fields.Nested(UserRoleAssociationSchema(only=("role",)), many=True)
     clientId = fields.Function(lambda obj: obj.client.id)
     client = fields.Function(lambda obj: obj.client.name)
 
     @post_dump(pass_many=True)
     def unwind_warehouses(self, data, many, **kwargs):
         data["warehouses"] = [
-            warehouse["warehouse"] for warehouse in data["warehouses"]
+            warehouse["warehouse"]
+            for warehouse in (
+                data["warehouses"]
+                or [
+                    {
+                        "warehouse": {
+                            "id": data["warehouseId"],
+                            "name": data["warehouse"],
+                        }
+                    }
+                ]
+            )
+        ]
+        data["roles"] = [
+            role["role"] for role in (data["roles"] or [{"role": data["role"]}])
         ]
         return data
 
