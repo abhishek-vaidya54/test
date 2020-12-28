@@ -59,14 +59,7 @@ class ClientSchema(SQLAlchemyAutoSchema):
 
 
 class WarehouseSchema(SQLAlchemyAutoSchema):
-    client = fields.Nested(
-        ClientSchema(
-            only=(
-                "id",
-                "name",
-            )
-        )
-    )
+    client = fields.Nested(ClientSchema(only=("id", "name")))
     client_id = fields.Function(lambda obj: obj.client.id)
 
     class Meta:
@@ -135,7 +128,10 @@ class IndustrialAthleteSchema(ModelSchema):
 
     @post_dump(pass_many=True)
     def add_fields(self, data, many, **kwargs):
-        data["warehouse"] = data["warehouse"]["name"] if data.get("warehouse") else None
+        if "warehouse" in data:
+            data["warehouse"] = (
+                data["warehouse"]["name"] if data.get("warehouse") else None
+            )
         return data
 
     class Meta:
@@ -176,23 +172,29 @@ class ExternalAdminUserSchema(ModelSchema):
 
     @post_dump(pass_many=True)
     def unwind_warehouses(self, data, many, **kwargs):
-        data["warehouses"] = [
-            warehouse["warehouse"]
-            for warehouse in (
-                data["warehouses"]
-                or [
-                    {
-                        "warehouse": {
-                            "id": data["warehouseId"],
-                            "name": data["warehouse"],
+        if "warehouses" in data:
+            data["warehouses"] = [
+                warehouse.get("warehouse")
+                for warehouse in (
+                    data.get("warehouses")
+                    or [
+                        {
+                            "warehouse": {
+                                "id": data.get("warehouseId"),
+                                "name": data.get("warehouse"),
+                            }
                         }
-                    }
-                ]
-            )
-        ]
-        data["roles"] = [
-            role["role"] for role in (data["roles"] or [{"role": data["role"]}])
-        ]
+                    ]
+                )
+            ]
+
+        if "roles" in data:
+            data["roles"] = [
+                role.get("role")
+                for role in (
+                    data.get("roles") or [{"role": data.get("role") or "manager"}]
+                )
+            ]
         return data
 
     class Meta:
