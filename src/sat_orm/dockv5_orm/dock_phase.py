@@ -38,6 +38,7 @@ import sat_orm.constants as constants
 from sat_orm.dockv5_orm.utilities import dock_utils
 from sat_orm.pipeline_orm.utilities.utils import build_error, check_errors_and_return
 from sat_orm.pipeline_orm.utilities import ia_utils
+from sat_orm.pipeline_orm.utilities import utils
 
 
 class DockPhase(Base):
@@ -146,26 +147,36 @@ def validate_before_insert(mapper, connection, target):
 
     is_valid = ia_utils.is_valid_warehouse(connection, warehouse_id)
     if not is_valid:
-        errors.append(build_error("warehouse_id", constants.INVALID_WAREHOUSE_ID_MESSAGE))
+        errors.append(
+            build_error("warehouse_id", constants.INVALID_WAREHOUSE_ID_MESSAGE)
+        )
 
     is_valid = dock_utils.is_valid_dock_phase(phase)
     if not is_valid:
         errors.append(build_error("phase", constants.INVALID_DOCK_PHASE_MESSAGE))
 
-    is_valid, date_obj = ia_utils.is_valid_date(phase_date)
+    is_valid, date_obj = utils.is_valid_date(phase_date)
     if not is_valid:
         errors.append(build_error("phase_date", constants.INVALID_DATE_MESSAGE))
 
     is_valid = dock_utils.is_valid_dock_deployment_stage(deployment_stage)
     if not is_valid:
-        errors.append(build_error("deployment_stage", constants.INVALID_DOCK_DEPLOYMENT_STAGE_MESSAGE))
+        errors.append(
+            build_error(
+                "deployment_stage", constants.INVALID_DOCK_DEPLOYMENT_STAGE_MESSAGE
+            )
+        )
 
     is_valid = dock_utils.is_valid_dock_firmware_version(dock_firmware_version)
     if not is_valid:
-        errors.append(build_error("dock_firmware_version", constants.INVALID_DOCK_FIRMWARE_VERSION_MESSAGE))
+        errors.append(
+            build_error(
+                "dock_firmware_version", constants.INVALID_DOCK_FIRMWARE_VERSION_MESSAGE
+            )
+        )
 
     if description.strip():
-        is_valid, message = ia_utils.is_valid_string(description.strip())
+        is_valid, message = utils.is_valid_string(description.strip())
         if not is_valid:
             errors.append(build_error("description", message))
 
@@ -203,7 +214,9 @@ def validate_before_update(mapper, connection, target):
             connection, params_input.get("warehouse_id", "")
         )
         if not is_valid:
-            errors.append(build_error("warehouse_id", constants.INVALID_WAREHOUSE_ID_MESSAGE))
+            errors.append(
+                build_error("warehouse_id", constants.INVALID_WAREHOUSE_ID_MESSAGE)
+            )
 
     if "phase" in params_input:
         is_valid = dock_utils.is_valid_dock_phase(params_input.get("phase", ""))
@@ -211,7 +224,7 @@ def validate_before_update(mapper, connection, target):
             errors.append(build_error("phase", constants.INVALID_DOCK_PHASE_MESSAGE))
 
     if "phase_date" in params_input:
-        is_valid, message = ia_utils.is_valid_date(params_input.get("phase_date", ""))
+        is_valid, message = utils.is_valid_date(params_input.get("phase_date", ""))
         if not is_valid:
             errors.append(build_error("phase_date", message))
 
@@ -220,17 +233,26 @@ def validate_before_update(mapper, connection, target):
             params_input.get("deployment_stage", "")
         )
         if not is_valid:
-            errors.append(build_error("deployment_stage", constants.INVALID_DOCK_DEPLOYMENT_STAGE_MESSAGE))
+            errors.append(
+                build_error(
+                    "deployment_stage", constants.INVALID_DOCK_DEPLOYMENT_STAGE_MESSAGE
+                )
+            )
 
     if "dock_firmware_version" in params_input:
         is_valid = dock_utils.is_valid_dock_firmware_version(
             params_input.get("dock_firmware_version", "")
         )
         if not is_valid:
-            errors.append(build_error("dock_firmware_version", constants.INVALID_DOCK_FIRMWARE_VERSION_MESSAGE))
+            errors.append(
+                build_error(
+                    "dock_firmware_version",
+                    constants.INVALID_DOCK_FIRMWARE_VERSION_MESSAGE,
+                )
+            )
 
     if "description" in params_input:
-        is_valid, message = ia_utils.is_valid_string(
+        is_valid, message = utils.is_valid_string(
             params_input.get("description", "").strip()
         )
         if not is_valid:
