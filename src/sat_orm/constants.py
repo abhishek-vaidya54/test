@@ -205,9 +205,9 @@ XLSX_FILE_CONTENT_TYPE = (
 
 
 # --------- RBAC CONSTS
-RBAC_VALID_ROLES = ("manager", "admin", "superuser")
+RBAC_VALID_ROLES = ("manager", "admin", "superuser", "bulk_upload")
 
-CREATE_VALID_ROLES = ("manager", "admin")
+CREATE_VALID_ROLES = ("manager", "admin", "bulk_upload")
 
 RBAC_VALID_RESOURCES = (
     "athletes",
