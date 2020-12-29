@@ -19,11 +19,14 @@ import datetime
 
 
 # Third Party Imports
-from sqlalchemy import ForeignKey, Column, Integer, DateTime, String
+from sqlalchemy import ForeignKey, Column, Integer, DateTime, String, event
 from sqlalchemy.orm import relationship
 
 # Local Application Import
 from sat_orm.pipeline_orm.pipeline_base import Base
+import sat_orm.constants as constants
+from sat_orm.pipeline_orm.utilities import external_admin_user_utils
+from sat_orm.pipeline_orm.utilities.utils import build_error, check_errors_and_return
 
 
 class UserRoleAssociation(Base):
@@ -55,3 +58,32 @@ class UserRoleAssociation(Base):
 
     def __repr__(self):
         return str(self.as_dict())
+
+
+@event.listens_for(UserRoleAssociation, "before_insert")
+def validate_role_before_insert(mapper, connection, target):
+    """
+    Event hook method that fires before insert
+    to check if params are valid for inserting a single external_admin_user and role association
+    """
+    params_input = {}
+    for key, value in target.as_dict().items():
+        if value is not None:
+            params_input[key] = value
+    errors = []
+
+    is_valid = external_admin_user_utils.is_valid_user_id(
+        connection, params_input.get("external_admin_user_id")
+    )
+    if not is_valid:
+        errors.append(
+            build_error(
+                "external_admin_user_id", constants.INVALID_PARAM_USERNAME_MESSAGE
+            )
+        )
+
+    is_valid = params_input.get("role") in constants.RBAC_VALID_ROLES
+    if not is_valid:
+        errors.append(build_error("role", constants.INVALID_ROLE_ERROR_MESSAGE))
+
+    check_errors_and_return(errors)

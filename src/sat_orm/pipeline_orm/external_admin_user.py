@@ -197,10 +197,33 @@ def validate_role_before_update(mapper, connection, target):
     Event hook method that fires before role update to check if
     role is valid
     """
+    params_input = {}
+    for key, value in target.as_dict().items():
+        if value is not None:
+            params_input[key] = value
     errors = []
 
     is_valid = target.role in constants.RBAC_VALID_ROLES
     if not is_valid:
         errors.append(build_error("role", constants.INVALID_ROLE_ERROR_MESSAGE))
+
+    if "warehouse_id" in params_input:
+        is_valid = warehouse_utils.is_valid_warehouse(
+            connection,
+            params_input.get("warehouse_id", ""),
+            params_input.get("client_id", ""),
+        )
+        if not is_valid:
+            errors.append(
+                build_error("warehouse_id", constants.INVALID_WAREHOUSE_ID_MESSAGE)
+            )
+
+    if "client_id" in params_input:
+        is_valid = client_utils.is_valid_client_id(
+            connection,
+            params_input.get("client_id", ""),
+        )
+        if not is_valid:
+            errors.append(build_error("client_id", constants.INVALID_CLIENT_ID_MESSAGE))
 
     check_errors_and_return(errors)
