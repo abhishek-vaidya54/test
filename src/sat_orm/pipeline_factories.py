@@ -29,6 +29,7 @@ from sat_orm.pipeline import (
     CasbinRule,
     Sensors,
     UserWarehouseAssociation,
+    Groups
 )
 
 
@@ -306,4 +307,16 @@ class SensorsFactory(factory.alchemy.SQLAlchemyModelFactory):
 
     class Meta:
         model = Sensors
+        sqlalchemy_session_persistence = "commit"
+
+class GroupsFactory(factory.alchemy.SQLAlchemyModelFactory):
+    id = factory.Sequence(lambda n: n)
+    title = factory.fuzzy.FuzzyText(length=45)
+    description = factory.fuzzy.FuzzyText(length=45)
+    db_created_at = datetime.datetime.now()
+    override_settings = factory.fuzzy.FuzzyChoice([True, False])
+    industrial_athletes = factory.SubFactory(IndustrialAthleteFactory)
+
+    class Meta:
+        model = Groups
         sqlalchemy_session_persistence = "commit"
