@@ -283,14 +283,18 @@ def validate_before_update(mapper, connection, target):
 
     if "shiftId" in param_input:
         is_valid = ia_utils.is_valid_shift(
-            connection, param_input.get("shiftId", ""), ia.warehouse_id
+            connection,
+            param_input.get("shiftId", ""),
+            param_input.get("warehouseId", ia.warehouse_id),
         )
         if not is_valid:
             errors.append(build_error("shiftId", constants.INVALID_SHIFT_MESSAGE))
 
     if "jobFunctionId" in param_input:
         is_valid = ia_utils.is_valid_job_function(
-            connection, param_input.get("jobFunctionId", ""), ia.warehouse_id
+            connection,
+            param_input.get("jobFunctionId", ""),
+            param_input.get("warehouseId", ia.warehouse_id),
         )
         if not is_valid:
             errors.append(
