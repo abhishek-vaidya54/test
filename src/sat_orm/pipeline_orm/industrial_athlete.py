@@ -215,6 +215,12 @@ def validate_before_insert(mapper, connection, target):
             build_error("jobFunctionId", constants.INVALID_JOB_FUNCTION_MESSAGE)
         )
 
+    is_valid = ia_utils.is_valid_warehouse(
+        connection, param_input.get("warehouseId", ""), target.client_id
+    )
+    if not is_valid:
+        errors.append(build_error("warehouseId", constants.INVALID_WAREHOUSE_MESSAGE))
+
     is_valid, date_obj = utils.is_valid_date(param_input.get("hireDate", ""))
     if not is_valid:
         errors.append(build_error("hireDate", constants.INVALID_DATE_MESSAGE))
@@ -277,18 +283,31 @@ def validate_before_update(mapper, connection, target):
 
     if "shiftId" in param_input:
         is_valid = ia_utils.is_valid_shift(
-            connection, param_input.get("shiftId", ""), ia.warehouse_id
+            connection,
+            param_input.get("shiftId", ""),
+            param_input.get("warehouseId", ia.warehouse_id),
         )
         if not is_valid:
             errors.append(build_error("shiftId", constants.INVALID_SHIFT_MESSAGE))
 
     if "jobFunctionId" in param_input:
         is_valid = ia_utils.is_valid_job_function(
-            connection, param_input.get("jobFunctionId", ""), ia.warehouse_id
+            connection,
+            param_input.get("jobFunctionId", ""),
+            param_input.get("warehouseId", ia.warehouse_id),
         )
         if not is_valid:
             errors.append(
                 build_error("jobFunctionId", constants.INVALID_JOB_FUNCTION_MESSAGE)
+            )
+
+    if "warehouseId" in param_input:
+        is_valid = ia_utils.is_valid_warehouse(
+            connection, param_input.get("warehouseId", ""), ia.client_id
+        )
+        if not is_valid:
+            errors.append(
+                build_error("warehouseId", constants.INVALID_WAREHOUSE_MESSAGE)
             )
 
     if "hireDate" in param_input:

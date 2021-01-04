@@ -57,8 +57,9 @@ class DockPhaseFactory(factory.alchemy.SQLAlchemyModelFactory):
     dock_id = generate_dock_id()
     timestamp = factory.LazyFunction(datetime.datetime.now)
     phase = factory.fuzzy.FuzzyChoice(["DEPLOYED", "NOT DEPLOYED", "MAINTENANCE"])
-    client = factory.SubFactory(ClientFactory)
-    warehouse = factory.SubFactory(WarehouseFactory)
+    phase_date = datetime.datetime.now()
+    client_id = 1
+    warehouse_id = 1
     dock_firmware_version = "1.01.01"
     deployment_stage = factory.fuzzy.FuzzyChoice(["DEV", "PROD"])
     description = factory.Faker("sentence")

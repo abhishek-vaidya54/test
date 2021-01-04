@@ -27,6 +27,9 @@ from sat_orm.pipeline import (
     ImportedIndustrialAthlete,
     AthleteUploadStatus,
     CasbinRule,
+    Sensors,
+    UserWarehouseAssociation,
+    Groups
 )
 
 
@@ -83,8 +86,10 @@ class WarehouseFactory(factory.alchemy.SQLAlchemyModelFactory):
     state = factory.fuzzy.FuzzyText(length=12)
     country = factory.fuzzy.FuzzyText(length=12)
     industry = factory.fuzzy.FuzzyText(length=20)
-    latitude = factory.fuzzy.FuzzyFloat(30, 120)
-    longitude = factory.fuzzy.FuzzyFloat(30, 120)
+    latitude = factory.fuzzy.FuzzyFloat(-90, 90)
+    longitude = factory.fuzzy.FuzzyFloat(-180, 180)
+    lat_direction = factory.fuzzy.FuzzyChoice(["N", "S", "E", "W"])
+    long_direction = factory.fuzzy.FuzzyChoice(["N", "S", "E", "W"])
     # @factory.post_generation
     # def job_functions(self,create,extracted,**kwargs):
     #     if extracted is None:
@@ -142,8 +147,26 @@ class ShiftsFactory(factory.alchemy.SQLAlchemyModelFactory):
 
 class SettingsFactory(factory.alchemy.SQLAlchemyModelFactory):
     id = factory.Sequence(lambda n: n)
-    target_type = str(uuid.uuid4())
-    target_id = factory.Sequence(lambda n: n)
+    target_type = "warehouse"
+    target_id = 1
+    value = {
+        "hapticEnabled": True,
+        "athleteEnabled": True,
+        "showEngagement": True,
+        "hapticBendNumber": 100,
+        "hapticFeedbackGap": 100,
+        "hapticBendPercentile": 100,
+        "hapticFeedbackWindow": 100,
+        "hapticSingleBendWindow": 100,
+        "hapticSagAngleThreshold": 100,
+        "showHapticModal": True,
+        "showBaselineModal": True,
+        "showSafetyScoreModal": True,
+        "handsFree": True,
+        "showSafetyJudgement": True,
+        "eulaVersion": 100,
+        "enagementEnabled": True,
+    }
 
     class Meta:
         model = Setting
@@ -175,18 +198,15 @@ class JobFunctionFactory(factory.alchemy.SQLAlchemyModelFactory):
 
 class IndustrialAthleteFactory(factory.alchemy.SQLAlchemyModelFactory):
     id = factory.Sequence(lambda n: n)
-    client_id = ClientFactory.id
     client = factory.SubFactory(ClientFactory)
-    warehouse_id = WarehouseFactory.id
     warehouse = factory.SubFactory(WarehouseFactory)
-    job_function_id = JobFunctionFactory.id
     job_function = factory.SubFactory(JobFunctionFactory)
-    shift_id = ShiftsFactory.id
     shifts = factory.SubFactory(ShiftsFactory)
     gender = factory.fuzzy.FuzzyChoice(["f", "m"])
     first_name = factory.Faker("first_name")
     last_name = factory.Faker("last_name")
     external_id = str(uuid.uuid4())
+    hire_date = datetime.datetime.now()
 
     class Meta:
         model = IndustrialAthlete
@@ -208,6 +228,15 @@ class ExternalAdminUserFactory(factory.alchemy.SQLAlchemyModelFactory):
 
     class Meta:
         model = ExternalAdminUser
+        sqlalchemy_session_persistence = "commit"
+
+
+class UserWarehouseAssociationFactory(factory.alchemy.SQLAlchemyModelFactory):
+    external_admin_user = factory.SubFactory(ExternalAdminUserFactory)
+    warehouse = factory.SubFactory(WarehouseFactory)
+
+    class Meta:
+        model = UserWarehouseAssociation
         sqlalchemy_session_persistence = "commit"
 
 
@@ -266,4 +295,28 @@ class CasbinRuleFactory(factory.alchemy.SQLAlchemyModelFactory):
 
     class Meta:
         model = CasbinRule
+        sqlalchemy_session_persistence = "commit"
+
+
+class SensorsFactory(factory.alchemy.SQLAlchemyModelFactory):
+    id = factory.Sequence(lambda n: n)
+    serial_number = factory.fuzzy.FuzzyText(length=45)
+    sensor_id = factory.fuzzy.FuzzyText(length=45)
+    stiction_flagged = factory.fuzzy.FuzzyChoice(["0", "1"])
+    decommissioned = factory.fuzzy.FuzzyChoice(["0", "1"])
+
+    class Meta:
+        model = Sensors
+        sqlalchemy_session_persistence = "commit"
+
+class GroupsFactory(factory.alchemy.SQLAlchemyModelFactory):
+    id = factory.Sequence(lambda n: n)
+    title = factory.fuzzy.FuzzyText(length=45)
+    description = factory.fuzzy.FuzzyText(length=45)
+    db_created_at = datetime.datetime.now()
+    override_settings = factory.fuzzy.FuzzyChoice([True, False])
+    industrial_athletes = factory.SubFactory(IndustrialAthleteFactory)
+
+    class Meta:
+        model = Groups
         sqlalchemy_session_persistence = "commit"
