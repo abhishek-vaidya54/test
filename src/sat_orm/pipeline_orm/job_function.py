@@ -146,16 +146,25 @@ def validate_before_insert(mapper, connection, target):
 
     is_valid = ia_utils.is_valid_warehouse(connection, warehouse_id)
     if not is_valid:
-        errors.append(build_error("warehouse_id", constants.INVALID_WAREHOUSE_ID_MESSAGE))
+        errors.append(
+            build_error("warehouse_id", constants.INVALID_WAREHOUSE_ID_MESSAGE)
+        )
 
-    is_valid = ia_utils.is_valid_setting(connection, settings_id)
-    if not is_valid:
-        errors.append(build_error("settings_id", constants.INVALID_SETTINGS_ID_MESSAGE))
+    if settings_id:
+        is_valid = ia_utils.is_valid_setting(connection, settings_id)
+        if not is_valid:
+            errors.append(
+                build_error("settings_id", constants.INVALID_SETTINGS_ID_MESSAGE)
+            )
 
     if group_administrator:
         is_valid = job_function_utils.is_valid_group_admin(group_administrator)
         if not is_valid:
-            errors.append(build_error("group_administrator", constants.INVALID_GROUP_ADMIN_MESSAGE))
+            errors.append(
+                build_error(
+                    "group_administrator", constants.INVALID_GROUP_ADMIN_MESSAGE
+                )
+            )
 
     if description:
         is_valid, message = utils.is_valid_string(description)
@@ -196,26 +205,32 @@ def validate_before_update(mapper, connection, target):
             connection, params_input.get("warehouse_id", "")
         )
         if not is_valid:
-            errors.append(build_error("warehouse_id", constants.INVALID_WAREHOUSE_ID_MESSAGE))
+            errors.append(
+                build_error("warehouse_id", constants.INVALID_WAREHOUSE_ID_MESSAGE)
+            )
 
     if "settings_id" in params_input:
         is_valid = ia_utils.is_valid_setting(
             connection, params_input.get("settings_id", "")
         )
         if not is_valid:
-            errors.append(build_error("settings_id", constants.INVALID_SETTINGS_ID_MESSAGE))
+            errors.append(
+                build_error("settings_id", constants.INVALID_SETTINGS_ID_MESSAGE)
+            )
 
     if "group_administrator" in params_input:
         is_valid = job_function_utils.is_valid_group_admin(
             params_input.get("group_administrator", "")
         )
         if not is_valid:
-            errors.append(build_error("group_administrator", constants.INVALID_GROUP_ADMIN_MESSAGE))
+            errors.append(
+                build_error(
+                    "group_administrator", constants.INVALID_GROUP_ADMIN_MESSAGE
+                )
+            )
 
     if "description" in params_input:
-        is_valid, message = utils.is_valid_string(
-            params_input.get("description", "")
-        )
+        is_valid, message = utils.is_valid_string(params_input.get("description", ""))
         if not is_valid:
             errors.append(build_error("description", message))
 
