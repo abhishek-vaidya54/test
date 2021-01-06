@@ -6,6 +6,7 @@ Create Date: 2020-12-28 12:17:29.637811
 
 """
 from alembic import op
+from datetime import datetime
 
 # revision identifiers, used by Alembic.
 revision = "c09966f2898d"
@@ -21,19 +22,12 @@ def upgrade():
     op.execute('DELETE FROM pipeline.casbin_rule where v1="bulkupload"')
 
     op.execute(
-        'UPDATE pipeline.external_admin_user SET role="bulk_upload" where role="superuser"'
-    )
-    op.execute(
-        'UPDATE pipeline.user_role_association SET role="bulk_upload" where role="superuser"'
-    )
-
-    op.execute(
         """
-            INSERT INTO pipeline.casbin_rule (ptype, v0, v1, v2)
-            SELECT ptype, "bulk_upload", v1, v2
-            from pipeline.casbin_rule
-            where v0="superuser"
-        """
+        INSERT INTO pipeline.user_role_association (external_admin_user_id, role, db_created_at, db_modified_at)
+        SELECT external_admin_user_id, "bulk_upload", "{0}", "{0}" 
+        FROM pipeline.user_role_association
+        where role="superuser" or role="admin"
+        """.format(datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
     )
 
     for action in actions:
@@ -46,15 +40,7 @@ def upgrade():
 
 def downgrade():
     op.execute('DELETE FROM pipeline.casbin_rule WHERE v0="bulk_upload"')
+   
     op.execute(
-        'UPDATE pipeline.external_admin_user SET role="superuser" where role="bulk_upload"'
+        'DELETE FROM pipeline.user_role_association WHERE role="bulk_upload"'
     )
-    op.execute(
-        'UPDATE pipeline.user_role_association SET role="superuser" where role="bulk_upload"'
-    )
-    for action in actions:
-        op.execute(
-            'INSERT INTO pipeline.casbin_rule (ptype, v0, v1, v2) VALUES ("p", "superuser", "bulk_upload", "{}")'.format(
-                action
-            )
-        )
