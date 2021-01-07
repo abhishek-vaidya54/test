@@ -46,7 +46,9 @@ INVALID_SHIFT_MESSAGE = "Invalid shift"
 
 INVALID_WAREHOUSE_MESSAGE = "Invalid warehouse"
 
-INVALID_DUPLICATE_EXTERNAL_ID_MESSAGE = "Duplicate external ID."
+DUPLICATE_EXTERNAL_ID_MESSAGE = "Duplicate external ID."
+
+INVALID_EXTERNAL_ID_MESSAGE = "Invalid external ID."
 
 INVALID_REQUEST = "Invalid request."
 
@@ -222,7 +224,7 @@ RBAC_VALID_RESOURCES = (
     "users",
     "settings",
     "sensors",
-    "looker"
+    "looker",
 )
 
 RBAC_VALID_ACTIONS = ("read", "write", "update", "delete")
@@ -285,8 +287,9 @@ IA_NAME_FORMATS = {
     "ANONYMOUS": "XYZ 123",
 }
 
-INVALID_IA_NAME_FORMAT_MESSAGE = "Invalid First Name/Last Name format; should be : "
+EXTERNAL_ID_REGEX = "^[a-z0-9]+(?:[-_]?[a-z0-9]*)*$"
 
+INVALID_IA_NAME_FORMAT_MESSAGE = "Invalid First Name/Last Name format; should be : "
 
 VALID_IA_HEIGHT_UNITS = ("INCH", "CM")
 
