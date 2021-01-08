@@ -28,34 +28,39 @@ def is_valid_ia_first_last_name(connection, value, field, client_id):
     )
 
 
-def is_valid_external_id(connection, ia, external_id, existing_ia_id=None):
+def is_valid_external_id(
+    connection, external_id, warehouse_id, ia=None, existing_ia_id=None
+):
     """
     Validates an IA's external ID
     Checks if
-        it is an int &
-        an IA with the same client ID & external ID is already in the database
+        IA with the same warehouse ID & external ID is already in the database
     If an existing_ia_id is provided,
         if there is an IA with the same external id & both have same ID, then it is valid
         else not valid.
     Returns [True, None] if it is a valid external ID
     Returns [False, reason] if it is not
     """
-    if ia and str(external_id) == str(ia.external_id):
-        return True, None
+    if ia:
+        if str(external_id) == str(ia.external_id):
+            return True, None
 
     existing_ia = athlete_queries.get_ia_by_external_id(
-        connection, external_id, ia.warehouse_id
+        connection, external_id, warehouse_id
     )
-    if not existing_ia:  # DB does not contain any IA with the same external_id
-        return True, None
-    if existing_ia_id and str(existing_ia_id) == str(
-        existing_ia.id
-    ):  # DB contains an IA with the same external_id, check if comparing against same IA
-        return True, None
-    return (
-        False,
-        constants.INVALID_DUPLICATE_EXTERNAL_ID_MESSAGE,
-    )  # DB contains an IA with same external_id, but not comparing against the same IA.
+    # DB does not contain any IA with the same external_id
+    if existing_ia:
+        # check if comparing against same IA
+        if str(existing_ia_id) == str(existing_ia.id):
+            return True, None
+
+        return False, constants.DUPLICATE_EXTERNAL_ID_MESSAGE
+
+    pattern = re.compile(constants.EXTERNAL_ID_REGEX, flags=re.IGNORECASE)
+    if re.match(pattern, external_id):
+        return True, external_id
+
+    return False, constants.INVALID_EXTERNAL_ID_MESSAGE
 
 
 def is_valid_client(connection, client_id):

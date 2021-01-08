@@ -189,10 +189,7 @@ def validate_before_insert(mapper, connection, target):
         errors.append(build_error("lastName", message))
 
     is_valid, message = ia_utils.is_valid_external_id(
-        connection,
-        target,
-        param_input.get("externalId", ""),
-        existing_ia_id=param_input.get("id"),
+        connection, param_input.get("externalId", ""), param_input.get("warehouseId")
     )
     if not is_valid:
         errors.append(build_error("externalId", message))
@@ -269,8 +266,9 @@ def validate_before_update(mapper, connection, target):
     if "externalId" in param_input:
         is_valid, message = ia_utils.is_valid_external_id(
             connection,
-            ia,
             param_input.get("externalId", ""),
+            ia.warehouse_id,
+            ia,
             existing_ia_id=param_input.get("id"),
         )
         if not is_valid:

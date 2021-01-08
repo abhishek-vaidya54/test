@@ -22,6 +22,7 @@ from sat_orm.pipeline_orm.bulk_upload_log import BulkUploadLog
 from sat_orm.pipeline_orm.casbin_rule import CasbinRule
 from sat_orm.pipeline_orm.groups import Groups
 from sat_orm.pipeline_orm.user_warehouse_association import UserWarehouseAssociation
+from sat_orm.pipeline_orm.user_role_association import UserRoleAssociation
 
 from sat_orm.pipeline_orm.marshmallow import schemas as Schemas
 
