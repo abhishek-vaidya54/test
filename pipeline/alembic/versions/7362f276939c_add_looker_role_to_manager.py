@@ -17,17 +17,18 @@ depends_on = None
 
 
 def upgrade():
-    op.execute(
-        """
-        INSERT INTO pipeline.casbin_rule
-            (ptype, v0, v1, v2)
-        VALUES
-            ("p", "manager", "looker", "get"),
-            ("p", "manager", "looker", "post"),
-            ("p", "manager", "looker", "put"),
-            ("p", "manager", "looker", "delete");
-        """
-    )
+    pass
+    # op.execute(
+    #     """
+    #     INSERT INTO pipeline.casbin_rule
+    #         (ptype, v0, v1, v2)
+    #     VALUES
+    #         ("p", "manager", "looker", "get"),
+    #         ("p", "manager", "looker", "post"),
+    #         ("p", "manager", "looker", "put"),
+    #         ("p", "manager", "looker", "delete");
+    #     """
+    # )
 
 
 def downgrade():
