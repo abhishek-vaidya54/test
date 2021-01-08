@@ -125,6 +125,9 @@ class IndustrialAthleteSchema(ModelSchema):
     terminationDate = fields.Function(
         lambda obj: convert_date(obj.termination_date) if obj.termination_date else None
     )
+    lastModified = fields.Function(
+        lambda obj: convert_date(obj.db_modified_at) if obj.db_modified_at else None
+    )
 
     @post_dump(pass_many=True)
     def add_fields(self, data, many, **kwargs):
