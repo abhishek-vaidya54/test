@@ -19,30 +19,27 @@ import datetime
 
 
 # Third Party Imports
-from sqlalchemy import ForeignKey, Column, Integer, DateTime, event
+from sqlalchemy import ForeignKey, Column, Integer, DateTime, String, event
 from sqlalchemy.orm import relationship
 
 # Local Application Import
 from sat_orm.pipeline_orm.pipeline_base import Base
 import sat_orm.constants as constants
-from sat_orm.pipeline_orm.utilities import external_admin_user_utils, warehouse_utils
+from sat_orm.pipeline_orm.utilities import external_admin_user_utils
 from sat_orm.pipeline_orm.utilities.utils import build_error, check_errors_and_return
 
 
-class UserWarehouseAssociation(Base):
-    __tablename__ = "user_warehouse_association"
+class UserRoleAssociation(Base):
+    __tablename__ = "user_role_association"
 
     external_admin_user_id = Column(
         Integer, ForeignKey("external_admin_user.id"), primary_key=True
     )
-    warehouse_id = Column(Integer, ForeignKey("warehouse.id"), primary_key=True)
+    role = Column(String(30), default="manager", primary_key=True)
 
     external_admin_user = relationship(
-        "ExternalAdminUser",
-        uselist=False,
-        back_populates="warehouses",
+        "ExternalAdminUser", uselist=False, back_populates="roles"
     )
-    warehouse = relationship("Warehouse", uselist=False, backref="external_admin_users")
 
     db_created_at = Column(DateTime, default=datetime.datetime.utcnow, nullable=False)
     db_modified_at = Column(
@@ -55,20 +52,19 @@ class UserWarehouseAssociation(Base):
     def as_dict(self):
         return {
             "external_admin_user_id": self.external_admin_user_id,
-            "warehouse_id": self.warehouse_id,
             "external_admin_user": self.external_admin_user,
-            "warehouse": self.warehouse,
+            "role": self.role,
         }
 
     def __repr__(self):
         return str(self.as_dict())
 
 
-@event.listens_for(UserWarehouseAssociation, "before_insert")
+@event.listens_for(UserRoleAssociation, "before_insert")
 def validate_role_before_insert(mapper, connection, target):
     """
     Event hook method that fires before insert
-    to check if params are valid for inserting a single external_admin_user and warehouse association
+    to check if params are valid for inserting a single external_admin_user and role association
     """
     params_input = {}
     for key, value in target.as_dict().items():
@@ -86,12 +82,8 @@ def validate_role_before_insert(mapper, connection, target):
             )
         )
 
-    is_valid = warehouse_utils.is_valid_warehouse(
-        connection, params_input.get("warehouse_id"), is_valid.client_id or None
-    )
+    is_valid = params_input.get("role") in constants.RBAC_VALID_ROLES
     if not is_valid:
-        errors.append(
-            build_error("warehouse_id", constants.INVALID_WAREHOUSE_ID_MESSAGE)
-        )
+        errors.append(build_error("role", constants.INVALID_ROLE_ERROR_MESSAGE))
 
     check_errors_and_return(errors)
