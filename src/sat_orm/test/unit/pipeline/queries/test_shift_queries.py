@@ -1,5 +1,5 @@
 from sat_orm.pipeline_orm.queries import shift_queries
-
+import pytest
 
 def test_get_shift_success(test_session, get_random_shift):
     """
@@ -16,9 +16,9 @@ def test_get_shift_success(test_session, get_random_shift):
 def test_get_shift_failure(test_session, invalid_int, get_random_shift):
     """
     input - invalid shift id, valid warehouse id
-    output - None
+    output - Error
     """
-    shift = shift_queries.get_shift(
-        test_session, invalid_int, get_random_shift.warehouse_id
-    )
-    assert shift is None
+    with pytest.raises(Exception):
+        shift = shift_queries.get_shift(
+            test_session, invalid_int, get_random_shift.warehouse_id
+        )

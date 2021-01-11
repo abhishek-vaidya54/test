@@ -10,9 +10,7 @@ def test_external_admin_user_serializer(
     output - valid external admin user dict
     """
     user_dict = Schemas.ExternalAdminUserSchema(
-        only=valid_external_admin_user_fields
     ).dump(get_external_admin_user)
-    assert len(user_dict.keys()) == len(valid_external_admin_user_fields)
     for field in valid_external_admin_user_fields:
         assert field in user_dict
 
@@ -100,6 +98,7 @@ def test_ia_schema_valid(get_external_admin_user, test_session):
         "shiftId",
         "jobFunctionId",
         "warehouseId",
+        "warehouse",
         "hireDate",
         "terminationDate",
         "db_created_at",
@@ -123,6 +122,7 @@ def test_ia_schema_invalid(get_external_admin_user, test_session):
         "shiftId",
         "jobFunctionId",
         "warehouseId",
+        "warehouse",
         "hireDate",
         "terminationDate",
         "db_created_at",

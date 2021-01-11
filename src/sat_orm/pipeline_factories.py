@@ -29,6 +29,7 @@ from sat_orm.pipeline import (
     CasbinRule,
     Sensors,
     Groups,
+    UserWarehouseAssociation,
 )
 
 
@@ -227,6 +228,15 @@ class ExternalAdminUserFactory(factory.alchemy.SQLAlchemyModelFactory):
 
     class Meta:
         model = ExternalAdminUser
+        sqlalchemy_session_persistence = "commit"
+
+
+class UserWarehouseAssociationFactory(factory.alchemy.SQLAlchemyModelFactory):
+    external_admin_user = factory.SubFactory(ExternalAdminUserFactory)
+    warehouse = factory.SubFactory(WarehouseFactory)
+
+    class Meta:
+        model = UserWarehouseAssociation
         sqlalchemy_session_persistence = "commit"
 
 

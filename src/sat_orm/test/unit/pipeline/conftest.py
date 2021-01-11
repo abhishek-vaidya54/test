@@ -22,6 +22,7 @@ from sat_orm.pipeline_factories import (
     AthleteUploadStatusFactory,
     ImportedIndustrialAthleteFactory,
     CasbinRuleFactory,
+    UserWarehouseAssociationFactory,
     SensorsFactory,
     GroupsFactory,
 )
@@ -92,7 +93,7 @@ def pytest_configure(config):
     )
 
 
-@pytest.fixture(scope="module")
+@pytest.fixture(scope="session")
 def test_session():
     is_created, error = create_test_pipeline()
     if is_created:
@@ -111,9 +112,9 @@ def test_session():
             AthleteUploadStatusFactory._meta.sqlalchemy_session = session
             ImportedIndustrialAthleteFactory._meta.sqlalchemy_session = session
             CasbinRuleFactory._meta.sqlalchemy_session = session
-            SensorsFactory._meta.sqlalchemy_session = session
+            UserWarehouseAssociationFactory._meta.sqlalchemy_session = session
             GroupsFactory._meta.sqlalchemy_session = session
-
+            SensorsFactory._meta.sqlalchemy_session = session
             # Reset the factory id values to greater than the records to avoid duplicate id errors
             client = session.query(func.max(Client.id)).first()
             warehouse = session.query(func.max(Warehouse.id)).first()
@@ -127,9 +128,8 @@ def test_session():
             ).first()
             imported_ia = session.query(func.max(ImportedIndustrialAthlete.id)).first()
             casbin_rule = session.query(func.max(CasbinRule.id)).first()
-            sensors = session.query(func.max(Sensors.id)).first()
             group = session.query(func.max(Groups.id)).first()
-
+            sensor = session.query(func.max(Sensors.id)).first()
             client_max_id = 1
             warehouse_max_id = 1
             shift_max_id = 1
@@ -140,9 +140,8 @@ def test_session():
             athlete_upload_status_max_id = 1
             imported_id_max_id = 1
             casbin_rule_max_id = 1
-            sensors_max_id = 1
             group_max_id = 1
-
+            sensor_max_id = 1
             if client[0] is not None:
                 client_max_id = client[0] + 1
             if warehouse[0] is not None:
@@ -163,11 +162,10 @@ def test_session():
                 imported_id_max_id = imported_ia[0] + 1
             if casbin_rule[0] is not None:
                 casbin_rule_max_id = casbin_rule[0] + 1
-            if sensors[0] is not None:
-                sensors_max_id = sensors[0] + 1
             if group[0] is not None:
                 group_max_id = group[0] + 1
-
+            if sensor[0] is not None:
+                sensor_max_id = sensor[0] + 1
             ClientFactory.reset_sequence(client_max_id)
             WarehouseFactory.reset_sequence(warehouse_max_id)
             ShiftsFactory.reset_sequence(shift_max_id)
@@ -178,32 +176,36 @@ def test_session():
             AthleteUploadStatusFactory.reset_sequence(athlete_upload_status_max_id)
             ImportedIndustrialAthleteFactory.reset_sequence(imported_id_max_id)
             CasbinRuleFactory.reset_sequence(casbin_rule_max_id)
-            SensorsFactory.reset_sequence(sensors_max_id)
             GroupsFactory.reset_sequence(group_max_id)
+            SensorsFactory.reset_sequence(sensor_max_id)
 
             yield session
     else:
         RuntimeError(error)
 
-
 # Random Database Objects
-@pytest.fixture(scope="module")
+@pytest.fixture(scope="session", autouse=True)
 def get_external_admin_user(test_session):
-    client = ClientFactory()
-    warehouse = WarehouseFactory(client=client)
+    new_client = ClientFactory()
+    new_warehouse = WarehouseFactory(client=new_client)
     user = ExternalAdminUserFactory(
-        role="superuser", client=client, warehouse=warehouse
+        role="superuser", client=new_client, warehouse=new_warehouse
     )
+
+    UserWarehouseAssociationFactory(external_admin_user=user, warehouse=new_warehouse)
+    for _ in range(random.randint(1, 4)):
+        UserWarehouseAssociationFactory(external_admin_user=user)
+
     athlete_upload_status = AthleteUploadStatusFactory(
         username=user.username, client_id=user.client_id
     )
 
-    for i in range(4):
-        new_jf = JobFunctionFactory(warehouse=warehouse)
-        new_shift = ShiftsFactory(warehouse=warehouse)
-        IndustrialAthleteFactory(
-            client=client,
-            warehouse=warehouse,
+    for _ in range(4):
+        new_jf = JobFunctionFactory(warehouse=user.warehouse)
+        new_shift = ShiftsFactory(warehouse=user.warehouse)
+        ia = IndustrialAthleteFactory(
+            client=new_client,
+            warehouse=new_warehouse,
             shifts=new_shift,
             job_function=new_jf,
         )
@@ -217,6 +219,12 @@ def get_external_admin_user(test_session):
         AthleteUploadStatusFactory(
             client_id=user.client_id, username=user.username, processed=100, total=100
         )
+        GroupsFactory(
+            industrial_athletes=[ia]
+        )
+        SensorsFactory()
+        SettingsFactory()
+        test_session.commit()
 
     return user
 
@@ -383,15 +391,18 @@ def valid_shift_fields():
 
 @pytest.fixture(scope="function")
 def valid_external_admin_user_fields():
-    return random.choices(
+    return (
         [
             "id",
-            "username",
-            "email",
-            "client_id",
-            "warehouse_id",
             "role",
+            "email",
+            "username",
             "is_active",
+            "warehouse",
+            "warehouses",
+            "warehouse_id",
+            "client",
+            "client_id",
         ]
     )
 
