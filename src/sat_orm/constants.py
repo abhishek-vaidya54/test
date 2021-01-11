@@ -44,7 +44,11 @@ INVALID_JOB_FUNCTION_MESSAGE = "Invalid job function"
 
 INVALID_SHIFT_MESSAGE = "Invalid shift"
 
-INVALID_DUPLICATE_EXTERNAL_ID_MESSAGE = "Duplicate external ID."
+INVALID_WAREHOUSE_MESSAGE = "Invalid warehouse"
+
+DUPLICATE_EXTERNAL_ID_MESSAGE = "Duplicate external ID."
+
+INVALID_EXTERNAL_ID_MESSAGE = "Invalid external ID."
 
 INVALID_REQUEST = "Invalid request."
 
@@ -203,9 +207,9 @@ XLSX_FILE_CONTENT_TYPE = (
 
 
 # --------- RBAC CONSTS
-RBAC_VALID_ROLES = ("manager", "admin", "superuser")
+RBAC_VALID_ROLES = ("manager", "admin", "superuser", "bulk_upload")
 
-CREATE_VALID_ROLES = ("manager", "admin")
+CREATE_VALID_ROLES = ("manager", "admin", "bulk_upload")
 
 RBAC_VALID_RESOURCES = (
     "athletes",
@@ -217,9 +221,10 @@ RBAC_VALID_RESOURCES = (
     "roles",
     "bulkupload",
     "groups",
-    "external_admin_user",
+    "users",
     "settings",
     "sensors",
+    "looker",
 )
 
 RBAC_VALID_ACTIONS = ("read", "write", "update", "delete")
@@ -247,10 +252,10 @@ POLICY_JOBFUNCTIONS_OBJ = "jobfunctions"
 POLICY_ROLES_OBJ = "roles"
 POLICY_BULK_UPLOAD_OBJ = "bulkupload"
 POLICY_GROUPS_OBJ = "groups"
-POLICY_EXTERNAL_ADMIN_USER_OBJ = "external_admin_user"
+POLICY_EXTERNAL_ADMIN_USER_OBJ = "users"
 POLICY_SETTINGS_OBJ = "settings"
 POLICY_SENSORS_OBJ = "sensors"
-
+POLICY_LOOKER_OBJ = "looker"
 
 # warehouse
 INVALID_LAT_LONG_DIRECTION_MESSAGE = 'should be one of ("N", "S", "E", "W")'
@@ -282,4 +287,14 @@ IA_NAME_FORMATS = {
     "ANONYMOUS": "XYZ 123",
 }
 
+EXTERNAL_ID_REGEX = "^[a-z0-9]+(?:[-_]?[a-z0-9]*)*$"
+
 INVALID_IA_NAME_FORMAT_MESSAGE = "Invalid First Name/Last Name format; should be : "
+
+VALID_IA_HEIGHT_UNITS = ("INCH", "CM")
+
+VALID_IA_WEIGHT_UNITS = ("LBS", "KG")
+
+INVALID_IA_HEIGHT_UNIT_MESSAGE = "Invalid height unit; Should be one of INCH or CM."
+
+INVALID_IA_WEIGHT_UNIT_MESSAGE = "Invalid weight unit; Should be one of LBS or KG."

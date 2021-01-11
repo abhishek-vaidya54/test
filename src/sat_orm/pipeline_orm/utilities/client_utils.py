@@ -31,6 +31,7 @@ def is_valid_client_name(connection, name, id=None):
 
     return False, constants.DUPLICATE_CLIENT_NAME_MESSAGE
 
+
 def is_valid_client_id(connection, id):
     """
     Helper method to check if input is a valid Client ID
@@ -44,3 +45,21 @@ def is_valid_client_id(connection, id):
         return is_valid
     except Exception as error:
         return False
+
+
+def is_valid_height_unit(param_input):
+    """
+    Helper method to check if input is a valid height unit
+    Return True if it is a valid height unit
+    Returns False if it is not valid
+    """
+    return param_input in constants.VALID_IA_HEIGHT_UNITS
+
+
+def is_valid_weight_unit(param_input):
+    """
+    Helper method to check if input is a valid weight unit
+    Return True if it is a valid weight unit
+    Returns False if it is not valid
+    """
+    return param_input in constants.VALID_IA_WEIGHT_UNITS

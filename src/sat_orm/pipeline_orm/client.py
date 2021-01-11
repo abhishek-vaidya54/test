@@ -31,6 +31,7 @@ from sqlalchemy import (
     UniqueConstraint,
     Boolean,
     event,
+    Enum,
 )
 from sqlalchemy.orm import relationship, validates
 
@@ -64,6 +65,16 @@ class Client(Base):
     active_inactive_date = Column(DateTime, nullable=False)
     ia_name_format = Column(String(45), server_default="FIRST_NAME_LAST_NAME")
     subdomain = Column(String(255), nullable=True)
+    ia_height_unit = Column(
+        Enum("INCH", "CM"),
+        nullable=False,
+        default="INCH",
+    )
+    ia_weight_unit = Column(
+        Enum("LBS", "KG"),
+        nullable=False,
+        default="LBS",
+    )
 
     # Table Constraints
     PrimaryKeyConstraint("id")
@@ -127,6 +138,8 @@ class Client(Base):
             "contracted_users": self.contracted_users,
             "active_inactive_date": self.active_inactive_date,
             "ia_name_format": self.ia_name_format,
+            "ia_height_unit": self.ia_height_unit,
+            "ia_weight_unit": self.ia_weight_unit,
             "db_created_at": self.db_created_at,
             "db_modified_at": self.db_modified_at,
         }
@@ -163,12 +176,12 @@ def validate_before_update(mapper, connection, target):
     if "status" in params_input:
         is_valid = client_utils.is_valid_client_status(params_input.get("status", ""))
         if not is_valid:
-            errors.append(build_error("status", constants.INVALID_CLIENT_STATUS_MESSAGE))
+            errors.append(
+                build_error("status", constants.INVALID_CLIENT_STATUS_MESSAGE)
+            )
 
     if "contracted_users" in params_input:
-        is_valid, message = utils.is_valid_int(
-            params_input.get("contracted_users", "")
-        )
+        is_valid, message = utils.is_valid_int(params_input.get("contracted_users", ""))
         if not is_valid:
             errors.append(build_error("contracted_users", message))
 
@@ -177,22 +190,46 @@ def validate_before_update(mapper, connection, target):
             params_input.get("active_inactive_date", "")
         )
         if not is_valid:
-            errors.append(build_error("active_inactive_date", constants.INVALID_DATE_MESSAGE))
+            errors.append(
+                build_error("active_inactive_date", constants.INVALID_DATE_MESSAGE)
+            )
 
     if "ia_name_format" in params_input:
         is_valid = client_utils.is_valid_client_ia_name_format(
             params_input.get("ia_name_format", "")
         )
         if not is_valid:
-            errors.append(build_error("ia_name_format", 
-                constants.INVALID_CLIENT_IA_NAME_FORMAT_MESSAGE))
+            errors.append(
+                build_error(
+                    "ia_name_format", constants.INVALID_CLIENT_IA_NAME_FORMAT_MESSAGE
+                )
+            )
+
+    if "ia_height_unit" in params_input:
+        is_valid = client_utils.is_valid_height_unit(
+            params_input.get("ia_height_unit", "")
+        )
+        if not is_valid:
+            errors.append(
+                build_error("ia_height_unit", constants.INVALID_IA_HEIGHT_UNIT_MESSAGE)
+            )
+
+    if "ia_weight_unit" in params_input:
+        is_valid = client_utils.is_valid_weight_unit(
+            params_input.get("ia_weight_unit", "")
+        )
+        if not is_valid:
+            errors.append(
+                build_error("ia_weight_unit", constants.INVALID_IA_WEIGHT_UNIT_MESSAGE)
+            )
 
     check_errors_and_return(errors)
+
 
 @event.listens_for(Client, "before_insert")
 def validate_before_insert(mapper, connection, target):
     """
-    Event hook method that fires before insert 
+    Event hook method that fires before insert
     to check if params are valid for inserting a single client
     """
     params_input = {}
@@ -212,12 +249,12 @@ def validate_before_insert(mapper, connection, target):
     if "status" in params_input:
         is_valid = client_utils.is_valid_client_status(params_input.get("status", ""))
         if not is_valid:
-            errors.append(build_error("status", constants.INVALID_CLIENT_STATUS_MESSAGE))
+            errors.append(
+                build_error("status", constants.INVALID_CLIENT_STATUS_MESSAGE)
+            )
 
     if "contracted_users" in params_input:
-        is_valid, message = utils.is_valid_int(
-            params_input.get("contracted_users", "")
-        )
+        is_valid, message = utils.is_valid_int(params_input.get("contracted_users", ""))
         if not is_valid:
             errors.append(build_error("contracted_users", message))
 
@@ -226,15 +263,38 @@ def validate_before_insert(mapper, connection, target):
             params_input.get("active_inactive_date", "")
         )
         if not is_valid:
-            errors.append(build_error("active_inactive_date", constants.INVALID_DATE_MESSAGE))
+            errors.append(
+                build_error("active_inactive_date", constants.INVALID_DATE_MESSAGE)
+            )
 
     if "ia_name_format" in params_input:
         is_valid = client_utils.is_valid_client_ia_name_format(
             params_input.get("ia_name_format", "")
         )
         if not is_valid:
-            errors.append(build_error("ia_name_format", 
-                constants.INVALID_CLIENT_IA_NAME_FORMAT_MESSAGE))
+            errors.append(
+                build_error(
+                    "ia_name_format", constants.INVALID_CLIENT_IA_NAME_FORMAT_MESSAGE
+                )
+            )
+
+    if "ia_height_unit" in params_input:
+        is_valid = client_utils.is_valid_height_unit(
+            params_input.get("ia_height_unit", "")
+        )
+        if not is_valid:
+            errors.append(
+                build_error("ia_height_unit", constants.INVALID_IA_HEIGHT_UNIT_MESSAGE)
+            )
+
+    if "ia_weight_unit" in params_input:
+        is_valid = client_utils.is_valid_weight_unit(
+            params_input.get("ia_weight_unit", "")
+        )
+        if not is_valid:
+            errors.append(
+                build_error("ia_weight_unit", constants.INVALID_IA_WEIGHT_UNIT_MESSAGE)
+            )
 
     check_errors_and_return(errors)
 
