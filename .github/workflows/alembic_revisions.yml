@@ -1,0 +1,68 @@
+name: Alembic Migrations
+
+on: 
+  workflow_dispatch:
+    inputs:
+      databaseUri:
+        description: 'Database URI'
+        required: true
+        default: 'default for branch'
+      databaseSchema:
+        description: 'Schema (ex: pipeline, dock, dockEvents).  Leave blank if inputting custom URI'
+      revisionId:
+        description: 'Revision ID'
+        required: true
+        default: 'head'
+
+jobs:
+  alembic-upgrade:
+    name: Alembic Migrations
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python: [3.8]
+  
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v2
+
+      - name: Install Open VPN
+        run: sudo apt-get install openvpn
+
+      - name: Write .ovpn file
+        run: echo ${{  secrets.CONFIG_OVPN  }} > .github/vpn/config.ovpn
+      
+      - name: Connect to VPN
+        uses: golfzaptw/action-connect-ovpn@master
+        id: connect_vpn
+        env:
+          CA_CRT: ${{  secrets.CA_CRT  }}
+          USER_CRT: ${{  secrets.USER_CRT  }}
+          USER_KEY: ${{  secrets.USER_KEY  }}
+        with:
+          FILE_OVPN: '.github/vpn/config.ovpn'
+          PING_URL: '127.0.0.1'
+
+      - name: Check VPN Connection Status
+        run: echo ${{  steps.connect_vpn.outputs.STATUS  }}
+
+      - name: Install dependencies
+        run: pip install -r .github/requirements.txt
+
+      - name: Determine which Alembic revision to jump to
+        env:
+          INPUT_DATABASE_URI: github.event.inputs.databaseUri
+          INPUT_REVISION_ID: github.event.inputs.revisionId
+        run: |
+          # Map branch to appropriate default database URI
+          MAPPED_DATABASE_URI=`echo ${{  secrets.CONNECTION_STRINGS_MAP  }} | jq .${#/refs/heads/}`
+
+          # Builds the correct INPUT_DATABASE_URI if necessary
+          if [ "${INPUT_DATABASE_URI}" == "default for branch" ]; then; INPUT_DATABASE_URI="${MAPPED_DATABASE_URI}/${INPUT_DATABASESCHEMA}"; fi
+          export "${INPUT_DATABASE_URI}"
+
+          python .github/alembic_revisions.py
+
+      - name: Kill VPN Connection
+        run: killall openvpn
+
