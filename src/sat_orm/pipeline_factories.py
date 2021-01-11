@@ -28,8 +28,8 @@ from sat_orm.pipeline import (
     AthleteUploadStatus,
     CasbinRule,
     Sensors,
+    Groups,
     UserWarehouseAssociation,
-    Groups
 )
 
 
@@ -308,6 +308,7 @@ class SensorsFactory(factory.alchemy.SQLAlchemyModelFactory):
     class Meta:
         model = Sensors
         sqlalchemy_session_persistence = "commit"
+
 
 class GroupsFactory(factory.alchemy.SQLAlchemyModelFactory):
     id = factory.Sequence(lambda n: n)
