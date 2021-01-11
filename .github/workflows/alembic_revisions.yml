@@ -30,7 +30,7 @@ jobs:
         run: sudo apt-get install openvpn
 
       - name: Write .ovpn file
-        run: echo ${{  secrets.CONFIG_OVPN  }} > .github/vpn/config.ovpn
+        run: echo "${{  secrets.CONFIG_OVPN  }}" > .github/vpn/config.ovpn
       
       - name: Connect to VPN
         uses: golfzaptw/action-connect-ovpn@master
