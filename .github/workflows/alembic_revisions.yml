@@ -80,11 +80,18 @@ jobs:
           INPUT_REVISION_ID: github.event.inputs.revisionId
         run: |
           # Exit if inputs not set
-          if [ -z $MAPPED_DATABASE_URI ] && [ -z $INPUT_DATABASE_URI ]; then; echo "Not in a preconfigured branch" <&2; exit 1; fi
+          if [ -z $MAPPED_DATABASE_URI ] && [ -z $INPUT_DATABASE_URI ]
+          then
+            echo "Not in a preconfigured branch, Database URI must therefore be input" <&2
+            exit 1
+          fi
 
           # Builds the correct INPUT_DATABASE_URI if necessary
-          if [ "${INPUT_DATABASE_URI}" == "default for branch" ]; then; INPUT_DATABASE_URI="${MAPPED_DATABASE_URI}/${INPUT_DATABASESCHEMA}"; fi
-          export "${INPUT_DATABASE_URI}"
+          if [ "${INPUT_DATABASE_URI}" == "default for branch" ]
+          then
+            INPUT_DATABASE_URI="${MAPPED_DATABASE_URI}/${INPUT_DATABASESCHEMA}"
+          fi
+          export INPUT_DATABASE_URI
 
           python .github/alembic_revisions.py
 
