@@ -59,7 +59,7 @@ def parse_INPUT_DATABASE_URI_to_get_database_and_subaccount(INPUT_DATABASE_URI):
         , re.X)
     m = pattern.match(INPUT_DATABASE_URI)
     if not m:
-        raise Exception('Database URI is invalid')
+        raise Exception(f'Database URI is invalid: {INPUT_DATABASE_URI}, {INPUT_REVISION_ID}')
     components = m.groupdict()
     host = components['host']
     INPUT_DATABASE_URI
