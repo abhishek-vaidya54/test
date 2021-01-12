@@ -35,9 +35,11 @@ def load_inputs():
         Read the inputs from command line args passed by the GitHub workflow
     """
     INPUT_DATABASE_URI = sys.argv[1]
-    INPUT_REVISION_ID = sys.argv[2]
+    INPUT_DATABASE_SCHEMA = sys.argv[2]
+    INPUT_REVISION_ID = sys.argv[3]
     os.environ['INPUT_DATABASE_URI'] = INPUT_DATABASE_URI
-    return INPUT_DATABASE_URI, INPUT_REVISION_ID
+    raise Exception(INPUT_DATABASE_URI, INPUT_DATABASE_SCHEMA, INPUT_REVISION_ID)
+    # return INPUT_DATABASE_URI, INPUT_REVISION_ID
 
 def parse_INPUT_DATABASE_URI_to_get_database_and_subaccount(INPUT_DATABASE_URI, INPUT_REVISION_ID):
     """

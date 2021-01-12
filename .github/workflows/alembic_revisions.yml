@@ -76,20 +76,7 @@ jobs:
           echo "MAPPED_DATABASE_URI=${{  secrets.DEV4_CONNECTION_STRING  }}" >> $GITHUB_ENV
 
       - name: Determine which Alembic revision to jump to
-        env:
-          INPUT_DATABASE_URI: ${{  github.event.inputs.databaseUri  }}
-          INPUT_REVISION_ID: ${{  github.event.inputs.revisionId  }}
-        run: |
-          # Builds the correct INPUT_DATABASE_URI if necessary
-          if [ "${INPUT_DATABASE_URI}" == "default for branch" ]
-          then
-            INPUT_DATABASE_URI="${MAPPED_DATABASE_URI}/${INPUT_DATABASESCHEMA}"
-          else
-            INPUT_DATABASE_URI="${INPUT_DATABASE_URI}/${INPUT_DATABASESCHEMA}"
-          fi
-          export INPUT_DATABASE_URI
-
-          python3 .github/alembic_revisions.py $INPUT_DATABASE_URI $INPUT_REVISION_ID
+        run: python3 .github/alembic_revisions.py ${{github.event.inputs.databaseUri}} ${{github.event.inputs.databaseSchema}} ${{github.event.inputs.revisionId}}
 
       - name: Kill VPN Connection
         run: killall openvpn
