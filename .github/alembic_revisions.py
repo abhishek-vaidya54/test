@@ -56,6 +56,8 @@ def parse_INPUT_DATABASE_URI_to_get_database_and_subaccount(INPUT_DATABASE_URI):
         '''
         , re.X)
     m = pattern.match(INPUT_DATABASE_URI)
+    if not m:
+        raise Exception('Schema is unspedified; Database URI is invalid')
     components = m.groupdict()
     host = components['host']
     INPUT_DATABASE_URI
@@ -66,8 +68,6 @@ def parse_INPUT_DATABASE_URI_to_get_database_and_subaccount(INPUT_DATABASE_URI):
     else:
         if len(host.split('.')) > 1:
             subaccount = host.split('.')[1]
-    if not database:
-        raise Exception('Schema is unspedified')
     return subaccount, database
 
 def find_what_the_current_revision_is(subaccount, database):
