@@ -39,7 +39,7 @@ def load_inputs():
     os.environ['INPUT_DATABASE_URI'] = INPUT_DATABASE_URI
     return INPUT_DATABASE_URI, INPUT_REVISION_ID
 
-def parse_INPUT_DATABASE_URI_to_get_database_and_subaccount(INPUT_DATABASE_URI):
+def parse_INPUT_DATABASE_URI_to_get_database_and_subaccount(INPUT_DATABASE_URI, INPUT_REVISION_ID):
     """
         From the database URI, determine which subaccount and which database
         we are wish to target
@@ -139,7 +139,7 @@ def main():
     """
     INPUT_DATABASE_URI, INPUT_REVISION_ID = load_inputs()
     subaccount, database =\
-        parse_INPUT_DATABASE_URI_to_get_database_and_subaccount(INPUT_DATABASE_URI)
+        parse_INPUT_DATABASE_URI_to_get_database_and_subaccount(INPUT_DATABASE_URI, INPUT_REVISION_ID)
     current_revision_id = find_what_the_current_revision_is(subaccount, database)
     if INPUT_REVISION_ID == 'head':
         direction = Direction.UPGRADE
