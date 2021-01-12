@@ -1,6 +1,7 @@
 import os
 import re
 import subprocess
+import sys
 from enum import Enum
 
 class Direction(Enum):
@@ -31,11 +32,11 @@ def run(cmd):
 
 def load_inputs():
     """
-        Read the inputs from environemnt variables set by the GitHub workflow
+        Read the inputs from command line args passed by the GitHub workflow
     """
-    INPUT_DATABASE_URI = os.environ.get('INPUT_DATABASE_URI')
-    INPUT_REVISION_ID = os.environ.get('INPUT_REVISION_ID')
-    print(INPUT_DATABASE_URI, INPUT_REVISION_ID)
+    INPUT_DATABASE_URI = sys.argv[1]
+    INPUT_REVISION_ID = sys.argv[2]
+    os.environ['INPUT_DATABASE_URI'] = INPUT_DATABASE_URI
     return INPUT_DATABASE_URI, INPUT_REVISION_ID
 
 def parse_INPUT_DATABASE_URI_to_get_database_and_subaccount(INPUT_DATABASE_URI):
@@ -58,7 +59,7 @@ def parse_INPUT_DATABASE_URI_to_get_database_and_subaccount(INPUT_DATABASE_URI):
         , re.X)
     m = pattern.match(INPUT_DATABASE_URI)
     if not m:
-        raise Exception('Schema is unspedified; Database URI is invalid')
+        raise Exception('Database URI is invalid')
     components = m.groupdict()
     host = components['host']
     INPUT_DATABASE_URI
