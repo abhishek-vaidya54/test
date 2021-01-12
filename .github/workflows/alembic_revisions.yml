@@ -75,8 +75,15 @@ jobs:
         run: |
           echo "MAPPED_DATABASE_URI=${{  secrets.DEV4_CONNECTION_STRING  }}" >> $GITHUB_ENV
 
+      - name: alembic-release Enviroment
+        if: github.ref == 'refs/heads/alembic-release'
+        run: |
+          echo "MAPPED_DATABASE_URI=${{  secrets.ALEMBIC_RELEASE_CONNECTION_STRING  }}" >> $GITHUB_ENV
+
       - name: Determine which Alembic revision to jump to
-        run: python3 .github/alembic_revisions.py ${{github.event.inputs.databaseUri}} ${{github.event.inputs.databaseSchema}} ${{github.event.inputs.revisionId}}
+        run: |
+          echo $MAPPED_DATABASE_URI
+          python3 .github/alembic_revisions.py ${{github.event.inputs.databaseUri}} ${{github.event.inputs.databaseSchema}} ${{github.event.inputs.revisionId}} $MAPPED_DATABASE_URI
 
       - name: Kill VPN Connection
         run: killall openvpn
