@@ -6,7 +6,7 @@ on:
       databaseUri:
         description: 'Database URI'
         required: true
-        default: 'default for branch'
+        default: 'default_for_branch'
       databaseSchema:
         description: 'Schema (ex: pipeline, dock, dockEvents).  Leave blank if inputting custom URI'
         required: true

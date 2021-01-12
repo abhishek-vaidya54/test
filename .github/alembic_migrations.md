@@ -3,7 +3,7 @@
 ## How to use
 1. Navigate to the Actions tab of the database_models repo [here](https://github.com/strongarm-tech/database_models/actions).
 2. Under All workflows, select Alembic Migrations, and click the Run workflow dropdown.
-3. In the first input, specify the appropriate database URI only if it differs from the default for that branch.  Otherwise, leave as `default for branch`.  Refer to this [page](https://strongarm.atlassian.net/wiki/spaces/SPD/pages/1435369487/Segregated+Databases) for details.
+3. In the first input, specify the appropriate database URI only if it differs from the default for that branch.  Otherwise, leave as `default_for_branch`.  Refer to this [page](https://strongarm.atlassian.net/wiki/spaces/SPD/pages/1435369487/Segregated+Databases) for details.
 4. In the second input, specify the schema you are modifying.
 5. In the third input, specify the alembic revision ID you would like the database to have at completion.
 6. Click Run workflow

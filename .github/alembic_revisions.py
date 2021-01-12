@@ -39,7 +39,7 @@ def load_inputs():
     INPUT_DATABASE_SCHEMA = sys.argv[2]
     INPUT_REVISION_ID = sys.argv[3]
     MAPPED_DATABASE_URI = sys.argv[4] if len(sys.argv) >= 4 else ''
-    if INPUT_DATABASE_URI == 'default for branch':
+    if INPUT_DATABASE_URI == 'default_for_branch':
         if MAPPED_DATABASE_URI == '':
             raise Exception('This branch has no default database URI')
         INPUT_DATABASE_URI = MAPPED_DATABASE_URI
