@@ -93,7 +93,7 @@ jobs:
           fi
           export INPUT_DATABASE_URI
 
-          python .github/alembic_revisions.py
+          python3 .github/alembic_revisions.py
 
       - name: Kill VPN Connection
         run: killall openvpn
