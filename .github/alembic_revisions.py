@@ -35,6 +35,7 @@ def load_inputs():
     """
     INPUT_DATABASE_URI = os.environ.get('INPUT_DATABASE_URI')
     INPUT_REVISION_ID = os.environ.get('INPUT_REVISION_ID')
+    print(INPUT_DATABASE_URI, INPUT_REVISION_ID)
     return INPUT_DATABASE_URI, INPUT_REVISION_ID
 
 def parse_INPUT_DATABASE_URI_to_get_database_and_subaccount(INPUT_DATABASE_URI):
