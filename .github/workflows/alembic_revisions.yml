@@ -77,8 +77,8 @@ jobs:
 
       - name: Determine which Alembic revision to jump to
         env:
-          INPUT_DATABASE_URI: github.event.inputs.databaseUri
-          INPUT_REVISION_ID: github.event.inputs.revisionId
+          INPUT_DATABASE_URI: ${{  github.event.inputs.databaseUri  }}
+          INPUT_REVISION_ID: ${{  github.event.inputs.revisionId  }}
         run: |
           # Builds the correct INPUT_DATABASE_URI if necessary
           if [ "${INPUT_DATABASE_URI}" == "default for branch" ]
