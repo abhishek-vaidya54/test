@@ -49,13 +49,38 @@ jobs:
       - name: Install dependencies
         run: pip install -r .github/requirements.txt
 
+      - name: prod Enviroment
+        if: github.ref == 'refs/heads/master'
+        run: |
+          echo "MAPPED_DATABASE_URI=${{  secrets.MASTER_CONNECTION_STRING  }}" >> $GITHUB_ENV
+
+      - name: staging Enviroment
+        if: github.ref == 'refs/heads/staging'
+        run: |
+          echo "MAPPED_DATABASE_URI=${{  secrets.STAGING_CONNECTION_STRING  }}" >> $GITHUB_ENV
+
+      - name: dev Enviroment
+        if: github.ref == 'refs/heads/dev'
+        run: |
+          echo "MAPPED_DATABASE_URI=${{  secrets.DEV_CONNECTION_STRING  }}" >> $GITHUB_ENV
+
+      - name: dev3 Enviroment
+        if: github.ref == 'refs/heads/dev3'
+        run: |
+          echo "MAPPED_DATABASE_URI=${{  secrets.DEV3_CONNECTION_STRING  }}" >> $GITHUB_ENV
+
+      - name: dev4 Enviroment
+        if: github.ref == 'refs/heads/dev4'
+        run: |
+          echo "MAPPED_DATABASE_URI=${{  secrets.DEV4_CONNECTION_STRING  }}" >> $GITHUB_ENV
+
       - name: Determine which Alembic revision to jump to
         env:
           INPUT_DATABASE_URI: github.event.inputs.databaseUri
           INPUT_REVISION_ID: github.event.inputs.revisionId
         run: |
-          # Map branch to appropriate default database URI
-          MAPPED_DATABASE_URI=`echo ${{  secrets.CONNECTION_STRINGS_MAP  }} | jq .${#/refs/heads/}`
+          # Exit if inputs not set
+          if [ -z $MAPPED_DATABASE_URI ] && [ -z $INPUT_DATABASE_URI ]; then; echo "Not in a preconfigured branch" <&2; exit 1; fi
 
           # Builds the correct INPUT_DATABASE_URI if necessary
           if [ "${INPUT_DATABASE_URI}" == "default for branch" ]; then; INPUT_DATABASE_URI="${MAPPED_DATABASE_URI}/${INPUT_DATABASESCHEMA}"; fi
