@@ -45,9 +45,9 @@ def load_inputs():
         INPUT_DATABASE_URI = MAPPED_DATABASE_URI
     INPUT_DATABASE_URI = f'{INPUT_DATABASE_URI}/{INPUT_DATABASE_SCHEMA}'
     os.environ['INPUT_DATABASE_URI'] = INPUT_DATABASE_URI
-    return INPUT_DATABASE_URI, INPUT_REVISION_ID
+    return INPUT_DATABASE_URI, INPUT_DATABASE_SCHEMA, INPUT_REVISION_ID
 
-def parse_INPUT_DATABASE_URI_to_get_database_and_subaccount(INPUT_DATABASE_URI, INPUT_REVISION_ID):
+def parse_INPUT_DATABASE_URI_to_get_database_and_subaccount(INPUT_DATABASE_URI):
     """
         From the database URI, determine which subaccount and which database
         we are wish to target
@@ -67,20 +67,18 @@ def parse_INPUT_DATABASE_URI_to_get_database_and_subaccount(INPUT_DATABASE_URI, 
         , re.X)
     m = pattern.match(INPUT_DATABASE_URI)
     if not m:
-        raise Exception(f'Database URI is invalid: {INPUT_DATABASE_URI}, {INPUT_REVISION_ID}')
+        raise Exception(f'Database URI is invalid: {INPUT_DATABASE_URI}')
     components = m.groupdict()
     host = components['host']
-    INPUT_DATABASE_URI
-    database = components['database']
     if (re.search(r'^\d{1,3}.\d{1,3}.\d{1,3}.\d{1,3}$', host)
         or host == 'localhost'):
         subaccount = 'local'
     else:
         if len(host.split('.')) > 1:
             subaccount = host.split('.')[1]
-    return subaccount, database
+    return subaccount
 
-def find_what_the_current_revision_is(subaccount, database):
+def find_what_the_current_revision_is(subaccount, INPUT_DATABASE_SCHEMA):
     """
         Find the current revision ID is in the subaccount & database targetted
     """
@@ -89,14 +87,14 @@ def find_what_the_current_revision_is(subaccount, database):
         'dock': 'dockv5',
         'dockEvents': 'dockv5_eventslog'
     }
-    if not database in folder_mappings:
-        raise Exception(f'Unknown database "{database}"')
-    folder = folder_mappings[database]
+    if not INPUT_DATABASE_SCHEMA in folder_mappings:
+        raise Exception(f'Unknown database "{INPUT_DATABASE_SCHEMA}"')
+    folder = folder_mappings[INPUT_DATABASE_SCHEMA]
     os.chdir(folder)
     stdout = run('alembic current')
     m = re.search(r'(\w{12}).*$', stdout)
     current_revision_id = m.groups()[0] if m else ''
-    print(f'{database} database running in {subaccount} subaccount is on revision {current_revision_id}')
+    print(f'{INPUT_DATABASE_SCHEMA} database running in {subaccount} subaccount is on revision {current_revision_id}')
     return current_revision_id
 
 def find_out_whether_revision_is_upgrade_or_downgrade(INPUT_REVISION_ID, current_revision_id):
@@ -129,7 +127,7 @@ def find_out_whether_revision_is_upgrade_or_downgrade(INPUT_REVISION_ID, current
     if INPUT_REVISION_ID_index > current_revision_id_index:
         return Direction.DOWNGRADE
 
-def go_in_that_direction_to_that_revision(direction, INPUT_REVISION_ID, database, subaccount):
+def go_in_that_direction_to_that_revision(direction, INPUT_REVISION_ID, INPUT_DATABASE_SCHEMA, subaccount):
     """
         Run the actual alembic migration
     """
@@ -138,23 +136,23 @@ def go_in_that_direction_to_that_revision(direction, INPUT_REVISION_ID, database
     elif direction is Direction.DOWNGRADE:
         run(f'alembic downgrade {INPUT_REVISION_ID}')
     else:
-        print(f'{database} database running in {subaccount} subaccount is already on revision {INPUT_REVISION_ID}')
+        print(f'{INPUT_DATABASE_SCHEMA} database running in {subaccount} subaccount is already on revision {INPUT_REVISION_ID}')
 
 def main():
     """
         Main function that drives the program.  Reads the inputs and determines
         the necessary action to take to run the alembic migration
     """
-    INPUT_DATABASE_URI, INPUT_REVISION_ID = load_inputs()
-    subaccount, database =\
-        parse_INPUT_DATABASE_URI_to_get_database_and_subaccount(INPUT_DATABASE_URI, INPUT_REVISION_ID)
-    current_revision_id = find_what_the_current_revision_is(subaccount, database)
+    INPUT_DATABASE_URI, INPUT_DATABASE_SCHEMA, INPUT_REVISION_ID = load_inputs()
+    subaccount =\
+        parse_INPUT_DATABASE_URI_to_get_database_and_subaccount(INPUT_DATABASE_URI)
+    current_revision_id = find_what_the_current_revision_is(subaccount, INPUT_DATABASE_SCHEMA)
     if INPUT_REVISION_ID == 'head':
         direction = Direction.UPGRADE
     else:
         direction =\
             find_out_whether_revision_is_upgrade_or_downgrade(INPUT_REVISION_ID, current_revision_id)
-    go_in_that_direction_to_that_revision(direction, INPUT_REVISION_ID, database, subaccount)
+    go_in_that_direction_to_that_revision(direction, INPUT_REVISION_ID, INPUT_DATABASE_SCHEMA, subaccount)
 
 if __name__ == "__main__":
     main()

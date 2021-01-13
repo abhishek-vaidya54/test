@@ -8,7 +8,7 @@ on:
         required: true
         default: 'default_for_branch'
       databaseSchema:
-        description: 'Schema (ex: pipeline, dock, dockEvents).  Leave blank if inputting custom URI'
+        description: 'Schema (ex: pipeline, dock, dockEvents)'
         required: true
       revisionId:
         description: 'Revision ID'
@@ -82,8 +82,11 @@ jobs:
 
       - name: Determine which Alembic revision to jump to
         run: |
-          echo $MAPPED_DATABASE_URI
-          python3 .github/alembic_revisions.py ${{github.event.inputs.databaseUri}} ${{github.event.inputs.databaseSchema}} ${{github.event.inputs.revisionId}} $MAPPED_DATABASE_URI
+          python3 .github/alembic_revisions.py \
+            ${{github.event.inputs.databaseUri}} \
+            ${{github.event.inputs.databaseSchema}} \
+            ${{github.event.inputs.revisionId}} \
+            $MAPPED_DATABASE_URI
 
       - name: Kill VPN Connection
         run: killall openvpn
