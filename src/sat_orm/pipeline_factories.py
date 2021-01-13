@@ -50,6 +50,7 @@ class ClientFactory(factory.alchemy.SQLAlchemyModelFactory):
     status = factory.fuzzy.FuzzyChoice(["pilot", "deployment", "rollout", "inactive"])
     contracted_users = factory.fuzzy.FuzzyInteger(1, 999999)
     active_inactive_date = datetime.datetime.now()
+    ia_name_format = "ANONYMOUS"
 
     # @factory.post_generation
     # def warehouse(self,create,extracted, **kwargs):
