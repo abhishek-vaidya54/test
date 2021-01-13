@@ -100,6 +100,7 @@ class Shifts(Base):
             "color": self.color,
             "description": self.description,
             "group_administrator": self.group_administrator,
+            "timezone": self.timezone,
             "db_created_at": self.db_created_at,
             "db_modified_at": self.db_modified_at,
         }
@@ -127,7 +128,9 @@ def validate_before_insert(mapper, connection, target):
         connection, param_input.get("warehouseId", "")
     )
     if not is_valid:
-        errors.append(build_error("warehouse_id", constants.INVALID_WAREHOUSE_ID_MESSAGE))
+        errors.append(
+            build_error("warehouse_id", constants.INVALID_WAREHOUSE_ID_MESSAGE)
+        )
     # Shift start
     is_valid, message = shift_utils.is_valid_time(param_input.get("shiftStart", ""))
     if not is_valid:
@@ -145,7 +148,9 @@ def validate_before_insert(mapper, connection, target):
         param_input.get("group_administrator", "")
     )
     if not is_valid:
-        errors.append(build_error("group_administrator", constants.INVALID_GROUP_ADMIN_MESSAGE))
+        errors.append(
+            build_error("group_administrator", constants.INVALID_GROUP_ADMIN_MESSAGE)
+        )
 
     check_errors_and_return(errors)
 
@@ -173,7 +178,9 @@ def validate_before_update(mapper, connection, target):
             connection, param_input.get("warehouseId", "")
         )
         if not is_valid:
-            errors.append(build_error("warehouse_id", constants.INVALID_WAREHOUSE_ID_MESSAGE))
+            errors.append(
+                build_error("warehouse_id", constants.INVALID_WAREHOUSE_ID_MESSAGE)
+            )
     # Shift start
     if "shiftStart" in param_input:
         is_valid, message = shift_utils.is_valid_time(param_input.get("shiftStart", ""))
@@ -188,13 +195,19 @@ def validate_before_update(mapper, connection, target):
     if target.timezone:
         is_valid = shift_utils.is_valid_shift_timezone(target.timezone)
         if not is_valid:
-            errors.append(build_error("timezone", constants.INVALID_SHIFT_TIMEZONE_MESSAGE))
+            errors.append(
+                build_error("timezone", constants.INVALID_SHIFT_TIMEZONE_MESSAGE)
+            )
     # Group admin
     if "group_administrator" in param_input:
         is_valid = job_function_utils.is_valid_group_admin(
             param_input.get("group_administrator", "")
         )
         if not is_valid:
-            errors.append(build_error("group_administrator", constants.INVALID_GROUP_ADMIN_MESSAGE))
+            errors.append(
+                build_error(
+                    "group_administrator", constants.INVALID_GROUP_ADMIN_MESSAGE
+                )
+            )
 
     check_errors_and_return(errors)
