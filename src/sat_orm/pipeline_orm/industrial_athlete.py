@@ -189,10 +189,7 @@ def validate_before_insert(mapper, connection, target):
         errors.append(build_error("lastName", message))
 
     is_valid, message = ia_utils.is_valid_external_id(
-        connection,
-        target,
-        param_input.get("externalId", ""),
-        existing_ia_id=param_input.get("id"),
+        connection, param_input.get("externalId", ""), param_input.get("warehouseId")
     )
     if not is_valid:
         errors.append(build_error("externalId", message))
@@ -269,8 +266,9 @@ def validate_before_update(mapper, connection, target):
     if "externalId" in param_input:
         is_valid, message = ia_utils.is_valid_external_id(
             connection,
-            ia,
             param_input.get("externalId", ""),
+            ia.warehouse_id,
+            ia,
             existing_ia_id=param_input.get("id"),
         )
         if not is_valid:
@@ -283,14 +281,18 @@ def validate_before_update(mapper, connection, target):
 
     if "shiftId" in param_input:
         is_valid = ia_utils.is_valid_shift(
-            connection, param_input.get("shiftId", ""), ia.warehouse_id
+            connection,
+            param_input.get("shiftId", ""),
+            param_input.get("warehouseId", ia.warehouse_id),
         )
         if not is_valid:
             errors.append(build_error("shiftId", constants.INVALID_SHIFT_MESSAGE))
 
     if "jobFunctionId" in param_input:
         is_valid = ia_utils.is_valid_job_function(
-            connection, param_input.get("jobFunctionId", ""), ia.warehouse_id
+            connection,
+            param_input.get("jobFunctionId", ""),
+            param_input.get("warehouseId", ia.warehouse_id),
         )
         if not is_valid:
             errors.append(

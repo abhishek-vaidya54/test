@@ -24,7 +24,7 @@ class DockPhase(Base):
 
     id = sa.Column(sa.Integer, primary_key=True, autoincrement=True)
     dock_id = sa.Column(sa.String(length=255), nullable=False)
-    description = sa.Column(sa.String(length=255), nullable=False)
+    description = sa.Column(sa.String(length=255), nullable=False, default="")
     warehouse_id = sa.Column(sa.Integer, nullable=False)
     client_id = sa.Column(sa.Integer, nullable=False)
     dock_firmware = sa.Column(sa.Boolean, nullable=True, default=False)
@@ -47,7 +47,7 @@ def get_records(session):
         records = [
             DockPhase(
                 dock_id=dock_phase.dock_id.strip(),
-                description=dock_phase.description,
+                description=dock_phase.description or "",
                 client_id=dock_phase.client_id,
                 warehouse_id=dock_phase.warehouse_id,
                 dock_firmware_version=dock_phase.dock_firmware_version,
