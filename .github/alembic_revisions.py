@@ -93,7 +93,7 @@ def find_what_the_current_revision_is(subaccount, INPUT_DATABASE_SCHEMA):
     stdout = run('alembic current')
     m = re.search(r'(\w{12}).*$', stdout)
     current_revision_id = m.groups()[0] if m else ''
-    print(f'{INPUT_DATABASE_SCHEMA} database running in {subaccount} subaccount is on revision {current_revision_id}')
+    print(f'{INPUT_DATABASE_SCHEMA} database running in {subaccount} subaccount is on revision {current_revision_id}\n')
     return current_revision_id
 
 def find_out_whether_revision_is_upgrade_or_downgrade(INPUT_REVISION_ID, current_revision_id):

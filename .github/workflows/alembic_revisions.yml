@@ -92,5 +92,5 @@ jobs:
             $MAPPED_DATABASE_URI
 
       - name: Kill VPN Connection
-        run: killall openvpn
+        run: sudo killall openvpn
 
