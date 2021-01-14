@@ -34,7 +34,6 @@ def load_inputs():
     """
         Read the inputs from command line args passed by the GitHub workflow
     """
-    raise Exception(sys.argv)
     INPUT_DATABASE_URI = sys.argv[1]
     INPUT_DATABASE_SCHEMA = sys.argv[2]
     INPUT_REVISION_ID = sys.argv[3]
