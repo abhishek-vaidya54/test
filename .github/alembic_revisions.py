@@ -20,7 +20,7 @@ def run(cmd):
     """
     print('$', cmd)
     cmd_list = cmd.split(' ')
-    output = subprocess.run(cmd_list, capture_output=True)
+    output = subprocess.run(cmd_list, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     stdout = str(output.stdout, 'utf8')
     stderr = str(output.stderr, 'utf8')
     print(stdout, end='')
