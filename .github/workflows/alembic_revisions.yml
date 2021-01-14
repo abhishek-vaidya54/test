@@ -51,6 +51,7 @@ jobs:
         run: |
           pip install -r .github/requirements.txt
           sudo apt install alembic
+          sudo apt-get install python3-pymysql
 
       - name: prod Enviroment
         if: github.ref == 'refs/heads/master'
