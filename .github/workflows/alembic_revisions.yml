@@ -48,7 +48,9 @@ jobs:
         run: echo ${{  steps.connect_vpn.outputs.STATUS  }}
 
       - name: Install dependencies
-        run: pip install -r .github/requirements.txt
+        run: |
+          pip install -r .github/requirements.txt
+          alembic --help
 
       - name: prod Enviroment
         if: github.ref == 'refs/heads/master'
