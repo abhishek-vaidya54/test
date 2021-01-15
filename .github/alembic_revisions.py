@@ -1,6 +1,7 @@
 import os
 import re
 import subprocess
+import sys
 from enum import Enum
 
 class Direction(Enum):
@@ -19,7 +20,7 @@ def run(cmd):
     """
     print('$', cmd)
     cmd_list = cmd.split(' ')
-    output = subprocess.run(cmd_list, capture_output=True)
+    output = subprocess.run(cmd_list, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     stdout = str(output.stdout, 'utf8')
     stderr = str(output.stderr, 'utf8')
     print(stdout, end='')
@@ -31,11 +32,19 @@ def run(cmd):
 
 def load_inputs():
     """
-        Read the inputs from environemnt variables set by the GitHub workflow
+        Read the inputs from command line args passed by the GitHub workflow
     """
-    INPUT_DATABASE_URI = os.environ.get('INPUT_DATABASE_URI')
-    INPUT_REVISION_ID = os.environ.get('INPUT_REVISION_ID')
-    return INPUT_DATABASE_URI, INPUT_REVISION_ID
+    INPUT_DATABASE_URI = sys.argv[1]
+    INPUT_DATABASE_SCHEMA = sys.argv[2]
+    INPUT_REVISION_ID = sys.argv[3]
+    MAPPED_DATABASE_URI = sys.argv[4] if len(sys.argv) >= 4 else ''
+    if INPUT_DATABASE_URI == 'default_for_branch':
+        if MAPPED_DATABASE_URI == '':
+            raise Exception('This branch has no default database URI')
+        INPUT_DATABASE_URI = MAPPED_DATABASE_URI
+    INPUT_DATABASE_URI = f'{INPUT_DATABASE_URI}/{INPUT_DATABASE_SCHEMA}'
+    os.environ['INPUT_DATABASE_URI'] = INPUT_DATABASE_URI
+    return INPUT_DATABASE_URI, INPUT_DATABASE_SCHEMA, INPUT_REVISION_ID
 
 def parse_INPUT_DATABASE_URI_to_get_database_and_subaccount(INPUT_DATABASE_URI):
     """
@@ -56,21 +65,19 @@ def parse_INPUT_DATABASE_URI_to_get_database_and_subaccount(INPUT_DATABASE_URI):
         '''
         , re.X)
     m = pattern.match(INPUT_DATABASE_URI)
+    if not m:
+        raise Exception(f'Database URI is invalid: {INPUT_DATABASE_URI}')
     components = m.groupdict()
     host = components['host']
-    INPUT_DATABASE_URI
-    database = components['database']
     if (re.search(r'^\d{1,3}.\d{1,3}.\d{1,3}.\d{1,3}$', host)
         or host == 'localhost'):
         subaccount = 'local'
     else:
         if len(host.split('.')) > 1:
             subaccount = host.split('.')[1]
-    if not database:
-        raise Exception('Schema is unspedified')
-    return subaccount, database
+    return subaccount
 
-def find_what_the_current_revision_is(subaccount, database):
+def find_what_the_current_revision_is(subaccount, INPUT_DATABASE_SCHEMA):
     """
         Find the current revision ID is in the subaccount & database targetted
     """
@@ -79,14 +86,14 @@ def find_what_the_current_revision_is(subaccount, database):
         'dock': 'dockv5',
         'dockEvents': 'dockv5_eventslog'
     }
-    if not database in folder_mappings:
-        raise Exception(f'Unknown database "{database}"')
-    folder = folder_mappings[database]
+    if not INPUT_DATABASE_SCHEMA in folder_mappings:
+        raise Exception(f'Unknown database "{INPUT_DATABASE_SCHEMA}"')
+    folder = folder_mappings[INPUT_DATABASE_SCHEMA]
     os.chdir(folder)
     stdout = run('alembic current')
     m = re.search(r'(\w{12}).*$', stdout)
     current_revision_id = m.groups()[0] if m else ''
-    print(f'{database} database running in {subaccount} subaccount is on revision {current_revision_id}')
+    print(f'{INPUT_DATABASE_SCHEMA} database running in {subaccount} subaccount is on revision {current_revision_id}\n')
     return current_revision_id
 
 def find_out_whether_revision_is_upgrade_or_downgrade(INPUT_REVISION_ID, current_revision_id):
@@ -119,7 +126,7 @@ def find_out_whether_revision_is_upgrade_or_downgrade(INPUT_REVISION_ID, current
     if INPUT_REVISION_ID_index > current_revision_id_index:
         return Direction.DOWNGRADE
 
-def go_in_that_direction_to_that_revision(direction, INPUT_REVISION_ID, database, subaccount):
+def go_in_that_direction_to_that_revision(direction, INPUT_REVISION_ID, INPUT_DATABASE_SCHEMA, subaccount):
     """
         Run the actual alembic migration
     """
@@ -128,23 +135,23 @@ def go_in_that_direction_to_that_revision(direction, INPUT_REVISION_ID, database
     elif direction is Direction.DOWNGRADE:
         run(f'alembic downgrade {INPUT_REVISION_ID}')
     else:
-        print(f'{database} database running in {subaccount} subaccount is already on revision {INPUT_REVISION_ID}')
+        print(f'{INPUT_DATABASE_SCHEMA} database running in {subaccount} subaccount is already on revision {INPUT_REVISION_ID}')
 
 def main():
     """
         Main function that drives the program.  Reads the inputs and determines
         the necessary action to take to run the alembic migration
     """
-    INPUT_DATABASE_URI, INPUT_REVISION_ID = load_inputs()
-    subaccount, database =\
+    INPUT_DATABASE_URI, INPUT_DATABASE_SCHEMA, INPUT_REVISION_ID = load_inputs()
+    subaccount =\
         parse_INPUT_DATABASE_URI_to_get_database_and_subaccount(INPUT_DATABASE_URI)
-    current_revision_id = find_what_the_current_revision_is(subaccount, database)
+    current_revision_id = find_what_the_current_revision_is(subaccount, INPUT_DATABASE_SCHEMA)
     if INPUT_REVISION_ID == 'head':
         direction = Direction.UPGRADE
     else:
         direction =\
             find_out_whether_revision_is_upgrade_or_downgrade(INPUT_REVISION_ID, current_revision_id)
-    go_in_that_direction_to_that_revision(direction, INPUT_REVISION_ID, database, subaccount)
+    go_in_that_direction_to_that_revision(direction, INPUT_REVISION_ID, INPUT_DATABASE_SCHEMA, subaccount)
 
 if __name__ == "__main__":
     main()

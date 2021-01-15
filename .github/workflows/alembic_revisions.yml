@@ -6,9 +6,10 @@ on:
       databaseUri:
         description: 'Database URI'
         required: true
-        default: 'default for branch'
+        default: 'default_for_branch'
       databaseSchema:
-        description: 'Schema (ex: pipeline, dock, dockEvents).  Leave blank if inputting custom URI'
+        description: 'Schema (ex: pipeline, dock, dockEvents)'
+        required: true
       revisionId:
         description: 'Revision ID'
         required: true
@@ -27,10 +28,10 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Install Open VPN
-        run: sudo apt-get install openvpn
+        run: sudo apt install openvpn
 
       - name: Write .ovpn file
-        run: echo ${{  secrets.CONFIG_OVPN  }} > .github/vpn/config.ovpn
+        run: echo "${{  secrets.CONFIG_OVPN  }}" > .github/vpn/config.ovpn
       
       - name: Connect to VPN
         uses: golfzaptw/action-connect-ovpn@master
@@ -47,22 +48,49 @@ jobs:
         run: echo ${{  steps.connect_vpn.outputs.STATUS  }}
 
       - name: Install dependencies
-        run: pip install -r .github/requirements.txt
+        run: |
+          pip install -r .github/requirements.txt
+          sudo apt install alembic
+          sudo apt-get install python3-pymysql
+
+      - name: prod Enviroment
+        if: github.ref == 'refs/heads/master'
+        run: |
+          echo "MAPPED_DATABASE_URI=${{  secrets.MASTER_CONNECTION_STRING  }}" >> $GITHUB_ENV
+
+      - name: staging Enviroment
+        if: github.ref == 'refs/heads/staging'
+        run: |
+          echo "MAPPED_DATABASE_URI=${{  secrets.STAGING_CONNECTION_STRING  }}" >> $GITHUB_ENV
+
+      - name: dev Enviroment
+        if: github.ref == 'refs/heads/dev'
+        run: |
+          echo "MAPPED_DATABASE_URI=${{  secrets.DEV_CONNECTION_STRING  }}" >> $GITHUB_ENV
+
+      - name: dev3 Enviroment
+        if: github.ref == 'refs/heads/dev3'
+        run: |
+          echo "MAPPED_DATABASE_URI=${{  secrets.DEV3_CONNECTION_STRING  }}" >> $GITHUB_ENV
+
+      - name: dev4 Enviroment
+        if: github.ref == 'refs/heads/dev4'
+        run: |
+          echo "MAPPED_DATABASE_URI=${{  secrets.DEV4_CONNECTION_STRING  }}" >> $GITHUB_ENV
+
+      - name: alembic-release Enviroment
+        if: github.ref == 'refs/heads/alembic-release'
+        run: |
+          echo "MAPPED_DATABASE_URI=${{  secrets.ALEMBIC_RELEASE_CONNECTION_STRING  }}" >> $GITHUB_ENV
 
       - name: Determine which Alembic revision to jump to
-        env:
-          INPUT_DATABASE_URI: github.event.inputs.databaseUri
-          INPUT_REVISION_ID: github.event.inputs.revisionId
         run: |
-          # Map branch to appropriate default database URI
-          MAPPED_DATABASE_URI=`echo ${{  secrets.CONNECTION_STRINGS_MAP  }} | jq .${#/refs/heads/}`
-
-          # Builds the correct INPUT_DATABASE_URI if necessary
-          if [ "${INPUT_DATABASE_URI}" == "default for branch" ]; then; INPUT_DATABASE_URI="${MAPPED_DATABASE_URI}/${INPUT_DATABASESCHEMA}"; fi
-          export "${INPUT_DATABASE_URI}"
-
-          python .github/alembic_revisions.py
+          python3 .github/alembic_revisions.py \
+            ${{github.event.inputs.databaseUri}} \
+            ${{github.event.inputs.databaseSchema}} \
+            ${{github.event.inputs.revisionId}} \
+            $MAPPED_DATABASE_URI
 
       - name: Kill VPN Connection
-        run: killall openvpn
+        run: sudo killall openvpn
 

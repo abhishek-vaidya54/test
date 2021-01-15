@@ -3,8 +3,8 @@
 ## How to use
 1. Navigate to the Actions tab of the database_models repo [here](https://github.com/strongarm-tech/database_models/actions).
 2. Under All workflows, select Alembic Migrations, and click the Run workflow dropdown.
-3. In the first input, specify the appropriate database URI (with schema) only if it differs from the default for that branch.  Otherwise, leave as `default for branch`.  Refer to this [page](https://strongarm.atlassian.net/wiki/spaces/SPD/pages/1435369487/Segregated+Databases) for details.
-4. In the second input, specify the schema you are modifying.  This input is required if the above input is left as `default for branch`.  Otherwise it is ignored.
+3. In the first input, specify the appropriate database URI only if it differs from the default for that branch.  Otherwise, leave as `default_for_branch`.  Refer to this [page](https://strongarm.atlassian.net/wiki/spaces/SPD/pages/1435369487/Segregated+Databases) for details.
+4. In the second input, specify the schema you are modifying.
 5. In the third input, specify the alembic revision ID you would like the database to have at completion.
 6. Click Run workflow
 
@@ -13,14 +13,13 @@
 
 ## Notes
 1. By default, selecting a branch will automatically determine the appropriate subaccount to run the migrations against.  Explicitly setting a database URI will override this default
-2. The schema field is required if Database URI field as left as default.  Otherwise, it is ignored and schema must be specified as part of the database URI.
-3. By default, the Revision ID is set to head, meaning that alembic should upgrade to the latest revision.
-4. The underlying Python script attempts to find out which alembic revision ID the database is currently at and, using the provided target Revision ID, will determine if an upgrade or downgrade is necessary.  It will then implement that change.
+2. By default, the Revision ID is set to head, meaning that alembic should upgrade to the latest revision.
+3. The underlying Python script attempts to find out which alembic revision ID the database is currently at and, using the provided target Revision ID, will determine if an upgrade or downgrade is necessary.  It will then implement that change.
 
 ## Common Errors
-1. ### `Schema is unspedified`
+1. ### `Database URI is invalid`
 
-   Explicitly specified database URI did not contain schema or schema left blank despite using default database URI
+   The Database URI did not have all the necessary parts and is therefore invalid.
 
 2. ### `Unknown database "<schema>"`
 
