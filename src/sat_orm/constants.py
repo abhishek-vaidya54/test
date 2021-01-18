@@ -268,7 +268,7 @@ INVALID_LAT_LONG_MESSAGE = {
 
 IA_NAME_FORMAT_REGEX = {
     "FIRST_NAME_LAST_NAME": {
-        "First Name": "^[a-z]+(?:[ -.']?[a-z]+)*$",  # for maching strings with hyphen periods or single qoutes eg; a-a-aaaa-a
+        "First Name": "^[a-z]+(?:[ -.']?[a-z]+)*[.]?$",  # for maching strings with hyphen periods or single qoutes eg; a-a-aaaa-a or Aaaaa B.
         "Last Name": "^[a-z]+(?:[ -.']?[a-z]+)*$",  # for maching strings with hyphen or periods or single qoutes or spaces eg; a-a-aa aa-a
     },
     "FIRST_INITIAL_LAST_NAME": {
