@@ -191,7 +191,7 @@ def validate_before_insert(mapper, connection, target):
     )
     industry = target.industry if target.industry else ""
 
-    is_valid, message = utils.is_valid_string(name)
+    is_valid, message = warehouse_utils.is_valid_warehouse_name(connection, name)
     if not is_valid:
         errors.append(utils.build_error("name", message))
 
@@ -259,7 +259,9 @@ def validate_before_update(mapper, connection, target):
         errors.append(utils.build_error("id", constants.MISSING_ID_MESSAGE))
 
     if "name" in params_input:
-        is_valid, message = utils.is_valid_string(params_input.get("name", ""))
+        is_valid, message = warehouse_utils.is_valid_warehouse_name(
+            connection, params_input.get("name", ""), params_input.get("id", "")
+        )
         if not is_valid:
             errors.append(utils.build_error("name", message))
 
