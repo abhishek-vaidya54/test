@@ -23,6 +23,8 @@ class ExternalAdminUser(Base):
 
     id = Column(Integer, primary_key=True, autoincrement=True)
 
+    looker_user_id = Column(Integer, nullable= True)
+
     email = Column(String(255), nullable=False)
     username = Column(String(36), nullable=False)
 

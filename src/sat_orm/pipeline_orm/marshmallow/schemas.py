@@ -164,6 +164,7 @@ class UserRoleAssociationSchema(ModelSchema):
 
 class ExternalAdminUserSchema(ModelSchema):
     warehouseId = fields.Function(lambda obj: obj.warehouse.id)
+    looker_user_id = fields.Function(lambda obj: obj.looker_user_id)
     warehouse = fields.Function(lambda obj: obj.warehouse.name)
     warehouses = fields.Nested(
         UserWarehouseAssociationSchema(only=("warehouse",)), many=True
