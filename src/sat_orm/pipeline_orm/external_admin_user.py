@@ -25,19 +25,13 @@ class ExternalAdminUser(Base):
 
     email = Column(String(255), nullable=False)
     username = Column(String(36), nullable=False)
-
-    warehouse_id = Column(Integer, ForeignKey("warehouse.id"), nullable=False)
-    warehouse = relationship(Warehouse, backref=__tablename__)
-
-    warehouses = relationship(UserWarehouseAssociation, back_populates=__tablename__)
-
     client_id = Column(Integer, ForeignKey("client.id"), nullable=False)
-    client = relationship(Client, backref=__tablename__)
-
-    role = Column(String(20), nullable=True, server_default="manager")
-    roles = relationship(UserRoleAssociation, back_populates=__tablename__)
-
     is_active = Column(String(5), server_default="true")
+
+    #  Table relationships
+    client = relationship(Client, backref=__tablename__)
+    warehouses = relationship(UserWarehouseAssociation, back_populates=__tablename__)
+    roles = relationship(UserRoleAssociation, back_populates=__tablename__)
 
     db_created_at = Column(DateTime, default=datetime.datetime.utcnow, nullable=False)
     db_modified_at = Column(
@@ -61,13 +55,6 @@ class ExternalAdminUser(Base):
         else:
             return username
 
-    @validates("warehouse_id")
-    def validate_warehouse_id(self, key, warehouse_id):
-        if warehouse_id == None:
-            raise Exception("warehouse_id cannot be Null")
-        else:
-            return warehouse_id
-
     @validates("client_id")
     def validate_client_id(self, key, client_id):
         if client_id == None:
@@ -80,7 +67,6 @@ class ExternalAdminUser(Base):
             "id": self.id,
             "email": self.email,
             "username": self.username,
-            "warehouse_id": self.warehouse_id,
             "client_id": self.client_id,
             "db_created_at": self.db_created_at,
             "db_modified_at": self.db_modified_at,
@@ -91,7 +77,6 @@ class ExternalAdminUser(Base):
             "id": self.id,
             "email": self.email,
             "username": self.username,
-            "warehouseId": self.warehouse_id,
             "clientId": self.client_id,
         }
 
@@ -103,7 +88,6 @@ class ExternalAdminUser(Base):
             self.id == other.id
             and self.email == other.email
             and self.username == other.username
-            and self.warehouse_id == other.warehouse_id
             and self.client_id == other.client_id
             and self.db_created_at == other.db_created_at
             and self.db_modified_at == other.db_modified_at
@@ -114,7 +98,6 @@ class ExternalAdminUser(Base):
         external_admin_user = ExternalAdminUser(
             email=email,
             username=username,
-            warehouse_id=warehouse_id,
             client_id=client_id,
         )
         session.add(external_admin_user)
@@ -136,8 +119,6 @@ class ExternalAdminUser(Base):
             external_admin_user.email = email
         if username is not None:
             external_admin_user.username = username
-        if warehouse_id is not None:
-            external_admin_user.warehouse_id = warehouse_id
         if client_id is not None:
             external_admin_user.client_id = client_id
 
@@ -166,8 +147,6 @@ def validate_role_before_insert(mapper, connection, target):
 
     email = params_input.get("email", "").lower()
     client_id = params_input.get("client_id", "")
-    warehouse_id = params_input.get("warehouse_id", "")
-    role = params_input.get("role", "")
 
     is_valid = utils.is_valid_email(email)
     if not is_valid:
@@ -176,17 +155,6 @@ def validate_role_before_insert(mapper, connection, target):
     is_valid = client_utils.is_valid_client_id(connection, client_id)
     if not is_valid:
         errors.append(build_error("client_id", constants.INVALID_CLIENT_ID_MESSAGE))
-
-    is_valid = warehouse_utils.is_valid_warehouse(connection, warehouse_id, client_id)
-    if not is_valid:
-        errors.append(
-            build_error("warehouse_id", constants.INVALID_WAREHOUSE_ID_MESSAGE)
-        )
-
-    if role:
-        is_valid = role in constants.CREATE_VALID_ROLES
-        if not is_valid:
-            errors.append(build_error("role", constants.INVALID_ROLE_ERROR_MESSAGE))
 
     check_errors_and_return(errors)
 
@@ -202,21 +170,6 @@ def validate_role_before_update(mapper, connection, target):
         if value is not None:
             params_input[key] = value
     errors = []
-
-    is_valid = target.role in constants.RBAC_VALID_ROLES
-    if not is_valid:
-        errors.append(build_error("role", constants.INVALID_ROLE_ERROR_MESSAGE))
-
-    if "warehouse_id" in params_input:
-        is_valid = warehouse_utils.is_valid_warehouse(
-            connection,
-            params_input.get("warehouse_id", ""),
-            params_input.get("client_id", ""),
-        )
-        if not is_valid:
-            errors.append(
-                build_error("warehouse_id", constants.INVALID_WAREHOUSE_ID_MESSAGE)
-            )
 
     if "client_id" in params_input:
         is_valid = client_utils.is_valid_client_id(

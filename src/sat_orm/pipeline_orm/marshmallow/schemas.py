@@ -177,18 +177,7 @@ class ExternalAdminUserSchema(ModelSchema):
     def unwind_warehouses(self, data, many, **kwargs):
         if "warehouses" in data:
             data["warehouses"] = [
-                warehouse.get("warehouse")
-                for warehouse in (
-                    data.get("warehouses")
-                    or [
-                        {
-                            "warehouse": {
-                                "id": data.get("warehouseId"),
-                                "name": data.get("warehouse"),
-                            }
-                        }
-                    ]
-                )
+                warehouse.get("warehouse") for warehouse in data.get("warehouses")
             ]
 
         if "roles" in data:
