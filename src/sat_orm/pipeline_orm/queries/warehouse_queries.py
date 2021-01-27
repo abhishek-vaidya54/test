@@ -47,6 +47,6 @@ def get_warehouse_by_name(connection, name):
     Get the Warehouse via Name
     """
     warehouse = connection.execute(
-        "SELECT * FROM warehouse WHERE name='{}'".format(name)
+        f'SELECT * FROM warehouse WHERE name="{name}"'
     ).fetchone()
     return warehouse

@@ -16,10 +16,9 @@ def get_client_by_name(connection, name):
     """
     Get the Client via Name
     """
-    client = connection.execute(
-        "SELECT * FROM client WHERE name='{}'".format(name)
-    ).fetchone()
+    client = connection.execute(f'SELECT * FROM client WHERE name="{name}"').fetchone()
     return client
+
 
 def get_client_exists(connection, client_id):
     """
@@ -31,5 +30,5 @@ def get_client_exists(connection, client_id):
     """
     client = connection.execute(
         "SELECT * FROM client WHERE id='{}'".format(client_id)
-        ).scalar()
+    ).scalar()
     return client
