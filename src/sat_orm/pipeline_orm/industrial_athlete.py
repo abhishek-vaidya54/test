@@ -35,7 +35,7 @@ from sqlalchemy.orm import relationship, validates
 from sat_orm.pipeline_orm.pipeline_base import Base
 import sat_orm.constants as constants
 from sat_orm.pipeline_orm.utilities import utils
-from sat_orm.pipeline_orm.utilities import ia_utils
+from sat_orm.pipeline_orm.utilities import ia_utils, client_utils
 from sat_orm.pipeline_orm.utilities.utils import build_error, check_errors_and_return
 
 
@@ -198,6 +198,20 @@ def validate_before_insert(mapper, connection, target):
     if not is_valid:
         errors.append(build_error("sex", constants.INVALID_PARAM_SEX_MESSAGE))
 
+    is_valid = client_utils.is_valid_client_id(
+        connection, param_input.get("clientId", "")
+    )
+    if not is_valid:
+        errors.append(
+            utils.build_error("clientId", constants.INVALID_CLIENT_ID_MESSAGE)
+        )
+
+    is_valid = ia_utils.is_valid_warehouse(
+        connection, param_input.get("warehouseId", ""), target.client_id
+    )
+    if not is_valid:
+        errors.append(build_error("warehouseId", constants.INVALID_WAREHOUSE_MESSAGE))
+
     is_valid = ia_utils.is_valid_shift(
         connection, param_input.get("shiftId", ""), target.warehouse_id
     )
@@ -211,12 +225,6 @@ def validate_before_insert(mapper, connection, target):
         errors.append(
             build_error("jobFunctionId", constants.INVALID_JOB_FUNCTION_MESSAGE)
         )
-
-    is_valid = ia_utils.is_valid_warehouse(
-        connection, param_input.get("warehouseId", ""), target.client_id
-    )
-    if not is_valid:
-        errors.append(build_error("warehouseId", constants.INVALID_WAREHOUSE_MESSAGE))
 
     is_valid, date_obj = utils.is_valid_date(param_input.get("hireDate", ""))
     if not is_valid:
@@ -279,6 +287,24 @@ def validate_before_update(mapper, connection, target):
         if not is_valid:
             errors.append(build_error("sex", constants.INVALID_PARAM_SEX_MESSAGE))
 
+    if "clientId" in param_input:
+        is_valid = client_utils.is_valid_client_id(
+            connection, param_input.get("clientId", "")
+        )
+        if not is_valid:
+            errors.append(
+                utils.build_error("clientId", constants.INVALID_CLIENT_ID_MESSAGE)
+            )
+
+    if "warehouseId" in param_input:
+        is_valid = ia_utils.is_valid_warehouse(
+            connection, param_input.get("warehouseId", ""), ia.client_id
+        )
+        if not is_valid:
+            errors.append(
+                build_error("warehouseId", constants.INVALID_WAREHOUSE_MESSAGE)
+            )
+
     if "shiftId" in param_input:
         is_valid = ia_utils.is_valid_shift(
             connection,
@@ -297,15 +323,6 @@ def validate_before_update(mapper, connection, target):
         if not is_valid:
             errors.append(
                 build_error("jobFunctionId", constants.INVALID_JOB_FUNCTION_MESSAGE)
-            )
-
-    if "warehouseId" in param_input:
-        is_valid = ia_utils.is_valid_warehouse(
-            connection, param_input.get("warehouseId", ""), ia.client_id
-        )
-        if not is_valid:
-            errors.append(
-                build_error("warehouseId", constants.INVALID_WAREHOUSE_MESSAGE)
             )
 
     if "hireDate" in param_input:
