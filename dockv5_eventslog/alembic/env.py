@@ -7,12 +7,7 @@ import json
 from alembic import context
 from sqlalchemy import engine_from_config, pool, create_engine
 from logging.config import fileConfig
-from pygit2 import Repository
 from os.path import expanduser
-
-import hvac
-
-branch = Repository('../').head.shorthand  # 'master'
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -39,38 +34,21 @@ VAULT_TOKEN = os.environ.get('VAULT_TOKEN', '')
 # TODO: fix verify SSL error (and remove verify=False flag)
 def get_vault_config(configName):
   config = None
-  client = hvac.Client(url=VAULT_ADDR, token=VAULT_TOKEN,  verify=False)
-
-  # Read the database secret
-  secret = client.read('secret/database/' + configName)
-  if secret:
-      config = json.loads(secret['data']['value'])
-  
   return config
 
 def get_url():
-    creds = get_vault_config('dockEvents')
-
-    username = ''
-    if(branch == 'master'):
-        creds = creds['PROD']
-        username = creds['username']
-        password = creds['password']
-        hostname = creds['hostname']
-        database = creds['db']
+    # if running in GitHub Action CI/CD
+    if os.environ.get('CI'):
+        # grab the database uri input by the user
+        uri_interim = os.environ.get('INPUT_DATABASE_URI')
     else:
-        creds = creds['DEV']
-        username = creds['username']
-        password = creds['password']
-        hostname = creds['hostname']
-        database = creds['db']
-
-    return "mysql+pymysql://%s:%s@%s/%s" % (
-        os.getenv("DB_USER", username),
-        os.getenv("DB_PASSWORD", password),
-        os.getenv("DB_HOST", hostname),
-        os.getenv("DB_NAME", database)
-    )
+        local_db = os.environ.get('LOCAL_DOCKEVENTS_DB_URI')
+        dev_db = os.environ.get('DEV_DOCKEVENTS_DB_URI')
+        staging_db = os.environ.get('STAGING_DOCKEVENTS_DB_URI')
+        prod_db = os.environ.get('PROD_DOCKEVENTS_DB_URI')
+        uri_interim = local_db
+    print("datavase URI:", uri_interim)
+    return uri_interim
 
 def run_migrations_offline():
     """Run migrations in 'offline' mode.
