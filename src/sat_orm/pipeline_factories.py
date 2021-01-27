@@ -28,8 +28,8 @@ from sat_orm.pipeline import (
     AthleteUploadStatus,
     CasbinRule,
     Sensors,
+    Groups,
     UserWarehouseAssociation,
-    Groups
 )
 
 
@@ -50,6 +50,7 @@ class ClientFactory(factory.alchemy.SQLAlchemyModelFactory):
     status = factory.fuzzy.FuzzyChoice(["pilot", "deployment", "rollout", "inactive"])
     contracted_users = factory.fuzzy.FuzzyInteger(1, 999999)
     active_inactive_date = datetime.datetime.now()
+    ia_name_format = "ANONYMOUS"
 
     # @factory.post_generation
     # def warehouse(self,create,extracted, **kwargs):
@@ -308,6 +309,7 @@ class SensorsFactory(factory.alchemy.SQLAlchemyModelFactory):
     class Meta:
         model = Sensors
         sqlalchemy_session_persistence = "commit"
+
 
 class GroupsFactory(factory.alchemy.SQLAlchemyModelFactory):
     id = factory.Sequence(lambda n: n)
