@@ -13,6 +13,7 @@ from sat_orm.pipeline_orm.external_admin_user import ExternalAdminUser
 from sat_orm.pipeline_orm.groups import Groups
 from sat_orm.pipeline_orm.user_warehouse_association import UserWarehouseAssociation
 from sat_orm.pipeline_orm.user_role_association import UserRoleAssociation
+from sat_orm.pipeline_orm.user_client_association import UserClientAssociation
 
 
 def convert_date(date_input):
@@ -162,31 +163,34 @@ class UserRoleAssociationSchema(ModelSchema):
         load_instance = True
 
 
+class UserClientAssociationSchema(ModelSchema):
+    client = fields.Nested(WarehouseSchema(only=("id", "name")))
+
+    class Meta:
+        model = UserClientAssociation
+        include_fk = True
+        include_relationships = True
+        load_instance = True
+
+
 class ExternalAdminUserSchema(ModelSchema):
-    warehouseId = fields.Function(lambda obj: obj.warehouse.id)
-    warehouse = fields.Function(lambda obj: obj.warehouse.name)
     warehouses = fields.Nested(
         UserWarehouseAssociationSchema(only=("warehouse",)), many=True
     )
-    role = fields.Function(lambda obj: (obj.role or "manager"))
     roles = fields.Nested(UserRoleAssociationSchema(only=("role",)), many=True)
-    clientId = fields.Function(lambda obj: obj.client.id)
-    client = fields.Function(lambda obj: obj.client.name)
+    clients = fields.Nested(UserClientAssociationSchema(only=("client",)), many=True)
 
     @post_dump(pass_many=True)
     def unwind_warehouses(self, data, many, **kwargs):
-        if "warehouses" in data:
-            data["warehouses"] = [
-                warehouse.get("warehouse") for warehouse in data.get("warehouses")
-            ]
+        to_be_modified = {
+            "warehouses": "warehouse",
+            "roles": "role",
+            "clients": "client",
+        }
+        for key, value in to_be_modified.items():
+            if key in data:
+                data[key] = [obj.get(value) for obj in data.get(key)]
 
-        if "roles" in data:
-            data["roles"] = [
-                role.get("role")
-                for role in (
-                    data.get("roles") or [{"role": data.get("role") or "manager"}]
-                )
-            ]
         return data
 
     class Meta:
