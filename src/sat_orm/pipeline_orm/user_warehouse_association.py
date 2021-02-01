@@ -87,7 +87,7 @@ def validate_role_before_insert(mapper, connection, target):
         )
 
     is_valid = warehouse_utils.is_valid_warehouse(
-        connection, params_input.get("warehouse_id"), is_valid.client_id or None
+        connection, params_input.get("warehouse_id"), None
     )
     if not is_valid:
         errors.append(
