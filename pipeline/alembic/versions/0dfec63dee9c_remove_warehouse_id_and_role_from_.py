@@ -38,6 +38,18 @@ def upgrade():
 
 
 def downgrade():
+    bind = op.get_bind()
+    session = orm.Session(bind=bind)
+
+    # Need to fix all incorrect dates in table first before running
+    session.execute(
+        """
+            UPDATE external_admin_user SET db_modified_at=CURRENT_TIMESTAMP(), db_created_at=CURRENT_TIMESTAMP()
+            WHERE db_created_at='0000-00-00 00:00:00' OR db_modified_at='0000-00-00 00:00:00';
+        """
+    )
+    session.commit()
+
     op.add_column(
         "external_admin_user",
         sa.Column("warehouse_id", sa.Integer(), nullable=False, server_default="45"),
@@ -48,18 +60,13 @@ def downgrade():
             "role", sa.String(length=20), nullable=False, server_default="manager"
         ),
     )
-    # Need to fix all incorrect dates in the `external_admin_user` table first before running it
-    # for ex - '0000-00-00 00:00:00'
-    # op.create_foreign_key(
-    #     "fk_ext_admin_user_warehouse",
-    #     "external_admin_user",
-    #     "warehouse",
-    #     ["warehouse_id"],
-    #     ["id"],
-    # )
-
-    bind = op.get_bind()
-    session = orm.Session(bind=bind)
+    op.create_foreign_key(
+        "fk_ext_admin_user_warehouse",
+        "external_admin_user",
+        "warehouse",
+        ["warehouse_id"],
+        ["id"],
+    )
 
     users = session.execute(
         """
