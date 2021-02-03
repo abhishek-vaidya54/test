@@ -34,7 +34,7 @@ from sqlalchemy import (
     event,
 )
 from sqlalchemy.orm import relationship, validates
-from sqlalchemy.dialects.mysql TIME
+from sqlalchemy.dialects.mysql import TIME
 
 # Local Application Import
 from sat_orm.pipeline_orm.pipeline_base import Base
@@ -59,7 +59,8 @@ class Warehouse(Base):
         onupdate=datetime.datetime.utcnow,
         nullable=False,
     )
-    app_restart_at = Column(TIME(),
+    app_restart_at = Column(
+        TIME(),
         nullable=True,
     )
     prefered_timezone = Column(String(100), server_default="UTC", nullable=False)
