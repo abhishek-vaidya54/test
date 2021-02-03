@@ -82,7 +82,7 @@ class WarehouseSchema(SQLAlchemyAutoSchema):
 
 
 class JobFunctionSchema(SQLAlchemyAutoSchema):
-    warehouse = fields.Nested(WarehouseSchema(only=("id", "name")))
+    warehouse = fields.Nested(WarehouseSchema(only=("id", "name", "client")))
     warehouse_id = fields.Function(
         lambda obj: obj.warehouse.id if obj.warehouse else None
     )
