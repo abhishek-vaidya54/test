@@ -17,11 +17,23 @@ from sat_orm.pipeline_orm.user_client_association import UserClientAssociation
 
 
 def convert_date(date_input):
-    return datetime.strptime(str(date_input), "%Y-%m-%d %H:%M:%S").strftime("%m/%d/%Y")
+    try:
+        converted = datetime.strptime(str(date_input), "%Y-%m-%d %H:%M:%S").strftime(
+            "%m/%d/%Y"
+        )
+        return converted
+    except:
+        return ""
 
 
 def convert_time(date_input):
-    return datetime.strptime(str(date_input), "%Y-%m-%d %H:%M:%S").strftime("%H:%M:%S")
+    try:
+        converted = datetime.strptime(str(date_input), "%Y-%m-%d %H:%M:%S").strftime(
+            "%H:%M:%S"
+        )
+        return converted
+    except:
+        return ""
 
 
 class ShiftsSchema(SQLAlchemyAutoSchema):
@@ -108,11 +120,13 @@ class IndustrialAthleteSchema(ModelSchema):
     warehouse = fields.Nested(WarehouseSchema(only=("id", "name")))
     shifts = fields.Nested(ShiftsSchema(only=("id", "name")))
     job_function = fields.Nested(JobFunctionSchema(only=("id", "name")))
+    client = fields.Nested(ClientSchema(only=("id", "name")))
 
     firstName = fields.Function(lambda obj: obj.first_name)
     lastName = fields.Function(lambda obj: obj.last_name)
     externalId = fields.Function(lambda obj: obj.external_id)
     sex = fields.Function(lambda obj: obj.gender)
+    clientId = fields.Function(lambda obj: obj.client.id)
     warehouseId = fields.Function(lambda obj: obj.warehouse_id)
     shiftId = fields.Function(lambda obj: obj.shift_id)
     shift = fields.Function(lambda obj: obj.shifts.name if obj.shifts else None)
@@ -132,10 +146,10 @@ class IndustrialAthleteSchema(ModelSchema):
 
     @post_dump(pass_many=True)
     def add_fields(self, data, many, **kwargs):
-        if "warehouse" in data:
-            data["warehouse"] = (
-                data["warehouse"]["name"] if data.get("warehouse") else None
-            )
+        for key in ("client", "warehouse"):
+            if key in data:
+                data[key] = data[key]["name"] if data.get(key) else None
+
         return data
 
     class Meta:
