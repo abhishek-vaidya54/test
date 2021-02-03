@@ -31,6 +31,12 @@ def upgrade():
     )
 
 
-def downgrade():    
-    pass
-    #Todo: If we want to remove this migration we need to specificly add here as its an alteration of existing migration, we have to fix this whenever we re-migrate everything.
+def downgrade():   
+    op.alter_column(
+        "warehouse",
+        sa.Column(
+            "app_restart_at",
+            sa.DateTime,
+            nullable=True,
+        ),
+    )
