@@ -17,17 +17,21 @@ depends_on = None
 
 
 def upgrade():
-    op.alter_column(
+    op.drop_column("warehouse", "app_restart_at")
+    op.add_column(
         "warehouse",
         sa.Column(
             "app_restart_at",
             sa.TIME(),
-            nullable=True,
+            server_default=str(
+            datetime.datetime.now().replace(hour=0, minute=0, second=0).strftime("%H:%M:%S")
+            ),
+            nullable=False,
         ),
     )
 
 
-def downgrade():
+def downgrade():   
     op.alter_column(
         "warehouse",
         sa.Column(
