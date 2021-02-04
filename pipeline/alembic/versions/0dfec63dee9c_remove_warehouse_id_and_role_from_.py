@@ -38,19 +38,48 @@ def upgrade():
 
 
 def downgrade():
-    pass
-    # op.add_column(
-    #     "external_admin_user",
-    #     sa.Column("warehouse_id", sa.Integer(), nullable=False, server_default="45"),
-    # )
-    # op.add_column(
-    #     "external_admin_user",
-    #     sa.Column("role", sa.String(length=20), nullable=False),
-    # )
-    # op.create_foreign_key(
-    #     "fk_ext_admin_user_warehouse",
-    #     "external_admin_user",
-    #     "warehouse",
-    #     ["warehouse_id"],
-    #     ["id"],
-    # )
+    bind = op.get_bind()
+    session = orm.Session(bind=bind)
+
+    # Need to fix all incorrect dates in table first before running
+    session.execute(
+        """
+            UPDATE external_admin_user SET db_modified_at=CURRENT_TIMESTAMP(), db_created_at=CURRENT_TIMESTAMP()
+            WHERE db_created_at='0000-00-00 00:00:00' OR db_modified_at='0000-00-00 00:00:00';
+        """
+    )
+    session.commit()
+
+    op.add_column(
+        "external_admin_user",
+        sa.Column("warehouse_id", sa.Integer(), nullable=False, server_default="45"),
+    )
+    op.add_column(
+        "external_admin_user",
+        sa.Column(
+            "role", sa.String(length=20), nullable=False, server_default="manager"
+        ),
+    )
+    op.create_foreign_key(
+        "fk_ext_admin_user_warehouse",
+        "external_admin_user",
+        "warehouse",
+        ["warehouse_id"],
+        ["id"],
+    )
+
+    users = session.execute(
+        """
+            SELECT u.id, uwa.warehouse_id, ura.role FROM external_admin_user u
+            INNER JOIN user_warehouse_association uwa ON (u.id = uwa.external_admin_user_id)
+            INNER JOIN user_role_association ura ON (u.id = ura.external_admin_user_id)
+        """
+    )
+
+    for user in users:
+        session.execute(
+            f"UPDATE external_admin_user SET warehouse_id={user.warehouse_id}, role='{user.role}' WHERE id={user.id}"
+        )
+
+    session.commit()
+    session.close()

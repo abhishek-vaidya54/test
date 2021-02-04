@@ -34,6 +34,7 @@ from sqlalchemy import (
     event,
 )
 from sqlalchemy.orm import relationship, validates
+from sqlalchemy.dialects.mysql import TIME
 
 # Local Application Import
 from sat_orm.pipeline_orm.pipeline_base import Base
@@ -59,13 +60,8 @@ class Warehouse(Base):
         nullable=False,
     )
     app_restart_at = Column(
-        DateTime,
-        server_default=str(
-            datetime.datetime.utcnow().replace(
-                hour=0, minute=0, second=0, microsecond=0
-            )
-        ),
-        nullable=False,
+        TIME(),
+        nullable=True,
     )
     prefered_timezone = Column(String(100), server_default="UTC", nullable=False)
     algo_version = Column(Integer, nullable=True)
@@ -191,7 +187,7 @@ def validate_before_insert(mapper, connection, target):
     )
     industry = target.industry if target.industry else ""
 
-    is_valid, message = utils.is_valid_string(name)
+    is_valid, message = warehouse_utils.is_valid_warehouse_name(connection, name)
     if not is_valid:
         errors.append(utils.build_error("name", message))
 
@@ -259,7 +255,9 @@ def validate_before_update(mapper, connection, target):
         errors.append(utils.build_error("id", constants.MISSING_ID_MESSAGE))
 
     if "name" in params_input:
-        is_valid, message = utils.is_valid_string(params_input.get("name", ""))
+        is_valid, message = warehouse_utils.is_valid_warehouse_name(
+            connection, params_input.get("name", ""), params_input.get("id", "")
+        )
         if not is_valid:
             errors.append(utils.build_error("name", message))
 
