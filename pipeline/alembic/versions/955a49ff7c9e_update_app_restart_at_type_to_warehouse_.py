@@ -26,7 +26,7 @@ def upgrade():
             server_default=str(
             datetime.datetime.now().replace(hour=0, minute=0, second=0).strftime("%H:%M:%S")
             ),
-            nullable=False,
+            nullable=True,
         ),
     )
 
