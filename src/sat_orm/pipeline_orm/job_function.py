@@ -31,6 +31,7 @@ from sqlalchemy import (
     Boolean,
     PrimaryKeyConstraint,
     event,
+    Enum,
 )
 from sqlalchemy.orm import relationship, validates
 
@@ -50,6 +51,11 @@ class JobFunction(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     warehouse_id = Column(Integer, ForeignKey("warehouse.id"), nullable=False)
     name = Column(String(255), nullable=False)
+    package_unit = Column(
+        Enum("KG", "LBS"),
+        nullable=False,
+        default="LBS",
+    )
     max_package_mass = Column(Float, default=6.6)
     group_administrator = Column(String(255), nullable=False)
     max_package_weight = Column(Integer, nullable=True)
@@ -109,6 +115,7 @@ class JobFunction(Base):
         return {
             "id": self.id,
             "name": self.name,
+            "package_unit": self.package_unit,
             "group_administrator": self.group_administrator,
             "description": self.description,
             "warehouse_id": self.warehouse_id,
@@ -175,6 +182,14 @@ def validate_before_insert(mapper, connection, target):
     if not is_valid:
         errors.append(build_error("max_package_weight", message))
 
+    if "package_unit" in params_input:
+        is_valid = job_function_utils.is_valid_package_unit(
+            params_input.get("package_unit", "")
+        )
+        if not is_valid:
+            errors.append(
+                build_error("package_unit", constants.INVALID_PACKAGE_UNITS_MESSAGE)
+            )
     check_errors_and_return(errors)
 
 
@@ -240,5 +255,14 @@ def validate_before_update(mapper, connection, target):
         )
         if not is_valid:
             errors.append(build_error("max_package_weight", message))
+
+    if "package_unit" in params_input:
+        is_valid = job_function_utils.is_valid_package_unit(
+            params_input.get("package_unit", "")
+        )
+        if not is_valid:
+            errors.append(
+                build_error("package_unit", constants.INVALID_PACKAGE_UNITS_MESSAGE)
+            )
 
     check_errors_and_return(errors)
