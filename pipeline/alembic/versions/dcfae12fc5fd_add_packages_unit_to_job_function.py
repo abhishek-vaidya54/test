@@ -1,7 +1,7 @@
 """add_packages_unit_to_job_function
 
 Revision ID: dcfae12fc5fd
-Revises: 0dfec63dee9c
+Revises: 160984874ff3
 Create Date: 2021-02-02 15:49:31.601900
 
 """
@@ -11,7 +11,7 @@ import sqlalchemy as sa
 
 # revision identifiers, used by Alembic.
 revision = "dcfae12fc5fd"
-down_revision = "0dfec63dee9c"
+down_revision = "160984874ff3"
 branch_labels = None
 depends_on = None
 
