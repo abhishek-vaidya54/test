@@ -9,6 +9,7 @@ from sqlalchemy import create_engine, func
 from sqlalchemy.orm import sessionmaker
 import time
 import copy
+import uuid
 
 # Local Application Import
 from sat_orm.pipeline_factories import (
@@ -43,7 +44,7 @@ from sat_orm.pipeline import (
     Sensors,
     Groups,
 )
-from sat_orm.test.test_database.test_database_setup import create_test_pipeline
+from sat_orm.test.test_database.test_database_setup import create_test_db
 from sat_orm import constants
 
 # import sat_orm.constants as constants
@@ -97,7 +98,7 @@ def pytest_configure(config):
 
 @pytest.fixture(scope="session")
 def test_session():
-    is_created, error = create_test_pipeline()
+    is_created, error = create_test_db("pipeline")
     if is_created:
         os.environ[
             "PIPELINE_CONNECTION_STRING"
@@ -186,6 +187,7 @@ def test_session():
     else:
         RuntimeError(error)
 
+
 # Random Database Objects
 @pytest.fixture(scope="session", autouse=True)
 def get_external_admin_user(test_session):
@@ -213,7 +215,7 @@ def get_external_admin_user(test_session):
             warehouse=new_warehouse,
             shifts=new_shift,
             job_function=new_jf,
-            external_id=str(uuid.uuid4()),
+            external_id= str(uuid.uuid4())
         )
         ImportedIndustrialAthleteFactory(
             athlete_upload_status=athlete_upload_status,
