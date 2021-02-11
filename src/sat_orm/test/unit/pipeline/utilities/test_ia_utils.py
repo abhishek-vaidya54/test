@@ -105,7 +105,7 @@ def test_is_valid_warehouse_valid(get_external_admin_user, test_session):
             True
     """
     
-    result = ia_utils.is_valid_warehouse(test_session, get_external_admin_user.warehouse_id)
+    result = ia_utils.is_valid_warehouse(test_session, get_external_admin_user.warehouses[0].warehouse_id)
     assert result
 
 def test_is_valid_warehouse_invalid(invalid_id, test_session):

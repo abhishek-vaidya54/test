@@ -48,10 +48,10 @@ def test_warehouse_factory_industrial_athlete(warehouse_factory):
     assert len(industrial_athletes) == 25
 
 @pytest.mark.test_factories
-def test_client_factory_warehouse(client_factory):
-    c_factory = client_factory
-    warehouses = c_factory.warehouses
-    assert len(warehouses) == 3
+def test_client_factory_warehouse(get_external_admin_user):
+    client = get_external_admin_user.client
+    warehouses = client.warehouses
+    assert warehouses
 
 
 

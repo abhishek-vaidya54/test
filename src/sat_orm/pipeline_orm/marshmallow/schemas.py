@@ -163,12 +163,9 @@ class UserRoleAssociationSchema(ModelSchema):
 
 
 class ExternalAdminUserSchema(ModelSchema):
-    warehouseId = fields.Function(lambda obj: obj.warehouse.id)
-    warehouse = fields.Function(lambda obj: obj.warehouse.name)
     warehouses = fields.Nested(
         UserWarehouseAssociationSchema(only=("warehouse",)), many=True
     )
-    role = fields.Function(lambda obj: (obj.role or "manager"))
     roles = fields.Nested(UserRoleAssociationSchema(only=("role",)), many=True)
     clientId = fields.Function(lambda obj: obj.client.id)
     client = fields.Function(lambda obj: obj.client.name)
