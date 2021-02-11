@@ -282,7 +282,7 @@ def validate_before_update(mapper, connection, target):
         if not is_valid:
             errors.append(utils.build_error("number_of_user_allocated", message))
 
-    for key in ["city", "state", "country"]:
+    for key in ["country"]:
         if getattr(target, key, None) is not None:
             is_valid, message = utils.is_valid_string(getattr(target, key))
             if not is_valid:
