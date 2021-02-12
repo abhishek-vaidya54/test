@@ -54,6 +54,8 @@ INVALID_REQUEST = "Invalid request."
 
 DUPLICATE_CLIENT_NAME_MESSAGE = "Client Name already exists."
 
+DUPLICATE_WAREHOUSE_NAME_MESSAGE = "Warehouse Name already exists."
+
 INVALID_CLIENT_STATUS_MESSAGE = "Invalid client status."
 
 INVALID_CLIENT_IA_NAME_FORMAT_MESSAGE = "Invalid client ia name format."
@@ -297,6 +299,10 @@ VALID_IA_HEIGHT_UNITS = ("INCH", "CM")
 
 VALID_IA_WEIGHT_UNITS = ("LBS", "KG")
 
+VALID_PACKAGE_UNITS = ("LBS", "KG")
+
 INVALID_IA_HEIGHT_UNIT_MESSAGE = "Invalid height unit; Should be one of INCH or CM."
 
 INVALID_IA_WEIGHT_UNIT_MESSAGE = "Invalid weight unit; Should be one of LBS or KG."
+
+INVALID_PACKAGE_UNIT_MESSAGE = "Invalid weight unit; Should be one of LBS or KG."
