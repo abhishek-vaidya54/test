@@ -16,7 +16,7 @@ def get_client_by_name(connection, name):
     """
     Get the Client via Name
     """
-    client = connection.execute(f'SELECT * FROM client WHERE name=\"{name}\"').fetchone()
+    client = connection.execute(f'SELECT * FROM client WHERE name="{name}"').fetchone()
     return client
 
 
