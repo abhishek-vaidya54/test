@@ -2,6 +2,7 @@
 
 Revision ID: 86bc75340eb7
 Revises: dcfae12fc5fd
+
 Create Date: 2020-12-23 14:30:55.906520
 
 """
@@ -12,6 +13,7 @@ import sqlalchemy as sa
 # revision identifiers, used by Alembic.
 revision = "86bc75340eb7"
 down_revision = "dcfae12fc5fd"
+
 branch_labels = None
 depends_on = None
 
