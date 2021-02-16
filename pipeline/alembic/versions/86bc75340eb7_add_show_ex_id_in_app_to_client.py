@@ -1,7 +1,8 @@
 """add show_ex_id_in_app to client
 
 Revision ID: 86bc75340eb7
-Revises: dfc30fb88fee
+Revises: dcfae12fc5fd
+
 Create Date: 2020-12-23 14:30:55.906520
 
 """
@@ -11,7 +12,8 @@ import sqlalchemy as sa
 
 # revision identifiers, used by Alembic.
 revision = "86bc75340eb7"
-down_revision = "dfc30fb88fee"
+down_revision = "dcfae12fc5fd"
+
 branch_labels = None
 depends_on = None
 
