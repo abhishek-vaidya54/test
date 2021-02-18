@@ -93,6 +93,7 @@ class Warehouse(Base):
         nullable=True,
         default="N",
     )
+    timezone = Column(String(50), default="UTC", nullable=False)
 
     # Table Constraints
     PrimaryKeyConstraint("id")
@@ -161,6 +162,7 @@ class Warehouse(Base):
             "longitude": self.longitude,
             "lat_direction": self.lat_direction,
             "long_direction": self.long_direction,
+            "timezone": self.timezone,
         }
 
     def __repr__(self):
@@ -231,6 +233,10 @@ def validate_before_insert(mapper, connection, target):
                         key, key + constants.INVALID_LAT_LONG_DIRECTION_MESSAGE
                     )
                 )
+
+    is_valid = params_input.get("timezone", "") in constants.VALID_TIMEZONES
+    if not is_valid:
+        errors.append(utils.build_error("timezone", constants.INVALID_TIMEZONE_MESSAGE))
 
     utils.check_errors_and_return(errors)
 
@@ -307,5 +313,12 @@ def validate_before_update(mapper, connection, target):
                         key, key + constants.INVALID_LAT_LONG_DIRECTION_MESSAGE
                     )
                 )
+
+    if "timezone" in params_input:
+        is_valid = params_input.get("timezone", "") in constants.VALID_TIMEZONES
+        if not is_valid:
+            errors.append(
+                utils.build_error("timezone", constants.INVALID_TIMEZONE_MESSAGE)
+            )
 
     utils.check_errors_and_return(errors)
