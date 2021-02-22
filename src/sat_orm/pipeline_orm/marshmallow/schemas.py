@@ -67,7 +67,9 @@ class WarehouseSchema(SQLAlchemyAutoSchema):
 
 
 class ShiftsSchema(SQLAlchemyAutoSchema):
-    warehouse = fields.Nested(WarehouseSchema(only=("id", "name", "client")))
+    warehouse = fields.Nested(
+        WarehouseSchema(only=("id", "name", "client", "timezone"))
+    )
     shift_start = fields.Function(
         lambda obj: convert_time(obj.shift_start) if obj.shift_start else None
     )
