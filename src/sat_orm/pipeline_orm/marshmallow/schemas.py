@@ -36,21 +36,6 @@ def convert_time(date_input):
         return ""
 
 
-class ShiftsSchema(SQLAlchemyAutoSchema):
-    shift_start = fields.Function(
-        lambda obj: convert_time(obj.shift_start) if obj.shift_start else None
-    )
-    shift_end = fields.Function(
-        lambda obj: convert_time(obj.shift_end) if obj.shift_end else None
-    )
-
-    class Meta:
-        model = Shifts
-        include_fk = True
-        include_relationships = True
-        load_instance = True
-
-
 class SettingSchema(SQLAlchemyAutoSchema):
     class Meta:
         model = Setting
@@ -77,6 +62,22 @@ class WarehouseSchema(SQLAlchemyAutoSchema):
 
     class Meta:
         model = Warehouse
+        include_relationships = True
+        load_instance = True
+
+
+class ShiftsSchema(SQLAlchemyAutoSchema):
+    warehouse = fields.Nested(WarehouseSchema(only=("id", "name", "client")))
+    shift_start = fields.Function(
+        lambda obj: convert_time(obj.shift_start) if obj.shift_start else None
+    )
+    shift_end = fields.Function(
+        lambda obj: convert_time(obj.shift_end) if obj.shift_end else None
+    )
+
+    class Meta:
+        model = Shifts
+        include_fk = True
         include_relationships = True
         load_instance = True
 
