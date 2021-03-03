@@ -93,7 +93,6 @@ class Warehouse(Base):
         nullable=True,
         default="N",
     )
-    timezone = Column(String(50), default="UTC", nullable=False)
 
     # Table Constraints
     PrimaryKeyConstraint("id")
@@ -162,7 +161,7 @@ class Warehouse(Base):
             "longitude": self.longitude,
             "lat_direction": self.lat_direction,
             "long_direction": self.long_direction,
-            "timezone": self.timezone,
+            "timezone": self.prefered_timezone,
         }
 
     def __repr__(self):
