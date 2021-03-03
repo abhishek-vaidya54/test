@@ -59,6 +59,7 @@ class ClientSchema(SQLAlchemyAutoSchema):
 class WarehouseSchema(SQLAlchemyAutoSchema):
     client = fields.Nested(ClientSchema(only=("id", "name")))
     client_id = fields.Function(lambda obj: obj.client.id)
+    timezone = fields.Function(lambda obj: obj.prefered_timezone)
 
     class Meta:
         model = Warehouse
