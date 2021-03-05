@@ -2,14 +2,12 @@
 LICENSE:
     This file is subject to the terms and conditions defined in
     file 'LICENSE.txt', which is part of this source code package.
- 
-CONTRIBUTORS: 
+
+CONTRIBUTORS:
             Vincent Turnier
             Hashmat Ibrahimi
-
-CLASSIFICATION: 
-            Highly Sensitive 
-
+CLASSIFICATION:
+            Highly Sensitive
     **** Add Contributors name if you have contributed to this file ****
 *********************************************************************************
 """
@@ -25,24 +23,22 @@ from sqlalchemy.orm import relationship
 # Local Application Import
 from sat_orm.pipeline_orm.pipeline_base import Base
 import sat_orm.constants as constants
-from sat_orm.pipeline_orm.utilities import external_admin_user_utils, warehouse_utils
+from sat_orm.pipeline_orm.utilities import external_admin_user_utils, client_utils
 from sat_orm.pipeline_orm.utilities.utils import build_error, check_errors_and_return
 
 
-class UserWarehouseAssociation(Base):
-    __tablename__ = "user_warehouse_association"
+class UserClientAssociation(Base):
+    __tablename__ = "user_client_association"
 
     external_admin_user_id = Column(
         Integer, ForeignKey("external_admin_user.id"), primary_key=True
     )
-    warehouse_id = Column(Integer, ForeignKey("warehouse.id"), primary_key=True)
+    client_id = Column(Integer, ForeignKey("client.id"), primary_key=True)
 
     external_admin_user = relationship(
-        "ExternalAdminUser",
-        uselist=False,
-        back_populates="warehouses",
+        "ExternalAdminUser", uselist=False, back_populates="clients"
     )
-    warehouse = relationship("Warehouse", uselist=False, backref="external_admin_users")
+    client = relationship("Client", uselist=False, backref="external_admin_users")
 
     db_created_at = Column(DateTime, default=datetime.datetime.utcnow, nullable=False)
     db_modified_at = Column(
@@ -55,20 +51,20 @@ class UserWarehouseAssociation(Base):
     def as_dict(self):
         return {
             "external_admin_user_id": self.external_admin_user_id,
-            "warehouse_id": self.warehouse_id,
+            "client_id": self.client_id,
             "external_admin_user": self.external_admin_user,
-            "warehouse": self.warehouse,
+            "client": self.client,
         }
 
     def __repr__(self):
         return str(self.as_dict())
 
 
-@event.listens_for(UserWarehouseAssociation, "before_insert")
+@event.listens_for(UserClientAssociation, "before_insert")
 def validate_role_before_insert(mapper, connection, target):
     """
     Event hook method that fires before insert
-    to check if params are valid for inserting a single external_admin_user and warehouse association
+    to check if params are valid for inserting a single external_admin_user and client association
     """
     params_input = {}
     for key, value in target.as_dict().items():
@@ -86,12 +82,10 @@ def validate_role_before_insert(mapper, connection, target):
             )
         )
 
-    is_valid = warehouse_utils.is_valid_warehouse(
-        connection, params_input.get("warehouse_id"), None
+    is_valid = client_utils.is_valid_client_id(
+        connection, params_input.get("client_id")
     )
     if not is_valid:
-        errors.append(
-            build_error("warehouse_id", constants.INVALID_WAREHOUSE_ID_MESSAGE)
-        )
+        errors.append(build_error("client_id", constants.INVALID_CLIENT_ID_MESSAGE))
 
     check_errors_and_return(errors)

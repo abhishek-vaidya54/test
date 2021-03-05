@@ -244,10 +244,10 @@ def validate_before_update(mapper, connection, target):
                 )
             )
 
-    if "description" in params_input:
-        is_valid, message = utils.is_valid_string(params_input.get("description", ""))
-        if not is_valid:
-            errors.append(build_error("description", message))
+    # if "description" in params_input:
+    #     is_valid, message = utils.is_valid_string(params_input.get("description", ""))
+    #     if not is_valid:
+    #         errors.append(build_error("description", message))
 
     if "max_package_weight" in params_input:
         is_valid, message = utils.is_valid_float(
