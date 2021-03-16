@@ -13,29 +13,27 @@ from sat_orm.pipeline_orm.external_admin_user import ExternalAdminUser
 from sat_orm.pipeline_orm.groups import Groups
 from sat_orm.pipeline_orm.user_warehouse_association import UserWarehouseAssociation
 from sat_orm.pipeline_orm.user_role_association import UserRoleAssociation
+from sat_orm.pipeline_orm.user_client_association import UserClientAssociation
 
 
 def convert_date(date_input):
-    return datetime.strptime(str(date_input), "%Y-%m-%d %H:%M:%S").strftime("%m/%d/%Y")
+    try:
+        converted = datetime.strptime(str(date_input), "%Y-%m-%d %H:%M:%S").strftime(
+            "%m/%d/%Y"
+        )
+        return converted
+    except:
+        return ""
 
 
 def convert_time(date_input):
-    return datetime.strptime(str(date_input), "%Y-%m-%d %H:%M:%S").strftime("%H:%M:%S")
-
-
-class ShiftsSchema(SQLAlchemyAutoSchema):
-    shift_start = fields.Function(
-        lambda obj: convert_time(obj.shift_start) if obj.shift_start else None
-    )
-    shift_end = fields.Function(
-        lambda obj: convert_time(obj.shift_end) if obj.shift_end else None
-    )
-
-    class Meta:
-        model = Shifts
-        include_fk = True
-        include_relationships = True
-        load_instance = True
+    try:
+        converted = datetime.strptime(str(date_input), "%Y-%m-%d %H:%M:%S").strftime(
+            "%H:%M:%S"
+        )
+        return converted
+    except:
+        return ""
 
 
 class SettingSchema(SQLAlchemyAutoSchema):
@@ -61,6 +59,7 @@ class ClientSchema(SQLAlchemyAutoSchema):
 class WarehouseSchema(SQLAlchemyAutoSchema):
     client = fields.Nested(ClientSchema(only=("id", "name")))
     client_id = fields.Function(lambda obj: obj.client.id)
+    timezone = fields.Function(lambda obj: obj.prefered_timezone)
 
     class Meta:
         model = Warehouse
@@ -68,8 +67,26 @@ class WarehouseSchema(SQLAlchemyAutoSchema):
         load_instance = True
 
 
+class ShiftsSchema(SQLAlchemyAutoSchema):
+    warehouse = fields.Nested(
+        WarehouseSchema(only=("id", "name", "client", "timezone"))
+    )
+    shift_start = fields.Function(
+        lambda obj: convert_time(obj.shift_start) if obj.shift_start else None
+    )
+    shift_end = fields.Function(
+        lambda obj: convert_time(obj.shift_end) if obj.shift_end else None
+    )
+
+    class Meta:
+        model = Shifts
+        include_fk = True
+        include_relationships = True
+        load_instance = True
+
+
 class JobFunctionSchema(SQLAlchemyAutoSchema):
-    warehouse = fields.Nested(WarehouseSchema(only=("id", "name")))
+    warehouse = fields.Nested(WarehouseSchema(only=("id", "name", "client")))
     warehouse_id = fields.Function(
         lambda obj: obj.warehouse.id if obj.warehouse else None
     )
@@ -107,11 +124,13 @@ class IndustrialAthleteSchema(ModelSchema):
     warehouse = fields.Nested(WarehouseSchema(only=("id", "name")))
     shifts = fields.Nested(ShiftsSchema(only=("id", "name")))
     job_function = fields.Nested(JobFunctionSchema(only=("id", "name")))
+    client = fields.Nested(ClientSchema(only=("id", "name")))
 
     firstName = fields.Function(lambda obj: obj.first_name)
     lastName = fields.Function(lambda obj: obj.last_name)
     externalId = fields.Function(lambda obj: obj.external_id)
     sex = fields.Function(lambda obj: obj.gender)
+    clientId = fields.Function(lambda obj: obj.client.id)
     warehouseId = fields.Function(lambda obj: obj.warehouse_id)
     shiftId = fields.Function(lambda obj: obj.shift_id)
     shift = fields.Function(lambda obj: obj.shifts.name if obj.shifts else None)
@@ -131,10 +150,10 @@ class IndustrialAthleteSchema(ModelSchema):
 
     @post_dump(pass_many=True)
     def add_fields(self, data, many, **kwargs):
-        if "warehouse" in data:
-            data["warehouse"] = (
-                data["warehouse"]["name"] if data.get("warehouse") else None
-            )
+        for key in ("client", "warehouse"):
+            if key in data:
+                data[key] = data[key]["name"] if data.get(key) else None
+
         return data
 
     class Meta:
@@ -162,31 +181,34 @@ class UserRoleAssociationSchema(ModelSchema):
         load_instance = True
 
 
+class UserClientAssociationSchema(ModelSchema):
+    client = fields.Nested(WarehouseSchema(only=("id", "name")))
+
+    class Meta:
+        model = UserClientAssociation
+        include_fk = True
+        include_relationships = True
+        load_instance = True
+
+
 class ExternalAdminUserSchema(ModelSchema):
-    warehouseId = fields.Function(lambda obj: obj.warehouse.id)
-    warehouse = fields.Function(lambda obj: obj.warehouse.name)
     warehouses = fields.Nested(
         UserWarehouseAssociationSchema(only=("warehouse",)), many=True
     )
-    role = fields.Function(lambda obj: (obj.role or "manager"))
     roles = fields.Nested(UserRoleAssociationSchema(only=("role",)), many=True)
-    clientId = fields.Function(lambda obj: obj.client.id)
-    client = fields.Function(lambda obj: obj.client.name)
+    clients = fields.Nested(UserClientAssociationSchema(only=("client",)), many=True)
 
     @post_dump(pass_many=True)
     def unwind_warehouses(self, data, many, **kwargs):
-        if "warehouses" in data:
-            data["warehouses"] = [
-                warehouse.get("warehouse") for warehouse in data.get("warehouses")
-            ]
+        to_be_modified = {
+            "warehouses": "warehouse",
+            "roles": "role",
+            "clients": "client",
+        }
+        for key, value in to_be_modified.items():
+            if key in data:
+                data[key] = [obj.get(value) for obj in data.get(key)]
 
-        if "roles" in data:
-            data["roles"] = [
-                role.get("role")
-                for role in (
-                    data.get("roles") or [{"role": data.get("role") or "manager"}]
-                )
-            ]
         return data
 
     class Meta:

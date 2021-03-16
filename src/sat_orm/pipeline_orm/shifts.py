@@ -39,8 +39,7 @@ class Shifts(Base):
     name = Column(String(255), nullable=False)
     shift_start = Column(DateTime, nullable=False)
     shift_end = Column(DateTime, nullable=False)
-    group_administrator = Column(String(255), nullable=False)
-    timezone = Column(String(30), nullable=False)
+    group_administrator = Column(String(255), nullable=True)
     description = Column(Text, nullable=True)
     color = Column(String(255), nullable=True)
     db_created_at = Column(DateTime, default=datetime.datetime.utcnow, nullable=False)
@@ -83,13 +82,6 @@ class Shifts(Base):
         else:
             return shift_end
 
-    @validates("group_administrator")
-    def validate_group_administrator(self, key, group_administrator):
-        if group_administrator == None:
-            raise Exception("group_administrator cannot be Null")
-        else:
-            return group_administrator
-
     def as_dict(self):
         return {
             "id": self.id,
@@ -100,7 +92,6 @@ class Shifts(Base):
             "color": self.color,
             "description": self.description,
             "group_administrator": self.group_administrator,
-            "timezone": self.timezone,
             "db_created_at": self.db_created_at,
             "db_modified_at": self.db_modified_at,
         }
@@ -139,18 +130,6 @@ def validate_before_insert(mapper, connection, target):
     is_valid, message = shift_utils.is_valid_time(param_input.get("shiftEnd", ""))
     if not is_valid:
         errors.append(build_error("shift_end", constants.INVALID_DATE_MESSAGE))
-    # Timezone
-    is_valid = shift_utils.is_valid_shift_timezone(target.timezone)
-    if not is_valid:
-        errors.append(build_error("timezone", constants.INVALID_SHIFT_TIMEZONE_MESSAGE))
-    # Group admin
-    is_valid = job_function_utils.is_valid_group_admin(
-        param_input.get("group_administrator", "")
-    )
-    if not is_valid:
-        errors.append(
-            build_error("group_administrator", constants.INVALID_GROUP_ADMIN_MESSAGE)
-        )
 
     check_errors_and_return(errors)
 
@@ -191,23 +170,5 @@ def validate_before_update(mapper, connection, target):
         is_valid, message = shift_utils.is_valid_time(param_input.get("shiftEnd", ""))
         if not is_valid:
             errors.append(build_error("shift_end", constants.INVALID_DATE_MESSAGE))
-    # Timezone
-    if target.timezone:
-        is_valid = shift_utils.is_valid_shift_timezone(target.timezone)
-        if not is_valid:
-            errors.append(
-                build_error("timezone", constants.INVALID_SHIFT_TIMEZONE_MESSAGE)
-            )
-    # Group admin
-    if "group_administrator" in param_input:
-        is_valid = job_function_utils.is_valid_group_admin(
-            param_input.get("group_administrator", "")
-        )
-        if not is_valid:
-            errors.append(
-                build_error(
-                    "group_administrator", constants.INVALID_GROUP_ADMIN_MESSAGE
-                )
-            )
 
     check_errors_and_return(errors)
