@@ -204,10 +204,17 @@ def validate_before_update(mapper, connection, target):
         Return [True, None] if all params are valid.
         Returns [False, Errors] if there are params which are not valid
     """
+    # Athlete ID is required
+    jf = connection.execute(
+        f"SELECT * FROM job_function WHERE id={target.id}"
+    ).fetchone()
+
     params_input = {}
     for key, value in target.as_dict().items():
         if value is not None:
-            params_input[key] = value
+            if getattr(jf, key, value) != value:
+                params_input[key] = value
+
     errors = []
 
     if "name" in params_input:
@@ -262,7 +269,7 @@ def validate_before_update(mapper, connection, target):
         )
         if not is_valid:
             errors.append(
-                build_error("package_unit", constants.INVALID_PACKAGE_UNITS_MESSAGE)
+                build_error("package_unit", constants.INVALID_PACKAGE_UNIT_MESSAGE)
             )
 
     check_errors_and_return(errors)
