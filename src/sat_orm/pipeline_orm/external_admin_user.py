@@ -25,7 +25,7 @@ class ExternalAdminUser(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
 
     email = Column(String(255), nullable=False)
-    username = Column(String(36), nullable=False)
+    username = Column(String(255), nullable=False)
     is_active = Column(String(5), server_default="true")
 
     #  Table relationships
