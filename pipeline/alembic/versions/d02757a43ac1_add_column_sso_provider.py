@@ -25,6 +25,7 @@ def upgrade():
             nullable=True
         ),
     )
+    op.execute('UPDATE client SET sso_provider = "okta" WHERE subdomain = "strongarm"')
 
 
 def downgrade():
