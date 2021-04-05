@@ -245,17 +245,31 @@ def validate_before_update(mapper, connection, target):
         Return [True, None] if all params are valid.
         Returns [False, Errors] if there are params which are not valid
     """
-    param_input = {}
-    for key, value in target.as_dict().items():
-        if value is not None:
-            param_input[key] = value
-
-    errors = []
+    key_mappings = {
+        "firstName": "first_name",
+        "lastName": "last_name",
+        "externalId": "external_id",
+        "sex": "gender",
+        "clientId": "client_id",
+        "warehouseId": "warehouse_id",
+        "shiftId": "shift_id",
+        "jobFunctionId": "job_function_id",
+        "hireDate": "hire_date",
+        "terminationDate": "termination_date",
+    }
 
     # Athlete ID is required
     ia = connection.execute(
         "SELECT * FROM industrial_athlete WHERE id={}".format(target.id)
     ).fetchone()
+
+    param_input = {}
+    for key, value in target.as_dict().items():
+        if value is not None:
+            if getattr(ia, key_mappings.get(key, key), value) != value:
+                param_input[key] = value
+
+    errors = []
 
     if "firstName" in param_input:
         is_valid, message = ia_utils.is_valid_ia_first_last_name(

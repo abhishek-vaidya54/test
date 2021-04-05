@@ -17,6 +17,10 @@ def is_valid_client_ia_name_format(field):
 
 
 def is_valid_client_name(connection, name, id=None):
+    is_valid, message = utils.is_valid_string(name)
+    if not is_valid:
+        return False, message
+
     client = client_queries.get_client_by_name(connection, name)
 
     if client is None:

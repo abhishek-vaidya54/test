@@ -1,3 +1,6 @@
+from sat_orm import valid_timezones
+
+
 SUCCESS = {"status": "success", "data": []}
 
 SUCCESS_DATA = {"id": None}
@@ -127,6 +130,7 @@ VALID_SETTING_VALUE_OBJ = {
 
 INVALID_SETTING_VALUE_OBJ_MESSAGE = "value object is not valid"
 
+INVALID_TIMEZONE_MESSAGE = "Invalid timezone."
 
 """
     REGEX FOR DATA INPUT
@@ -301,8 +305,10 @@ VALID_IA_WEIGHT_UNITS = ("LBS", "KG")
 
 VALID_PACKAGE_UNITS = ("LBS", "KG")
 
-INVALID_IA_HEIGHT_UNIT_MESSAGE = "Invalid height unit; Should be one of INCH or CM."
+INVALID_IA_HEIGHT_UNIT_MESSAGE = "Invalid height unit: Should be one of INCH or CM."
 
-INVALID_IA_WEIGHT_UNIT_MESSAGE = "Invalid weight unit; Should be one of LBS or KG."
+INVALID_IA_WEIGHT_UNIT_MESSAGE = "Invalid weight unit: Should be one of LBS or KG."
 
-INVALID_PACKAGE_UNIT_MESSAGE = "Invalid weight unit; Should be one of LBS or KG."
+INVALID_PACKAGE_UNIT_MESSAGE = "Invalid weight unit: Should be one of LBS or KG."
+
+VALID_TIMEZONES = valid_timezones.TIMEZONES
