@@ -29,7 +29,7 @@ def upgrade():
     )
 
 def downgrade():
-      op.execute(
+    op.execute(
         """
            update industrial_athlete set group_id = Null  where warehouse_id in
             (237, 238)
