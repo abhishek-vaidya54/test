@@ -15,51 +15,35 @@ down_revision = '624f2cb83417'
 branch_labels = None
 depends_on = None
 
-
 def upgrade():
     op.execute(
-
-       """
-
-           update industrial_athlete set group_id = 202  where warehouse_id in
-
-               (237)
-
-       """
-
+        """
+        insert into settings (value, target_type, target_id) values ('{"handsFree": false, "eulaVersion": null, "enableMotion": true, "hapticEnabled": true, "athleteEnabled": true, "showEngagement": true, "enableProximity": false, "showHapticModal": true, "enagementEnabled": true, "hapticBendNumber": 3, "enableTemperature": true, "exposureRSSILimit": -48, "hapticFeedbackGap": 0, "showBaselineModal": false, "showSafetyJudgement": true, "hapticBendPercentile": 50, "hapticFeedbackWindow": 600000, "showSafetyScoreModal": true, "exposureHapticEnabled": false, "exposureHapticRepeatMS": 10000, "hapticSingleBendWindow": 600, "hapticSagAngleThreshold": 60, "exposureHapticSuppressMS": 30000}', 'warehouse', 237)
+        """
     )
 
     op.execute(
-
-       """
-
-insert into settings (value, target_type, target_id) values ('{"handsFree": false, "eulaVersion": null, "enableMotion": true, "hapticEnabled": true, "athleteEnabled": true, "showEngagement": true, "enableProximity": false, "showHapticModal": true, "enagementEnabled": true, "hapticBendNumber": 3, "enableTemperature": true, "exposureRSSILimit": -48, "hapticFeedbackGap": 0, "showBaselineModal": false, "showSafetyJudgement": true, "hapticBendPercentile": 50, "hapticFeedbackWindow": 600000, "showSafetyScoreModal": true, "exposureHapticEnabled": false, "exposureHapticRepeatMS": 10000, "hapticSingleBendWindow": 600, "hapticSagAngleThreshold": 60, "exposureHapticSuppressMS": 30000}', 'warehouse', 202)
-
-       """
-
+        """
+            insert into settings (value, target_type, target_id) values ('{"handsFree": false, "eulaVersion": null, "enableMotion": true, "hapticEnabled": true, "athleteEnabled": true, "showEngagement": true, "enableProximity": false, "showHapticModal": true, "enagementEnabled": true, "hapticBendNumber": 5, "enableTemperature": true, "exposureRSSILimit": -48, "hapticFeedbackGap": 0, "showBaselineModal": false, "showSafetyJudgement": true, "hapticBendPercentile": 50, "hapticFeedbackWindow": 499800, "showSafetyScoreModal": true, "exposureHapticEnabled": false, "exposureHapticRepeatMS": 10000, "hapticSingleBendWindow": 600, "hapticSagAngleThreshold": 55, "exposureHapticSuppressMS": 30000}', 'warehouse', 238)
+        """
     )
-
-    op.execute(
-
-       """
-
-           update industrial_athlete set group_id = 203  where warehouse_id in
-
-               (238)
-
-       """
-
-    )
-
-    op.execute(
-
-       """
-
-insert into settings (value, target_type, target_id) values ('{"handsFree": false, "eulaVersion": null, "enableMotion": true, "hapticEnabled": true, "athleteEnabled": true, "showEngagement": true, "enableProximity": false, "showHapticModal": true, "enagementEnabled": true, "hapticBendNumber": 5, "enableTemperature": true, "exposureRSSILimit": -48, "hapticFeedbackGap": 0, "showBaselineModal": false, "showSafetyJudgement": true, "hapticBendPercentile": 50, "hapticFeedbackWindow": 499800, "showSafetyScoreModal": true, "exposureHapticEnabled": false, "exposureHapticRepeatMS": 10000, "hapticSingleBendWindow": 600, "hapticSagAngleThreshold": 55, "exposureHapticSuppressMS": 30000}', 'warehouse', 203)
-"""
-    )
-
-
 
 def downgrade():
-    pass
+      op.execute(
+        """
+           update industrial_athlete set group_id = Null  where warehouse_id in
+            (237, 238)
+        """
+    )
+
+    op.execute(
+        """
+            delete from settings  where id  = 1522
+        """
+    )
+
+    op.execute(
+        """
+            delete from settings  where id  = 1523
+        """
+    )
