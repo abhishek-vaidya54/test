@@ -26,6 +26,8 @@ from sat_orm.pipeline_factories import (
     UserWarehouseAssociationFactory,
     SensorsFactory,
     GroupsFactory,
+    UserRoleAssociationFactory,
+
 )
 from sat_orm.pipeline import (
     get_session,
@@ -114,6 +116,7 @@ def test_session():
             ImportedIndustrialAthleteFactory._meta.sqlalchemy_session = session
             CasbinRuleFactory._meta.sqlalchemy_session = session
             UserWarehouseAssociationFactory._meta.sqlalchemy_session = session
+            UserRoleAssociationFactory._meta.sqlalchemy_session = session
             GroupsFactory._meta.sqlalchemy_session = session
             SensorsFactory._meta.sqlalchemy_session = session
             # Reset the factory id values to greater than the records to avoid duplicate id errors
@@ -190,22 +193,23 @@ def test_session():
 def get_external_admin_user(test_session):
     new_client = ClientFactory()
     new_warehouse = WarehouseFactory(client=new_client)
-    user = ExternalAdminUserFactory(
-        role="superuser", client=new_client, warehouse=new_warehouse
-    )
+    user = ExternalAdminUserFactory(client=new_client)
+    UserRoleAssociationFactory(external_admin_user=user, role="superuser")
 
     UserWarehouseAssociationFactory(external_admin_user=user, warehouse=new_warehouse)
     for _ in range(random.randint(1, 4)):
-        warehouse = WarehouseFactory(client=new_client)
-        UserWarehouseAssociationFactory(external_admin_user=user, warehouse=warehouse)
+        temp_warehouse = WarehouseFactory(client=new_client)
+        UserWarehouseAssociationFactory(
+            external_admin_user=user, warehouse=temp_warehouse
+        )
 
     athlete_upload_status = AthleteUploadStatusFactory(
         username=user.username, client_id=user.client_id
     )
 
     for _ in range(4):
-        new_jf = JobFunctionFactory(warehouse=user.warehouse)
-        new_shift = ShiftsFactory(warehouse=user.warehouse)
+        new_jf = JobFunctionFactory(warehouse=new_warehouse)
+        new_shift = ShiftsFactory(warehouse=new_warehouse)
         ia = IndustrialAthleteFactory(
             client=new_client,
             warehouse=new_warehouse,
@@ -216,16 +220,14 @@ def get_external_admin_user(test_session):
         ImportedIndustrialAthleteFactory(
             athlete_upload_status=athlete_upload_status,
             client_id=user.client_id,
-            warehouse_id=user.warehouse_id,
+            warehouse_id=new_warehouse.id,
             shift_id=new_shift.id,
             job_function_id=new_jf.id,
         )
         AthleteUploadStatusFactory(
             client_id=user.client_id, username=user.username, processed=100, total=100
         )
-        GroupsFactory(
-            industrial_athletes=[ia]
-        )
+        GroupsFactory(industrial_athletes=[ia])
         SensorsFactory()
         SettingsFactory()
         test_session.commit()
@@ -237,7 +239,7 @@ def get_external_admin_user(test_session):
 def get_industrial_athlete(get_external_admin_user, test_session):
     ia_list = (
         test_session.query(IndustrialAthlete)
-        .filter_by(warehouse_id=get_external_admin_user.warehouse_id)
+        .filter_by(warehouse_id=get_external_admin_user.warehouses[0].warehouse_id)
         .filter_by(client_id=get_external_admin_user.client_id)
         .all()
     )
@@ -288,7 +290,7 @@ def get_job_function_from_db(test_session):
 def get_random_shift(test_session, get_external_admin_user):
     shifts = (
         test_session.query(Shifts)
-        .filter_by(warehouse_id=get_external_admin_user.warehouse_id)
+        .filter_by(warehouse_id=get_external_admin_user.warehouses[0].warehouse_id)
         .all()
     )
     return random.choice(shifts)
@@ -398,13 +400,10 @@ def valid_external_admin_user_fields():
     return (
         [
             "id",
-            "role",
             "email",
             "username",
             "is_active",
-            "warehouse",
             "warehouses",
-            "warehouse_id",
             "client",
             "client_id",
         ]
@@ -418,7 +417,7 @@ def create_external_admin_user_params(get_external_admin_user):
         "email": temp_user.email,
         "username": temp_user.username,
         "client_id": get_external_admin_user.client_id,
-        "warehouse_id": get_external_admin_user.warehouse_id,
+        "warehouse_id": get_external_admin_user.warehouses[0].warehouse_id,
     }
 
 
@@ -446,7 +445,7 @@ def valid_ia_put_body(
     valid_last_name,
     test_session,
 ):
-    warehouse_id = get_external_admin_user.warehouse_id
+    warehouse_id = get_external_admin_user.warehouses[0].warehouse_id
     ia_list = (
         test_session.query(IndustrialAthlete)
         .filter_by(warehouse_id=warehouse_id)
