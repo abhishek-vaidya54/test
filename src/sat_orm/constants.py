@@ -1,3 +1,6 @@
+from sat_orm import valid_timezones
+
+
 SUCCESS = {"status": "success", "data": []}
 
 SUCCESS_DATA = {"id": None}
@@ -53,6 +56,8 @@ INVALID_EXTERNAL_ID_MESSAGE = "Invalid external ID."
 INVALID_REQUEST = "Invalid request."
 
 DUPLICATE_CLIENT_NAME_MESSAGE = "Client Name already exists."
+
+DUPLICATE_WAREHOUSE_NAME_MESSAGE = "Warehouse Name already exists."
 
 INVALID_CLIENT_STATUS_MESSAGE = "Invalid client status."
 
@@ -125,6 +130,7 @@ VALID_SETTING_VALUE_OBJ = {
 
 INVALID_SETTING_VALUE_OBJ_MESSAGE = "value object is not valid"
 
+INVALID_TIMEZONE_MESSAGE = "Invalid timezone."
 
 """
     REGEX FOR DATA INPUT
@@ -207,9 +213,9 @@ XLSX_FILE_CONTENT_TYPE = (
 
 
 # --------- RBAC CONSTS
-RBAC_VALID_ROLES = ("manager", "admin", "superuser", "bulk_upload")
+RBAC_VALID_ROLES = ("manager", "admin", "superuser", "bulk_upload", "looker_ergo", "looker_prox")
 
-CREATE_VALID_ROLES = ("manager", "admin", "bulk_upload")
+CREATE_VALID_ROLES = ("manager", "admin", "bulk_upload", "looker_ergo", "looker_prox")
 
 RBAC_VALID_RESOURCES = (
     "athletes",
@@ -224,7 +230,8 @@ RBAC_VALID_RESOURCES = (
     "users",
     "settings",
     "sensors",
-    "looker",
+    "looker_ergo", 
+    "looker_prox",
 )
 
 RBAC_VALID_ACTIONS = ("read", "write", "update", "delete")
@@ -255,7 +262,8 @@ POLICY_GROUPS_OBJ = "groups"
 POLICY_EXTERNAL_ADMIN_USER_OBJ = "users"
 POLICY_SETTINGS_OBJ = "settings"
 POLICY_SENSORS_OBJ = "sensors"
-POLICY_LOOKER_OBJ = "looker"
+POLICY_LOOKER_ERGO_OBJ = "looker_ergo"
+POLICY_LOOKER_PROX_OBJ = "looker_prox"
 
 # warehouse
 INVALID_LAT_LONG_DIRECTION_MESSAGE = 'should be one of ("N", "S", "E", "W")'
@@ -295,6 +303,12 @@ VALID_IA_HEIGHT_UNITS = ("INCH", "CM")
 
 VALID_IA_WEIGHT_UNITS = ("LBS", "KG")
 
-INVALID_IA_HEIGHT_UNIT_MESSAGE = "Invalid height unit; Should be one of INCH or CM."
+VALID_PACKAGE_UNITS = ("LBS", "KG")
 
-INVALID_IA_WEIGHT_UNIT_MESSAGE = "Invalid weight unit; Should be one of LBS or KG."
+INVALID_IA_HEIGHT_UNIT_MESSAGE = "Invalid height unit: Should be one of INCH or CM."
+
+INVALID_IA_WEIGHT_UNIT_MESSAGE = "Invalid weight unit: Should be one of LBS or KG."
+
+INVALID_PACKAGE_UNIT_MESSAGE = "Invalid weight unit: Should be one of LBS or KG."
+
+VALID_TIMEZONES = valid_timezones.TIMEZONES

@@ -1,5 +1,6 @@
 from sat_orm.pipeline_orm.utilities import utils
 from sat_orm.pipeline_orm.queries import warehouse_queries
+from sat_orm import constants
 
 def is_valid_lat_long(key, value):
     """
@@ -14,8 +15,10 @@ def is_valid_lat_long(key, value):
     except:
         return False
 
+
 def is_valid_lat_long_direction(value):
     return value in ("N", "S", "E", "W")
+
 
 def is_valid_warehouse_id(connection, id):
     """
@@ -31,6 +34,7 @@ def is_valid_warehouse_id(connection, id):
     except:
         return False
 
+
 def is_valid_warehouse(connection, warehouse_id, client_id):
     """
     Validates a warehouse, checks if warehouse belongs to the client
@@ -42,3 +46,19 @@ def is_valid_warehouse(connection, warehouse_id, client_id):
         return bool(warehouse)
     except Exception as error:
         return False
+
+
+def is_valid_warehouse_name(connection, name, id=None):
+    is_valid, message = utils.is_valid_string(name)
+    if not is_valid:
+        return False, message
+
+    warehouse = warehouse_queries.get_warehouse_by_name(connection, name)
+
+    if warehouse is None:
+        return True, None
+
+    if id == warehouse.id:
+        return True, None
+
+    return False, constants.DUPLICATE_WAREHOUSE_NAME_MESSAGE
