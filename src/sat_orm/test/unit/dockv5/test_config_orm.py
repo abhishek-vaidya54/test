@@ -14,7 +14,6 @@ import pytest
 
 from sat_orm.dockv5 import Config, DockPhase
 from sat_orm.dockv5_orm import config
-from sat_orm.dockv5_factories import ConfigFactory, DockPhaseFactory
 
 
 @pytest.mark.input_validation
