@@ -17,7 +17,7 @@ depends_on = None
 
 
 def upgrade():
-     settings_json = """ 
+    settings_json = """ 
     {"handsFree":false,"eulaVersion":null,"enableMotion":true,
     "hapticEnabled":true,"athleteEnabled":true,"showEngagement":false,
     "enableProximity":false,
@@ -28,15 +28,20 @@ def upgrade():
     "hapticBendPercentile":50,"hapticFeedbackWindow":600000,
     "showSafetyScoreModal":true,"exposureHapticEnabled":false,
     "exposureHapticRepeatMS":10000,"hapticSingleBendWindow":600,
-    "hapticSagAngleThreshold":75,"exposureHapticSuppressMS":30000}""".replace('\n', '')
-    for industrial_athlete set group_id = 206 where job_function_id in
-                    [1217, 1218, 1219, 1220, 1243]:
-        sql = """
-            insert into settings (value, target_type, target_id)
-            values ('{0}',
-                'group', {1})
-        """.format(settings_json, group)
+    "hapticSagAngleThreshold":75,"exposureHapticSuppressMS":30000}"""
+    sql = """
+        insert into settings (value, target_type, target_id)
+        values ('{0}','group', {1})
+        """.format(settings_json, 206)
     op.execute(sql)
+
+    op.execute(
+        """
+        UPDATE industrial_athlete SET group_id=206 WHERE job_function_id in (1217, 1218, 1219, 1220, 1243)
+        """  
+    )
+
+
 
 
 def downgrade():
