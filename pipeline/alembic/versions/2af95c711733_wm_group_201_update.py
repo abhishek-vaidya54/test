@@ -31,15 +31,22 @@ def upgrade():
     "hapticSagAngleThreshold":75,"exposureHapticSuppressMS":30000}"""
     sql = """
         insert into settings (value, target_type, target_id)
-        values ('{0}','group', {1})
+        values ('{0}','group', {1});
         """.format(settings_json, 206)
     op.execute(sql)
 
     op.execute(
         """
-        UPDATE industrial_athlete SET group_id=206 WHERE job_function_id in (1217, 1218, 1219, 1220, 1243)
+        UPDATE industrial_athlete SET group_id=206 WHERE job_function_id in (1217, 1218, 1219, 1220, 1243);
         """  
     )
+
+    op.execute(
+        """
+        UPDATE groups SET override_settings=1 WHERE id=206;
+        """  
+    )
+
 
 
 
