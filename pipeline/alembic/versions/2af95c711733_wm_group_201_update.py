@@ -29,10 +29,7 @@ def upgrade():
     "showSafetyScoreModal":true,"exposureHapticEnabled":false,
     "exposureHapticRepeatMS":10000,"hapticSingleBendWindow":600,
     "hapticSagAngleThreshold":75,"exposureHapticSuppressMS":30000}"""
-    sql = """
-        insert into settings (value, target_type, target_id)
-        values ('{0}','group', {1});
-        """.format(settings_json, 206)
+    sql = """insert into settings (value, target_type, target_id) values (%s,'group', 206);""",(settings_json)
     op.execute(sql)
 
     op.execute(
