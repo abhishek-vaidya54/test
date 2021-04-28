@@ -18,7 +18,7 @@ depends_on = None
 
 def upgrade():
     settings_json = """{"handsFree":false,"eulaVersion":null,"enableMotion":true,"hapticEnabled":true,"athleteEnabled":true,"showEngagement":false,"enableProximity":false,"showHapticModal":false,"enagementEnabled":true,"hapticBendNumber":4,"enableTemperature":true,"exposureRSSILimit":-48,"hapticFeedbackGap":0,"showBaselineModal":false,"showSafetyJudgement":true,"hapticBendPercentile":50,"hapticFeedbackWindow":600000,"showSafetyScoreModal":true,"exposureHapticEnabled":false,"exposureHapticRepeatMS":10000,"hapticSingleBendWindow":600,"hapticSagAngleThreshold":75,"exposureHapticSuppressMS":30000}"""
-    sql = """insert into settings (value, target_type, target_id) values (%s,'group', 206);""",(settings_json)
+    sql = """insert into settings (value, target_type, target_id) values ('{0}','group', 206);""".format(settings_json)
     op.execute(sql)
 
     op.execute(
