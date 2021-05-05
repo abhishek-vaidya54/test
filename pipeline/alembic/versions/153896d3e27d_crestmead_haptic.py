@@ -23,7 +23,7 @@ def upgrade():
 
         sql = """insert into settings (value, target_type, target_id) values ('{0}', 'warehouse', {1})""".format(settings_json, warehouse)
 
-op.execute(sql)
+  op.execute(sql)
 
 
 def downgrade():
