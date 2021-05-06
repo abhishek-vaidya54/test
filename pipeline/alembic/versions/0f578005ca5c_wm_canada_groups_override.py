@@ -18,6 +18,12 @@ depends_on = None
 
 def upgrade():
 
+    op.execute(
+        """
+            UPDATE groups SET override_settings=1 WHERE id in (207,208,209);
+        """  
+    )
+
     settings_json_groupa_canada = """{"handsFree": false,
         "eulaVersion": null,
         "enableMotion": true,
@@ -107,12 +113,6 @@ def upgrade():
 
     print(sql)
     op.execute(sql)
-
-    op.execute(
-        """
-            UPDATE groups SET override_settings=1 WHERE id in (207,208,209);
-        """  
-    )
 
 
 def downgrade():
