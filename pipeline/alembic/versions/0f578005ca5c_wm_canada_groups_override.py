@@ -107,10 +107,10 @@ def upgrade():
 
     print(sql)
     op.execute(sql)
-    
+
     op.execute(
         """
-            UPDATE groups SET override_settings=1 WHERE id in [207,208,209];
+            UPDATE groups SET override_settings=1 WHERE id in (207,208,209);
         """  
     )
 
