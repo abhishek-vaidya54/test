@@ -47,7 +47,7 @@ def upgrade():
         "hapticSagAngleThreshold": 65,
         "exposureHapticSuppressMS": 30000}""".replace('\n', '')
 
-    print(settings_json_groupa_canada)
+    print(settings_json_groupa_caselot)
     sql = """insert into settings (value, target_type, target_id) values ('{0}','group', 210);""".format(settings_json_groupa_caselot)
 
     print(sql)
@@ -77,7 +77,7 @@ def upgrade():
         "hapticSagAngleThreshold": 70,
         "exposureHapticSuppressMS": 30000}""".replace('\n', '')
 
-    print(settings_json_groupb_canada)
+    print(settings_json_groupb_caselot)
     sql = """insert into settings (value, target_type, target_id) values ('{0}','group', 211);""".format(settings_json_groupb_caselot)
 
     print(sql)
@@ -107,7 +107,7 @@ def upgrade():
         "hapticSagAngleThreshold": 75,
         "exposureHapticSuppressMS": 30000}""".replace('\n', '')
 
-    print(settings_json_groupc_canada)
+    print(settings_json_groupa_noncon)
     sql = """insert into settings (value, target_type, target_id) values ('{0}','group', 212);""".format(settings_json_groupa_noncon)
 
     print(sql)
@@ -137,7 +137,7 @@ def upgrade():
         "hapticSagAngleThreshold": 70,
         "exposureHapticSuppressMS": 30000}""".replace('\n', '')
 
-    print(settings_json_groupc_canada)
+    print(settings_json_groupb_noncon)
     sql = """insert into settings (value, target_type, target_id) values ('{0}','group', 213);""".format(settings_json_groupb_noncon)
 
     print(sql)
