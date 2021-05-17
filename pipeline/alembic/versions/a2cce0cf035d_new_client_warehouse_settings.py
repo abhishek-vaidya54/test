@@ -49,37 +49,37 @@ def upgrade():
         """.format(dot_foods_hd_supply_settings_json, warehouse)
         op.execute(sql)
 
-    primoris_settings_json = """{ "handsFree": false,
-                "eulaVersion": null,
-                "enableMotion": true,
-                "hapticEnabled": false,
-                "athleteEnabled": false,
-                "showEngagement": true,
-                "enableProximity": true,
-                "showHapticModal": false,
-                "enagementEnabled": true,
-                "hapticBendNumber": 1,
-                "enableTemperature": true,
-                "exposureRSSILimit": -48,
-                "hapticFeedbackGap": 0,
-                "showBaselineModal": true,
-                "showSafetyJudgement": true,
-                "hapticBendPercentile": 50,
-                "hapticFeedbackWindow": 0,
-                "showSafetyScoreModal": true,
-                "exposureHapticEnabled": false,
-                "exposureHapticRepeatMS": 10000,
-                "hapticSingleBendWindow": 600,
-                "hapticSagAngleThreshold": 70,
-                "exposureHapticSuppressMS": 30000}""".replace('\n', '')
+    # primoris_settings_json = """{ "handsFree": false,
+    #             "eulaVersion": null,
+    #             "enableMotion": true,
+    #             "hapticEnabled": false,
+    #             "athleteEnabled": false,
+    #             "showEngagement": true,
+    #             "enableProximity": true,
+    #             "showHapticModal": false,
+    #             "enagementEnabled": true,
+    #             "hapticBendNumber": 1,
+    #             "enableTemperature": true,
+    #             "exposureRSSILimit": -48,
+    #             "hapticFeedbackGap": 0,
+    #             "showBaselineModal": true,
+    #             "showSafetyJudgement": true,
+    #             "hapticBendPercentile": 50,
+    #             "hapticFeedbackWindow": 0,
+    #             "showSafetyScoreModal": true,
+    #             "exposureHapticEnabled": false,
+    #             "exposureHapticRepeatMS": 10000,
+    #             "hapticSingleBendWindow": 600,
+    #             "hapticSagAngleThreshold": 70,
+    #             "exposureHapticSuppressMS": 30000}""".replace('\n', '')
 
-    for warehouse in [270]:
-        sql = """
-            insert into settings (value, target_type, target_id)
-            values ('{0}',
-                'warehouse', {1})
-        """.format(primoris_settings_json, warehouse)
-        op.execute(sql)
+    # for warehouse in [270]:
+    #     sql = """
+    #         insert into settings (value, target_type, target_id)
+    #         values ('{0}',
+    #             'warehouse', {1})
+    #     """.format(primoris_settings_json, warehouse)
+    #     op.execute(sql)
 
 
 def downgrade():
