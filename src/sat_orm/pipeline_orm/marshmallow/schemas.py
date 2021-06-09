@@ -1,4 +1,4 @@
-from marshmallow_sqlalchemy import SQLAlchemyAutoSchema, ModelSchema
+from marshmallow_sqlalchemy import SQLAlchemyAutoSchema
 from marshmallow import validates, fields, ValidationError, Schema, post_dump
 from datetime import datetime
 
@@ -120,7 +120,7 @@ class CasbinRuleSchema(SQLAlchemyAutoSchema):
 #     #         raise ValidationError("Pin codes must contain only digits.") from error
 
 
-class IndustrialAthleteSchema(ModelSchema):
+class IndustrialAthleteSchema(SQLAlchemyAutoSchema):
     warehouse = fields.Nested(WarehouseSchema(only=("id", "name")))
     shifts = fields.Nested(ShiftsSchema(only=("id", "name")))
     job_function = fields.Nested(JobFunctionSchema(only=("id", "name")))
@@ -163,7 +163,7 @@ class IndustrialAthleteSchema(ModelSchema):
         load_instance = True
 
 
-class UserWarehouseAssociationSchema(ModelSchema):
+class UserWarehouseAssociationSchema(SQLAlchemyAutoSchema):
     warehouse = fields.Nested(WarehouseSchema(only=("id", "name")))
 
     class Meta:
@@ -173,7 +173,7 @@ class UserWarehouseAssociationSchema(ModelSchema):
         load_instance = True
 
 
-class UserRoleAssociationSchema(ModelSchema):
+class UserRoleAssociationSchema(SQLAlchemyAutoSchema):
     class Meta:
         model = UserRoleAssociation
         include_fk = True
@@ -181,7 +181,7 @@ class UserRoleAssociationSchema(ModelSchema):
         load_instance = True
 
 
-class UserClientAssociationSchema(ModelSchema):
+class UserClientAssociationSchema(SQLAlchemyAutoSchema):
     client = fields.Nested(WarehouseSchema(only=("id", "name")))
 
     class Meta:
@@ -191,7 +191,7 @@ class UserClientAssociationSchema(ModelSchema):
         load_instance = True
 
 
-class ExternalAdminUserSchema(ModelSchema):
+class ExternalAdminUserSchema(SQLAlchemyAutoSchema):
     warehouses = fields.Nested(
         UserWarehouseAssociationSchema(only=("warehouse",)), many=True
     )
@@ -218,7 +218,7 @@ class ExternalAdminUserSchema(ModelSchema):
         load_instance = True
 
 
-class GroupSchema(ModelSchema):
+class GroupSchema(SQLAlchemyAutoSchema):
     overrideSettings = fields.Function(lambda obj: bool(obj.override_settings))
 
     class Meta:

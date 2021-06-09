@@ -69,12 +69,15 @@ class DockPhaseFactory(factory.alchemy.SQLAlchemyModelFactory):
         sqlalchemy_session_persistence = "commit"
 
 
-# class ConfigFactory(factory.alchemy.SQLAlchemyModelFactory):
-#     id = factory.Sequence(lambda n: n)
-#     dock_phase = factory.SubFactory(DockPhaseFactory)
-#     client_id = ClientFactory.id
-#     warehouse_id = WarehouseFactory.id
-#     deployment_stage = factory.fuzzy.FuzzyChoice(["dev", "prod"])
+class ConfigFactory(factory.alchemy.SQLAlchemyModelFactory):
+    id = factory.Sequence(lambda n: n)
+    client_id = 1
+    warehouse_id = 1
+    deployment_stage = factory.fuzzy.FuzzyChoice(["dev", "prod"])
+
+    class Meta:
+        model = Config
+        sqlalchemy_session_persistence = "commit"
 
 # @factory.post_generation
 # def dock_phases(self, create, extracted, **kwargs):
