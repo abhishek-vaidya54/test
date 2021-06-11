@@ -11,3 +11,4 @@ htmlcov
 sat_orm.egg-info
 build/
 dist/
+.vscode/*

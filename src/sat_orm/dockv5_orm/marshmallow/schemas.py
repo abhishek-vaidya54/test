@@ -1,4 +1,4 @@
-from marshmallow_sqlalchemy import SQLAlchemyAutoSchema, ModelSchema
+from marshmallow_sqlalchemy import SQLAlchemyAutoSchema
 from marshmallow import validates, fields, ValidationError, Schema, post_dump
 from datetime import datetime
 
