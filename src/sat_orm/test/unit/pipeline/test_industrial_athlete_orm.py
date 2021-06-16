@@ -166,7 +166,7 @@ def test_dockv5_getAthletes_select_by_client_warehouse_not_terminated(get_extern
     """
     verify all client_id and warehouse_id values from our result match what was queried for
     """
-    result = ia.dockv5_getAthletes_select_by_client_warehouse_not_terminated(test_session,get_external_admin_user.client_id,get_external_admin_user.warehouse_id)
+    result = ia.dockv5_getAthletes_select_by_client_warehouse_not_terminated(test_session,get_external_admin_user.client_id,get_external_admin_user.warehouses[0].warehouse_id)
     assert all([r.client_id == client_id and r.warehouse_id == warehouse_id for r in result])
 
 
@@ -186,7 +186,7 @@ def test_dockv5_getUpdatedAthletes_select_group_id(get_external_admin_user,test_
     """
     verify that athletes selected by the group_ids of the result contain the correct client_id and warehouse_id
     """
-    result = ia.dockv5_getUpdatedAthletes_select_group_id(test_session,get_external_admin_user.client_id,get_external_admin_user.warehouse_id)
+    result = ia.dockv5_getUpdatedAthletes_select_group_id(test_session,get_external_admin_user.client_id,get_external_admin_user.warehouses[0].warehouse_id)
     group_ids = [r.group_id for r in result]
     validation_result = test_session.query(ia.IndustrialAthlete).filter(ia.IndustrialAthlete.group_id in group_ids).all()
     assert all([r.client_id == client_id and r.warehouse_id == warehouse_id for r in validation_result])
@@ -197,7 +197,7 @@ def test_dockv5_getUpdatedAthletes_select_id(get_external_admin_user,test_sessio
     """
     verify that athletes selected by the athlete_ids of the result contain the correct client_id and warehouse_id
     """
-    result = ia.dockv5_getUpdatedAthletes_select_id(test_session,get_external_admin_user.client_id,get_external_admin_user.warehouse_id)
+    result = ia.dockv5_getUpdatedAthletes_select_id(test_session,get_external_admin_user.client_id,get_external_admin_user.warehouses[0].warehouse_id)
     validation_result = test_session.query(ia.IndustrialAthlete).filter(ia.IndustrialAthlete.id in [r.id for r in result]).all()
     assert all([r.client_id == client_id and r.warehouse_id == warehouse_id for r in validation_result])
 

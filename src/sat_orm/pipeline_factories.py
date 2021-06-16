@@ -30,6 +30,7 @@ from sat_orm.pipeline import (
     Sensors,
     Groups,
     UserWarehouseAssociation,
+    UserRoleAssociation,
 )
 
 
@@ -223,9 +224,6 @@ class ExternalAdminUserFactory(factory.alchemy.SQLAlchemyModelFactory):
     username = str(uuid.uuid4())
     client_id = ClientFactory.id
     client = factory.SubFactory(ClientFactory)
-    warehouse_id = WarehouseFactory.id
-    warehouse = factory.SubFactory(WarehouseFactory)
-    role = "admin"
 
     class Meta:
         model = ExternalAdminUser
@@ -238,6 +236,14 @@ class UserWarehouseAssociationFactory(factory.alchemy.SQLAlchemyModelFactory):
 
     class Meta:
         model = UserWarehouseAssociation
+        sqlalchemy_session_persistence = "commit"
+
+class UserRoleAssociationFactory(factory.alchemy.SQLAlchemyModelFactory):
+    external_admin_user = factory.SubFactory(ExternalAdminUserFactory)
+    role = random_str()
+
+    class Meta:
+        model = UserRoleAssociation
         sqlalchemy_session_persistence = "commit"
 
 

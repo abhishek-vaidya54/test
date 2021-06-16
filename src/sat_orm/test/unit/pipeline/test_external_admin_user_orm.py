@@ -2,7 +2,7 @@
 import pytest
 
 # Local Application Imports
-from sat_orm.pipeline import Client, Warehouse, ExternalAdminUser
+from sat_orm.pipeline import Client, Warehouse, ExternalAdminUser, UserRoleAssociation, UserWarehouseAssociation
 
 
 @pytest.mark.input_validation
@@ -19,14 +19,6 @@ def test_external_admin_user_validate_username():
     with pytest.raises(Exception) as exc_info:
         assert ExternalAdminUser(username=None)
     assert "username cannot be Null" in str(exc_info.value)
-
-
-@pytest.mark.input_validation
-def test_external_admin_user_validate_warehouse_id():
-    """ Validates external admin user warehouse_id column """
-    with pytest.raises(Exception) as exc_info:
-        assert ExternalAdminUser(warehouse_id=None)
-    assert "warehouse_id cannot be Null" in str(exc_info.value)
 
 
 @pytest.mark.input_validation
@@ -77,7 +69,7 @@ def test_external_admin_user_warehouse_relationship(
         .filter_by(id=get_external_admin_user.id)
         .first()
     )
-    warehouse = test_session.query(Warehouse).filter_by(id=user.warehouse_id).first()
+    warehouse = test_session.query(Warehouse).filter_by(id=user.warehouses[0].warehouse_id).first()
     assert warehouse
 
 
@@ -119,6 +111,9 @@ def test_delete_by_id(test_session, get_external_admin_user):
     """
     verify delete_by_id deletes the correct object
     """
+    test_session.query(UserRoleAssociation).filter_by(external_admin_user_id=get_external_admin_user.id).delete()
+    test_session.query(UserWarehouseAssociation).filter_by(external_admin_user_id=get_external_admin_user.id).delete()
+    test_session.commit()
     ExternalAdminUser.delete_by_id(test_session, get_external_admin_user.id)
     user = (
         test_session.query(ExternalAdminUser)
