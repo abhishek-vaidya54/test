@@ -17,7 +17,7 @@ depends_on = None
 
 
 def upgrade():
-    flex_settings = """{ "handsFree":true,
+    flex_settings = """{ "handsFree": true,
                 "eulaVersion": null,
                 "enableMotion": true,
                 "hapticEnabled": true,
