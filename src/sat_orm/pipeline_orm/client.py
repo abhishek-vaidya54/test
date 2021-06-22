@@ -140,6 +140,7 @@ class Client(Base):
             "contracted_users": self.contracted_users,
             "active_inactive_date": self.active_inactive_date,
             "ia_name_format": self.ia_name_format,
+            "subdomain": self.subdomain,
             "ia_height_unit": self.ia_height_unit,
             "ia_weight_unit": self.ia_weight_unit,
             "sso_provider": self.sso_provider,
@@ -269,6 +270,13 @@ def validate_before_insert(mapper, connection, target):
             errors.append(
                 build_error("active_inactive_date", constants.INVALID_DATE_MESSAGE)
             )
+
+    if "subdomain" in params_input:
+        is_valid, message = client_utils.is_valid_client_subdomain(
+            params_input.get("subdomain", None)
+        )
+        if not is_valid:
+            errors.append("subdomain", constants.INVALID_CLIENT_SUBDOMAIN_MESSAGE)
 
     if "ia_name_format" in params_input:
         is_valid = client_utils.is_valid_client_ia_name_format(
