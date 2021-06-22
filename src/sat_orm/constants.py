@@ -61,6 +61,8 @@ DUPLICATE_WAREHOUSE_NAME_MESSAGE = "Warehouse Name already exists."
 
 INVALID_CLIENT_STATUS_MESSAGE = "Invalid client status."
 
+INVALID_CLIENT_SUBDOMAIN_MESSAGE = "Invalid client subdomain"
+
 INVALID_CLIENT_IA_NAME_FORMAT_MESSAGE = "Invalid client ia name format."
 
 INVALID_WAREHOUSE_ID_MESSAGE = "Invalid warehouse ID."

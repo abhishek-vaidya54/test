@@ -12,6 +12,13 @@ def is_valid_client_status(status):
     return status in constants.VALID_CLIENT_STATUSES
 
 
+def is_valid_client_subdomain(subdomain):
+    is_valid, message = utils.is_valid_string(subdomain)
+    if not is_valid:
+        return False, message
+    return True, None
+
+
 def is_valid_client_ia_name_format(field):
     return field in constants.VALID_CLIENT_IA_NAME_FORMATS
 
