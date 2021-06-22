@@ -113,5 +113,37 @@ def upgrade():
     print(sql)
     op.execute(sql)
 
+    warehouse_settings  = """{ "handsFree": false,
+                "eulaVersion": null,
+                "enableMotion": true,
+                "hapticEnabled": false,
+                "athleteEnabled": true,
+                "showEngagement": true,
+                "enableProximity": false,
+                "showHapticModal": false,
+                "enagementEnabled": true,
+                "hapticBendNumber": 8,
+                "enableTemperature": true,
+                "exposureRSSILimit": -48,
+                "hapticFeedbackGap": 0,
+                "showBaselineModal": true,
+                "showSafetyJudgement": true,
+                "hapticBendPercentile": 50,
+                "hapticFeedbackWindow": 600000,
+                "showSafetyScoreModal": false,
+                "exposureHapticEnabled": false,
+                "exposureHapticRepeatMS": 10000,
+                "hapticSingleBendWindow": 600,
+                "hapticSagAngleThreshold": 60,
+                "exposureHapticSuppressMS": 30000}""".replace('\n', '')
+
+    for warehouse in [230]:
+        sql = """
+            insert into settings (value, target_type, target_id)
+            values ('{0}',
+                'warehouse', {1})
+        """.format(warehouse_settings, warehouse)
+        op.execute(sql)
+
 def downgrade():
     pass
