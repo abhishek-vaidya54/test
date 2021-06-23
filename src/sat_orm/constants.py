@@ -111,7 +111,6 @@ INVALID_TARGET_ID_MESSAGE = "target_id should be id of target_type table"
 
 VALID_SETTING_VALUE_OBJ = {
     "handsFree": bool,
-    "ergoProgram": bool,
     "enableMotion": bool,
     "hapticEnabled": bool,
     "athleteEnabled": bool,
@@ -135,6 +134,10 @@ VALID_SETTING_VALUE_OBJ = {
     "showSafetyJudgement": bool,
     "eulaVersion": int,
 }
+
+{value":"{\"handsFree\":true,\"enableMotion\":true,\"hapticEnabled\":true,\"athleteEnabled\":true,\"showEngagement\":true,\"enableProximity\":true,\
+
+"showHapticModal\":false,\"enagementEnabled\":true,\"hapticBendNumber\":3,\"enableTemperature\":true,\"exposureRSSILimit\":-48,\"hapticFeedbackGap\":0,\"showBaselineModal\":false,\"hapticBendPercentile\":50,\"hapticFeedbackWindow\":60000,\"showSafetyScoreModal\":false,\"exposureHapticEnabled\":true,\"exposureHapticRepeatMS\":10000,\"hapticSingleBendWindow\":600,\"hapticSagAngleThreshold\":65,\"exposureHapticSuppressMS\":30000,\"showSafetyJudgement\":true,\"eulaVersion\":null}"}
 
 INVALID_SETTING_VALUE_OBJ_MESSAGE = "value object is not valid"
 
