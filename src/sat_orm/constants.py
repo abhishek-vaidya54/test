@@ -111,7 +111,6 @@ INVALID_TARGET_ID_MESSAGE = "target_id should be id of target_type table"
 
 VALID_SETTING_VALUE_OBJ = {
     "handsFree": bool,
-    "ergoProgram": bool,
     "enableMotion": bool,
     "hapticEnabled": bool,
     "athleteEnabled": bool,
