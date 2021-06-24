@@ -110,22 +110,29 @@ VALID_TARGET_TYPES = ("group", "warehouse", "industrial_athlete")
 INVALID_TARGET_ID_MESSAGE = "target_id should be id of target_type table"
 
 VALID_SETTING_VALUE_OBJ = {
+    "handsFree": bool,
+    "enableMotion": bool,
     "hapticEnabled": bool,
     "athleteEnabled": bool,
     "showEngagement": bool,
+    "enableProximity": bool,
+    "showHapticModal": bool,
+    "enagementEnabled": bool,
     "hapticBendNumber": int,
+    "enableTemperature": bool,
     "hapticFeedbackGap": int,
-    "hapticBendPercentile": int,
+    "exposureRSSILimit": int,
+    "showBaselineModal": bool,
     "hapticFeedbackWindow": int,
+    "hapticBendPercentile": int,
+    "showSafetyScoreModal": bool,
+    "exposureHapticEnabled": bool,
+    "exposureHapticRepeatMS": int,
     "hapticSingleBendWindow": int,
     "hapticSagAngleThreshold": int,
-    "showHapticModal": bool,
-    "showBaselineModal": bool,
-    "showSafetyScoreModal": bool,
-    "handsFree": bool,
+    "exposureHapticSuppressMS": int,
     "showSafetyJudgement": bool,
     "eulaVersion": int,
-    "enagementEnabled": bool,
 }
 
 INVALID_SETTING_VALUE_OBJ_MESSAGE = "value object is not valid"
@@ -213,7 +220,14 @@ XLSX_FILE_CONTENT_TYPE = (
 
 
 # --------- RBAC CONSTS
-RBAC_VALID_ROLES = ("manager", "admin", "superuser", "bulk_upload", "looker_ergo", "looker_prox")
+RBAC_VALID_ROLES = (
+    "manager",
+    "admin",
+    "superuser",
+    "bulk_upload",
+    "looker_ergo",
+    "looker_prox",
+)
 
 CREATE_VALID_ROLES = ("manager", "admin", "bulk_upload", "looker_ergo", "looker_prox")
 
@@ -230,7 +244,7 @@ RBAC_VALID_RESOURCES = (
     "users",
     "settings",
     "sensors",
-    "looker_ergo", 
+    "looker_ergo",
     "looker_prox",
 )
 
