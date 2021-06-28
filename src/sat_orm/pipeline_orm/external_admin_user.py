@@ -26,7 +26,7 @@ class ExternalAdminUser(Base):
 
     email = Column(String(255), nullable=False)
     username = Column(String(255), nullable=False)
-    is_active = Column(String(5), server_default="true")
+    account_status = Column(String(255), nullable=False, server_default="inactive")
 
     #  Table relationships
     clients = relationship(UserClientAssociation, back_populates=__tablename__)
@@ -134,5 +134,12 @@ def validate_role_before_insert(mapper, connection, target):
     is_valid = utils.is_valid_email(email)
     if not is_valid:
         errors.append(build_error("email", constants.INVALID_EMAIL_ERROR_MESSAGE))
+
+
+    account_status = params_input.get("account_status", "").lower()
+
+    is_valid = utils.is_valid_account_status(account_status)
+    if not is_valid:
+        errors.append(build_error("account_status", constants.INVALID_ACCOUNT_STATUS_ERROR_MESSAGE))
 
     check_errors_and_return(errors)

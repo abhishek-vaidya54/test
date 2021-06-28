@@ -15,3 +15,12 @@ def is_valid_user_id(connection, id):
         return is_valid
     except Exception as error:
         return False
+
+
+def is_valid_account_status(account_status):
+    """
+    CHECKS FOR A VALID ACCOUNT STATUS
+    input - account_status
+    output - True if valid or False otherwise
+    """
+    return account_status in constants.VALID_USER_ACCOUNT_STATUS_FORMATS

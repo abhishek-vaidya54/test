@@ -97,6 +97,10 @@ BULK_UPLOAD_IN_PROGRESS_ERROR_MESSAGE = "Bulk upload is already in progress."
 
 INVALID_EMAIL_ERROR_MESSAGE = "Invalid email address."
 
+INVALID_ACCOUNT_STATUS_ERROR_MESSAGE = "Invalid account status address."
+
+VALID_USER_ACCOUNT_STATUS_FORMATS = ("active", "deleted", "inactive")
+
 USER_NOT_FOUND_ERROR_MESSAGE = "User not found."
 
 INVALID_EX_ADMIN_PUT_ACTION_ERROR_MESSAGE = "Action should be enable or disable."
