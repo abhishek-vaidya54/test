@@ -1,5 +1,6 @@
 from sat_orm.pipeline_orm.utilities import utils
 from sat_orm.pipeline_orm.queries import external_admin_user_queries
+import sat_orm.constants as constants
 
 
 def is_valid_user_id(connection, id):
