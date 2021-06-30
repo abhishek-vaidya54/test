@@ -13,9 +13,7 @@ from sat_orm.pipeline_orm.user_role_association import UserRoleAssociation
 from sat_orm.pipeline_orm.user_client_association import UserClientAssociation
 from sat_orm.pipeline_orm.pipeline_base import Base
 import sat_orm.constants as constants
-from sat_orm.pipeline_orm.utilities import utils
-from sat_orm.pipeline_orm.utilities import client_utils
-from sat_orm.pipeline_orm.utilities import warehouse_utils
+from sat_orm.pipeline_orm.utilities import utils, client_utils, warehouse_utils, external_admin_user_utils
 from sat_orm.pipeline_orm.utilities.utils import build_error, check_errors_and_return
 
 
@@ -32,7 +30,7 @@ class ExternalAdminUser(Base):
     clients = relationship(UserClientAssociation, back_populates=__tablename__)
     warehouses = relationship(UserWarehouseAssociation, back_populates=__tablename__)
     roles = relationship(UserRoleAssociation, back_populates=__tablename__)
-
+    deleted_at = Column(DateTime, nullable=True)
     db_created_at = Column(DateTime, default=datetime.datetime.utcnow, nullable=False)
     db_modified_at = Column(
         DateTime,
@@ -60,6 +58,8 @@ class ExternalAdminUser(Base):
             "id": self.id,
             "email": self.email,
             "username": self.username,
+            "account_status": self.account_status,
+            "deleted_at": self.deleted_at,
             "db_created_at": self.db_created_at,
             "db_modified_at": self.db_modified_at,
         }
@@ -79,6 +79,8 @@ class ExternalAdminUser(Base):
             self.id == other.id
             and self.email == other.email
             and self.username == other.username
+            and self.account_status == other.account_status
+            and self.deleted_at == other.deleted_at
             and self.db_created_at == other.db_created_at
             and self.db_modified_at == other.db_modified_at
         )
@@ -135,11 +137,11 @@ def validate_role_before_insert(mapper, connection, target):
     if not is_valid:
         errors.append(build_error("email", constants.INVALID_EMAIL_ERROR_MESSAGE))
 
+    if "account_status" in params_input:
+        account_status = params_input.get("account_status", "").lower()
 
-    account_status = params_input.get("account_status", "").lower()
-
-    is_valid = utils.is_valid_account_status(account_status)
-    if not is_valid:
-        errors.append(build_error("account_status", constants.INVALID_ACCOUNT_STATUS_ERROR_MESSAGE))
+        is_valid = external_admin_user_utils.is_valid_account_status(account_status)
+        if not is_valid:
+            errors.append(build_error("account_status", constants.INVALID_ACCOUNT_STATUS_ERROR_MESSAGE))
 
     check_errors_and_return(errors)
