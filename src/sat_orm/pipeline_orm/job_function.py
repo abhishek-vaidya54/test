@@ -149,7 +149,9 @@ def validate_before_insert(mapper, connection, target):
     max_package_weight = params_input.get("max_package_weight", "")
     max_package_mass = params_input.get("max_package_mass", "")
 
-    is_valid, message = utils.is_valid_string(name)
+    is_valid, message = job_function_utils.is_valid_job_function_name(
+        connection, params_input.get("name", ""), params_input.get("id", "")
+    )
     if not is_valid:
         errors.append(build_error("name", message))
 
@@ -223,9 +225,11 @@ def validate_before_update(mapper, connection, target):
     errors = []
 
     if "name" in params_input:
-        is_valid, message = utils.is_valid_string(params_input.get("name", ""))
-        if not is_valid:
-            errors.append(build_error("name", message))
+        is_valid, message = job_function_utils.is_valid_job_function_name(
+            connection, params_input.get("name", ""), params_input.get("id", "")
+        )
+    if not is_valid:
+        errors.append(build_error("name", message))
 
     if "warehouse_id" in params_input:
         is_valid = ia_utils.is_valid_warehouse(
