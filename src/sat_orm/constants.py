@@ -57,6 +57,10 @@ INVALID_REQUEST = "Invalid request."
 
 DUPLICATE_CLIENT_NAME_MESSAGE = "Client Name already exists."
 
+DUPLICATE_SHIFT_NAME_MESSAGE = "Shifts Name already exists."
+
+DUPLICATE_JOB_FUNCTION_NAME_MESSAGE = "JobFunction Name already exists."
+
 DUPLICATE_WAREHOUSE_NAME_MESSAGE = "Warehouse Name already exists."
 
 INVALID_CLIENT_STATUS_MESSAGE = "Invalid client status."
