@@ -15,6 +15,8 @@ CLASSIFICATION:
 
 # Standard Library Imports
 import os
+from ddtrace import patch
+
 
 # Third Party Library Imports
 from sqlalchemy import create_engine
@@ -25,6 +27,7 @@ from contextlib import contextmanager
 
 import logging
 
+# patch(sqlalchemy=True)
 LOGGER = logging.getLogger()
 logging.basicConfig()
 
