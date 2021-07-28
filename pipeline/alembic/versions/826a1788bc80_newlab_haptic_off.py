@@ -17,7 +17,7 @@ depends_on = None
 
 
 def upgrade():
-     json_settings = """{ "handsFree": false,
+  json_settings = """{ "handsFree": false,
                 "eulaVersion": null,
                 "enableMotion": true,
                 "hapticEnabled": false,
@@ -41,13 +41,14 @@ def upgrade():
                 "hapticSagAngleThreshold": 70,
                 "exposureHapticSuppressMS": 30000}""".replace('\n', '')
 
-     for warehouse in [77]:
-        sql = """
-          insert into settings (value, target_type, target_id) 
-          values ('{0}', 'warehouse', {1})
-        """.format(json_settings = """{ "handsFree": false, warehouse)
-        op.execute(sql)
+  for warehouse in [77]:
+    sql = """
+        insert into settings (value, target_type, target_id)
+        values ('{0}',
+            'warehouse', {1})
+    """.format( json_settings, warehouse)
+    op.execute(sql)
 
 
 def downgrade():
-    pass
+  pass
