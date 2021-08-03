@@ -1,7 +1,7 @@
 """pghaptic
 
 Revision ID: 729417177e51
-Revises: 826a1788bc80
+Revises: 9fab6a69c788
 Create Date: 2021-08-02 08:48:49.249626
 
 """
@@ -11,7 +11,7 @@ import sqlalchemy as sa
 
 # revision identifiers, used by Alembic.
 revision = '729417177e51'
-down_revision = '826a1788bc80'
+down_revision = '9fab6a69c788'
 branch_labels = None
 depends_on = None
 
@@ -42,11 +42,9 @@ def upgrade():
                     "exposureHapticSuppressMS": 30000}""".replace('\n', '') 
 
     for warehouse in [225]:
-
         sql = """  
                 insert into settings (value, target_type, target_id) values ('{0}', 'warehouse', {1}) """.format(jkt_json, warehouse)
-
-op.execute(sql)
+        op.execute(sql)
 
 def downgrade():
     pass
