@@ -40,7 +40,7 @@ def upgrade():
                 "hapticSingleBendWindow": 600,
                 "hapticSagAngleThreshold": 60,
                 "exposureHapticSuppressMS": 30000}""".replace('\n', '')
-    for industrial_athlete in [1709, 1710, 1711]:
+    for industrial_athlete in [74153, 74154, 74155]:
         sql = """
             insert into settings (value, target_type, target_id)
             values ('{0}', 'industrial_athlete', {1})
