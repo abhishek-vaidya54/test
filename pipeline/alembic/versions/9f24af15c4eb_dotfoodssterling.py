@@ -1,7 +1,7 @@
 """dotfoodssterling
 
-Revision ID: 93f4bfd3035a
-Revises: 1a5da5e35977
+Revision ID: 9f24af15c4eb
+Revises: 88a4b39e5f37
 Create Date: 2021-08-12 17:37:17.171093
 
 """
@@ -10,8 +10,8 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '93f4bfd3035a'
-down_revision = '729417177e51'
+revision = '9f24af15c4eb'
+down_revision = '88a4b39e5f37'
 branch_labels = None
 depends_on = None
 
