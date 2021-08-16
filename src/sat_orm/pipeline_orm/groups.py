@@ -1,4 +1,3 @@
-
 from sqlalchemy import Column, Integer, String, JSON, DateTime, event
 from sqlalchemy.dialects.mysql import TINYINT
 from sqlalchemy.orm import relationship
@@ -31,7 +30,7 @@ class Groups(Base):
             "title": self.title,
             "description": self.description,
             "db_created_at": self.db_created_at,
-            "overrideSettings": self.override_settings,
+            "override_settings": self.override_settings,
         }
 
     def __repr__(self):
@@ -56,8 +55,10 @@ def validate_before_insert(mapper, connection, target):
         if not is_valid:
             errors.append(build_error(key, message))
 
-    is_valid, message = utils.is_valid_bool(params_input.get("overrideSettings", False))
+    is_valid, message = utils.is_valid_bool(
+        params_input.get("override_settings", False)
+    )
     if not is_valid:
-        errors.append(build_error("overrideSettings", message))
+        errors.append(build_error("override_settings", message))
 
     check_errors_and_return(errors)
