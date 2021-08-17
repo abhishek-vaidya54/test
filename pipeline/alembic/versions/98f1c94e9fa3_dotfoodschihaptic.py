@@ -1,8 +1,8 @@
-"""dotfoodschicago
+"""dotfoodschihaptic
 
-Revision ID: 0ea3ffa0dee6
+Revision ID: 98f1c94e9fa3
 Revises: 377e5ec93402
-Create Date: 2021-08-16 13:53:52.043617
+Create Date: 2021-08-16 19:49:04.639783
 
 """
 from alembic import op
@@ -10,14 +10,14 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '0ea3ffa0dee6'
+revision = '98f1c94e9fa3'
 down_revision = '377e5ec93402'
 branch_labels = None
 depends_on = None
 
 
 def upgrade():
-    chi_settings = """{ "handsFree": false,
+     chi_settings = """{ "handsFree": false,
             "eulaVersion": null,
             "enableMotion": true,
             "hapticEnabled": true,
@@ -48,6 +48,7 @@ def upgrade():
                 'warehouse', {1})
         """.format(chi_settings, warehouse)
         op.execute(sql)
+
 
 
 def downgrade():
