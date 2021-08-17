@@ -17,7 +17,7 @@ depends_on = None
 
 
 def upgrade():
-     chi_settings = """{ "handsFree": false,
+    chi_settings = """{ "handsFree": false,
             "eulaVersion": null,
             "enableMotion": true,
             "hapticEnabled": true,
