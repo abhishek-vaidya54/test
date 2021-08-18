@@ -13,7 +13,12 @@ from sat_orm.pipeline_orm.user_role_association import UserRoleAssociation
 from sat_orm.pipeline_orm.user_client_association import UserClientAssociation
 from sat_orm.pipeline_orm.pipeline_base import Base
 import sat_orm.constants as constants
-from sat_orm.pipeline_orm.utilities import utils, client_utils, warehouse_utils, external_admin_user_utils
+from sat_orm.pipeline_orm.utilities import (
+    utils,
+    client_utils,
+    warehouse_utils,
+    external_admin_user_utils,
+)
 from sat_orm.pipeline_orm.utilities.utils import build_error, check_errors_and_return
 
 
@@ -121,6 +126,7 @@ class ExternalAdminUser(Base):
 
 @event.listens_for(ExternalAdminUser, "before_insert")
 def validate_role_before_insert(mapper, connection, target):
+    print("->>>>>>>>>>>>>>>CHECK CI?CD PIPELINE ")
     """
     Event hook method that fires before insert
     to check if params are valid for inserting a single external_admin_user
@@ -142,6 +148,10 @@ def validate_role_before_insert(mapper, connection, target):
 
         is_valid = external_admin_user_utils.is_valid_account_status(account_status)
         if not is_valid:
-            errors.append(build_error("account_status", constants.INVALID_ACCOUNT_STATUS_ERROR_MESSAGE))
+            errors.append(
+                build_error(
+                    "account_status", constants.INVALID_ACCOUNT_STATUS_ERROR_MESSAGE
+                )
+            )
 
     check_errors_and_return(errors)
