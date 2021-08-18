@@ -230,7 +230,7 @@ class ExternalAdminUserSchema(SQLAlchemyAutoSchema):
 
 
 class GroupSchema(SQLAlchemyAutoSchema):
-    overrideSettings = fields.Function(lambda obj: bool(obj.override_settings))
+    override_settings = fields.Function(lambda obj: bool(obj.override_settings))
 
     class Meta:
         model = Groups
