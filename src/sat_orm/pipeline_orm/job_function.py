@@ -121,6 +121,7 @@ class JobFunction(Base):
             "warehouse_id": self.warehouse_id,
             "settings_id": self.settings_id,
             "max_package_weight": self.max_package_weight,
+            "max_package_mass": self.max_package_mass,
         }
 
     def __repr__(self):
@@ -146,8 +147,11 @@ def validate_before_insert(mapper, connection, target):
     warehouse_id = params_input.get("warehouse_id", "")
     settings_id = params_input.get("settings_id", "")
     max_package_weight = params_input.get("max_package_weight", "")
+    max_package_mass = params_input.get("max_package_mass", "")
 
-    is_valid, message = utils.is_valid_string(name)
+    is_valid, message = job_function_utils.is_valid_job_function_name(
+        connection, params_input.get("name", ""), params_input.get("id", "")
+    )
     if not is_valid:
         errors.append(build_error("name", message))
 
@@ -181,6 +185,9 @@ def validate_before_insert(mapper, connection, target):
     is_valid, message = utils.is_valid_float(max_package_weight)
     if not is_valid:
         errors.append(build_error("max_package_weight", message))
+    is_valid, message = utils.is_valid_float(max_package_mass)
+    if not is_valid:
+        errors.append(build_error("max_package_mass", message))
 
     if "package_unit" in params_input:
         is_valid = job_function_utils.is_valid_package_unit(
@@ -218,9 +225,11 @@ def validate_before_update(mapper, connection, target):
     errors = []
 
     if "name" in params_input:
-        is_valid, message = utils.is_valid_string(params_input.get("name", ""))
-        if not is_valid:
-            errors.append(build_error("name", message))
+        is_valid, message = job_function_utils.is_valid_job_function_name(
+            connection, params_input.get("name", ""), params_input.get("id", "")
+        )
+    if not is_valid:
+        errors.append(build_error("name", message))
 
     if "warehouse_id" in params_input:
         is_valid = ia_utils.is_valid_warehouse(
@@ -262,6 +271,13 @@ def validate_before_update(mapper, connection, target):
         )
         if not is_valid:
             errors.append(build_error("max_package_weight", message))
+
+    if "max_package_mass" in params_input:
+        is_valid, message = utils.is_valid_float(
+            params_input.get("max_package_mass", "")
+        )
+        if not is_valid:
+            errors.append(build_error("max_package_mass", message))
 
     if "package_unit" in params_input:
         is_valid = job_function_utils.is_valid_package_unit(
