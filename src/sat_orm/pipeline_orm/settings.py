@@ -36,17 +36,19 @@ class Setting(Base):
 
     # Columns
     id = Column(Integer, primary_key=True, autoincrement=True)
-    target_type = Column(
-        Enum(
-            "group",
-            "warehouse",
-            "industrial_athlete",
-            "shift",
-            "jobfunction",
-        ),
-        nullable=False,
-        default="group",
-    )
+    target_type = Column(String(45), nullable=False)
+
+    # target_type = Column(
+    #     Enum(
+    #         "group",
+    #         "warehouse",
+    #         "industrial_athlete",
+    #         "shift",
+    #         "jobfunction",
+    #     ),
+    #     nullable=False,
+    #     default="group",
+    # )
     target_id = Column(Integer, nullable=False)
     value = Column(JSON, nullable=True, server_default=None)
     db_created_by = Column(Integer, ForeignKey("external_admin_user.id"))

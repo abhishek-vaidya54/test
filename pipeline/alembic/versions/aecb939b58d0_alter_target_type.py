@@ -17,26 +17,28 @@ depends_on = None
 
 
 def upgrade():
-    op.drop_column("settings", "target_type")
-    op.add_column(
-        "settings",
-        sa.Column(
-            "target_type",
-            sa.Enum(
-                "group",
-                "warehouse",
-                "jobfunction",
-                "industrial_athlete",
-                "shift",
-            ),
-            server_default="group",
-        ),
-    )
+    pass
+    # op.drop_column("settings", "target_type")
+    # op.add_column(
+    #     "settings",
+    #     sa.Column(
+    #         "target_type",
+    #         sa.Enum(
+    #             "group",
+    #             "warehouse",
+    #             "jobfunction",
+    #             "industrial_athlete",
+    #             "shift",
+    #         ),
+    #         server_default="group",
+    #     ),
+    # )
 
 
 def downgrade():
-    op.drop_column("settings", "target_type")
-    op.add_column(
-        "settings",
-        sa.Column("target_type", sa.String(length=255), nullable=False),
-    )
+    pass
+    # op.drop_column("settings", "target_type")
+    # op.add_column(
+    #     "settings",
+    #     sa.Column("target_type", sa.String(length=255), nullable=False),
+    # )
