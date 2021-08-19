@@ -13,3 +13,14 @@ def get_job_function(connection, job_function_id, warehouse_id):
         )
     ).fetchone()
     return job_function
+
+
+def get_job_function_by_name(connection, name):
+    """
+    Get the JobFunction via name
+    """
+    job_function = connection.execute(
+        f'SELECT * FROM job_function WHERE name="{name}"'
+    ).fetchone()
+
+    return job_function
