@@ -6,6 +6,7 @@ from sat_orm.pipeline_orm.queries import shift_queries
 from sat_orm.pipeline_orm.queries import job_function_queries
 from sat_orm.pipeline_orm.queries import warehouse_queries
 import sat_orm.constants as constants
+from sat_orm.pipeline_orm.utilities import utils
 
 
 def is_valid_string(string_input):
@@ -73,3 +74,19 @@ def is_valid_shift_id(connection, id, warehouse_id):
         return bool(shift)
     except Exception as error:
         return False
+
+
+def is_valid_shift_name(connection, name, id=None):
+    is_valid, message = utils.is_valid_string(name)
+    if not is_valid:
+        return False, message
+
+    shifts = shift_queries.get_shift_by_name(connection, name)
+
+    if shifts is None:
+        return True, None
+
+    if id == shifts.id:
+        return True, None
+
+    return False, constants.DUPLICATE_SHIFT_NAME_MESSAGE

@@ -14,3 +14,12 @@ def get_shift(connection, shift_id, warehouse_id):
     ).fetchone()
 
     return shift
+
+
+def get_shift_by_name(connection, name):
+    """
+    Get the Shift via name
+    """
+    shift = connection.execute(f'SELECT * FROM shifts WHERE name="{name}"').fetchone()
+
+    return shift
