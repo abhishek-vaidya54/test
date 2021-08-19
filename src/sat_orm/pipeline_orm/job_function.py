@@ -34,6 +34,7 @@ from sqlalchemy import (
     Enum,
 )
 from sqlalchemy.orm import relationship, validates
+from sqlalchemy.dialects.mysql import TINYINT
 
 # Local Application Imports
 from sat_orm.pipeline_orm.pipeline_base import Base
@@ -65,6 +66,7 @@ class JobFunction(Base):
     lbd_indicence_rate = Column(Integer, nullable=True)
     description = Column(Text, nullable=True)
     color = Column(String(255), nullable=True)
+    override_settings = Column(TINYINT(1), nullable=False)
     db_created_at = Column(DateTime, default=datetime.datetime.utcnow, nullable=False)
     db_modified_at = Column(
         DateTime,
@@ -122,6 +124,7 @@ class JobFunction(Base):
             "settings_id": self.settings_id,
             "max_package_weight": self.max_package_weight,
             "max_package_mass": self.max_package_mass,
+            "override_settings": self.override_settings,
         }
 
     def __repr__(self):
