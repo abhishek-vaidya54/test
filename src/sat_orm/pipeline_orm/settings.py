@@ -17,14 +17,16 @@ CLASSIFICATION:
 
 
 # Third Party Library Imports
-from sqlalchemy import Column, Integer, String, JSON, DateTime, event
+from sqlalchemy import Column, Integer, String, JSON, DateTime, event, ForeignKey
 from sqlalchemy.sql import text
 from sqlalchemy.orm import validates
 
 # Local Application Imports
+from sqlalchemy.orm import relationship
 from sat_orm.pipeline_orm.pipeline_base import Base
 import sat_orm.constants as constants
 from sat_orm.pipeline_orm.utilities import utils
+from sat_orm.pipeline_orm.utilities import external_admin_user_utils
 from sat_orm.pipeline_orm.utilities.utils import build_error, check_errors_and_return
 from sat_orm.pipeline_orm.utilities import setting_utils
 
@@ -37,11 +39,16 @@ class Setting(Base):
     target_type = Column(String(45), nullable=False)
     target_id = Column(Integer, nullable=False)
     value = Column(JSON, nullable=True, server_default=None)
+    db_created_by = Column(
+        Integer, ForeignKey("external_admin_user.id"))
     db_created_at = Column(
         DateTime, nullable=True, server_default=text("CURRENT_TIMESTAMP")
     )
 
     # Relationship
+    external_admin_user = relationship(
+        "ExternalAdminUser", uselist=False
+    )
 
     @validates("target_type")
     def validate_target_type(self, key, target_type):
@@ -63,6 +70,7 @@ class Setting(Base):
             "target_type": self.target_type,
             "target_id": self.target_id,
             "value": self.value,
+            "db_created_by": self.db_created_by,
             "db_created_at": self.db_created_at,
         }
 
@@ -86,6 +94,7 @@ def validate_before_insert(mapper, connection, target):
     target_type = params_input.get("target_type", "")
     target_id = params_input.get("target_id", 0)
     value = params_input.get("value", {})
+    db_created_by = params_input.get("db_created_by", None)
 
     is_valid = setting_utils.is_valid_target_type(target_type)
     if not is_valid:
@@ -100,5 +109,15 @@ def validate_before_insert(mapper, connection, target):
     is_valid, message = setting_utils.is_valid_value_obj(value)
     if not is_valid:
         errors.append(build_error("value", message))
+
+    is_valid = external_admin_user_utils.is_valid_user_id(
+        connection, db_created_by
+    )
+    if not is_valid:
+        errors.append(
+            build_error(
+                "db_created_by", constants.INVALID_PARAM_USERNAME_MESSAGE
+            )
+        )
 
     check_errors_and_return(errors)
