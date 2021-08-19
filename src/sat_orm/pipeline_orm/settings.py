@@ -17,7 +17,7 @@ CLASSIFICATION:
 
 
 # Third Party Library Imports
-from sqlalchemy import Column, Integer, String, JSON, DateTime, event, ForeignKey
+from sqlalchemy import Column, Integer, String, JSON, DateTime, event, ForeignKey, Enum
 from sqlalchemy.sql import text
 from sqlalchemy.orm import validates
 
@@ -37,18 +37,27 @@ class Setting(Base):
     # Columns
     id = Column(Integer, primary_key=True, autoincrement=True)
     target_type = Column(String(45), nullable=False)
+
+    # target_type = Column(
+    #     Enum(
+    #         "group",
+    #         "warehouse",
+    #         "industrial_athlete",
+    #         "shift",
+    #         "jobfunction",
+    #     ),
+    #     nullable=False,
+    #     default="group",
+    # )
     target_id = Column(Integer, nullable=False)
     value = Column(JSON, nullable=True, server_default=None)
-    db_created_by = Column(
-        Integer, ForeignKey("external_admin_user.id"))
+    db_created_by = Column(Integer, ForeignKey("external_admin_user.id"))
     db_created_at = Column(
         DateTime, nullable=True, server_default=text("CURRENT_TIMESTAMP")
     )
 
     # Relationship
-    external_admin_user = relationship(
-        "ExternalAdminUser", uselist=False
-    )
+    external_admin_user = relationship("ExternalAdminUser", uselist=False)
 
     @validates("target_type")
     def validate_target_type(self, key, target_type):
@@ -110,14 +119,10 @@ def validate_before_insert(mapper, connection, target):
     if not is_valid:
         errors.append(build_error("value", message))
 
-    is_valid = external_admin_user_utils.is_valid_user_id(
-        connection, db_created_by
-    )
+    is_valid = external_admin_user_utils.is_valid_user_id(connection, db_created_by)
     if not is_valid:
         errors.append(
-            build_error(
-                "db_created_by", constants.INVALID_PARAM_USERNAME_MESSAGE
-            )
+            build_error("db_created_by", constants.INVALID_PARAM_USERNAME_MESSAGE)
         )
 
     check_errors_and_return(errors)
