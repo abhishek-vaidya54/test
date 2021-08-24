@@ -30,7 +30,7 @@ def upgrade():
                 "enableTemperature": false,
                 "exposureRSSILimit": -48,
                 "hapticFeedbackGap": 0,
-                "showBaselineModal": true,
+                "showBaselineModal": false,
                 "showSafetyJudgement": true,
                 "hapticBendPercentile": 50,
                 "hapticFeedbackWindow": 10,
