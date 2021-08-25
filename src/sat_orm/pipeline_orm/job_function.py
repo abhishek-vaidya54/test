@@ -231,8 +231,8 @@ def validate_before_update(mapper, connection, target):
         is_valid, message = job_function_utils.is_valid_job_function_name(
             connection, params_input.get("name", ""), params_input.get("id", "")
         )
-    if not is_valid:
-        errors.append(build_error("name", message))
+        if not is_valid:
+            errors.append(build_error("name", message))
 
     if "warehouse_id" in params_input:
         is_valid = ia_utils.is_valid_warehouse(
