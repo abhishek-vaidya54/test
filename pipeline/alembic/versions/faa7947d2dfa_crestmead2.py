@@ -20,7 +20,7 @@ def upgrade():
     warehouse_settings_json = """{ "handsFree": false,
             "eulaVersion": null,
             "enableMotion": true,
-            "hapticEnabled": false,
+            "hapticEnabled": true,
             "athleteEnabled": false,
             "showEngagement": true,
             "enableProximity": false,
