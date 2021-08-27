@@ -29,7 +29,7 @@ def is_valid_ia_first_last_name(connection, value, field, client_id):
 
 
 def is_valid_external_id(
-    connection, external_id, warehouse_id, ia=None, existing_ia_id=None
+    connection, external_id, warehouse_id, hire_date=None, ia=None, existing_ia_id=None
 ):
     """
     Validates an IA's external ID
@@ -46,7 +46,7 @@ def is_valid_external_id(
             return True, None
 
     existing_ia = athlete_queries.get_ia_by_external_id(
-        connection, external_id, warehouse_id
+        connection, external_id, warehouse_id, hire_date
     )
     # DB does not contain any IA with the same external_id
     if existing_ia:
