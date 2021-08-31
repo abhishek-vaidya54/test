@@ -35,8 +35,19 @@ def convert_time(date_input):
     except:
         return ""
 
+def convert_date_time(date_input):
+    try:
+        converted = datetime.strptime(str(date_input), "%Y-%m-%d %H:%M:%S").strftime(
+            "%Y-%m-%d %H:%M:%S"
+        )
+        return converted
+    except:
+        return ""
 
 class SettingSchema(SQLAlchemyAutoSchema):
+    db_created_at = fields.Function(
+        lambda obj: convert_date_time(obj.db_created_at) if obj.db_created_at else None
+    )
     class Meta:
         model = Setting
         include_relationships = True
@@ -219,7 +230,7 @@ class ExternalAdminUserSchema(SQLAlchemyAutoSchema):
 
 
 class GroupSchema(SQLAlchemyAutoSchema):
-    overrideSettings = fields.Function(lambda obj: bool(obj.override_settings))
+    override_settings = fields.Function(lambda obj: bool(obj.override_settings))
 
     class Meta:
         model = Groups
