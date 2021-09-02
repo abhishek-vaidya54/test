@@ -57,9 +57,15 @@ INVALID_REQUEST = "Invalid request."
 
 DUPLICATE_CLIENT_NAME_MESSAGE = "Client Name already exists."
 
+DUPLICATE_SHIFT_NAME_MESSAGE = "Shifts Name already exists."
+
+DUPLICATE_JOB_FUNCTION_NAME_MESSAGE = "JobFunction Name already exists."
+
 DUPLICATE_WAREHOUSE_NAME_MESSAGE = "Warehouse Name already exists."
 
 INVALID_CLIENT_STATUS_MESSAGE = "Invalid client status."
+
+INVALID_CLIENT_SUBDOMAIN_MESSAGE = "Invalid client subdomain"
 
 INVALID_CLIENT_IA_NAME_FORMAT_MESSAGE = "Invalid client ia name format."
 
@@ -95,17 +101,19 @@ BULK_UPLOAD_IN_PROGRESS_ERROR_MESSAGE = "Bulk upload is already in progress."
 
 INVALID_EMAIL_ERROR_MESSAGE = "Invalid email address."
 
+INVALID_ACCOUNT_STATUS_ERROR_MESSAGE = "Invalid account status address."
+
+VALID_USER_ACCOUNT_STATUS_FORMATS = ("active", "deleted", "inactive")
+
 USER_NOT_FOUND_ERROR_MESSAGE = "User not found."
 
 INVALID_EX_ADMIN_PUT_ACTION_ERROR_MESSAGE = "Action should be enable or disable."
 
 EX_ADMIN_VALID_PUT_ACTIONS = ("enable", "disable")
 
-INVALID_TARGET_TYPE_MESSAGE = (
-    "target_type should be one of 'group', 'warehouse', 'industrial_athlete'"
-)
+INVALID_TARGET_TYPE_MESSAGE = "target_type should be one of 'group', 'warehouse', 'job_function', 'industrial_athlete', 'shifts'"
 
-VALID_TARGET_TYPES = ("group", "warehouse", "industrial_athlete")
+VALID_TARGET_TYPES = ("group", "warehouse", "job_function", "shifts")
 
 INVALID_TARGET_ID_MESSAGE = "target_id should be id of target_type table"
 
