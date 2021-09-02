@@ -8,7 +8,7 @@ def get_ia_by_external_id(connection, external_id, warehouse_id, hire_date):
             user: The IA object retrieved from the database
     """
     ia = connection.execute(
-        "SELECT * FROM industrial_athlete WHERE external_id='{}' AND warehouse_id={} AND termination_date > '{}'".format(
+        "SELECT * FROM industrial_athlete WHERE external_id='{}' AND warehouse_id={} AND (termination_date >= '{}' OR  termination_date is null )  ".format(
             external_id, warehouse_id, hire_date
         )
     ).fetchone()
