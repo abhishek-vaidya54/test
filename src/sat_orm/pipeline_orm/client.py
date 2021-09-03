@@ -272,13 +272,14 @@ def validate_before_insert(mapper, connection, target):
             )
 
     if "subdomain" in params_input:
-        is_valid, message = client_utils.is_valid_client_subdomain(
-            params_input.get("subdomain", None)
-        )
-        if not is_valid:
-            errors.append(
-                build_error("subdomain", constants.INVALID_CLIENT_SUBDOMAIN_MESSAGE)
-                )
+        if params_input['subdomain'] != "":
+            is_valid, message = client_utils.is_valid_client_subdomain(
+                params_input.get("subdomain", None)
+            )
+            if not is_valid:
+                errors.append(
+                    build_error("subdomain", constants.INVALID_CLIENT_SUBDOMAIN_MESSAGE)
+                    )
 
     if "ia_name_format" in params_input:
         is_valid = client_utils.is_valid_client_ia_name_format(
