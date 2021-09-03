@@ -67,7 +67,8 @@ class JobFunction(Base):
     description = Column(Text, nullable=True)
     color = Column(String(255), nullable=True)
     override_settings = Column(TINYINT(1), nullable=False)
-    db_created_at = Column(DateTime, default=datetime.datetime.utcnow, nullable=False)
+    db_created_at = Column(
+        DateTime, default=datetime.datetime.utcnow, nullable=False)
     db_modified_at = Column(
         DateTime,
         default=datetime.datetime.utcnow,
@@ -81,7 +82,8 @@ class JobFunction(Base):
     median_safety_score = Column(Float, nullable=True)
     third_quarter_safety_score = Column(Float, nullable=True)
     settings_id = Column(Integer, ForeignKey("settings.id"), nullable=False)
-    settings = relationship("Setting", foreign_keys=settings_id, backref="settings")
+    settings = relationship(
+        "Setting", foreign_keys=settings_id, backref="settings")
 
     # Table Constraints
     PrimaryKeyConstraint("id")
@@ -90,7 +92,8 @@ class JobFunction(Base):
     industrial_athletes = relationship(
         "IndustrialAthlete", back_populates="job_function"
     )
-    warehouse = relationship("Warehouse", back_populates="job_functions", uselist=False)
+    warehouse = relationship(
+        "Warehouse", back_populates="job_functions", uselist=False)
 
     @validates("warehouse_id")
     def validate_warehouse_id(self, key, warehouse_id):
@@ -153,7 +156,8 @@ def validate_before_insert(mapper, connection, target):
     # max_package_mass = params_input.get("max_package_mass", "")
 
     is_valid, message = job_function_utils.is_valid_job_function_name(
-        connection, params_input.get("name", ""), params_input.get("id", "")
+        connection, params_input.get("name", ""), params_input.get(
+            "id", ""), params_input.get("warehouse_id", "")
     )
     if not is_valid:
         errors.append(build_error("name", message))
@@ -168,7 +172,8 @@ def validate_before_insert(mapper, connection, target):
         is_valid = ia_utils.is_valid_setting(connection, settings_id)
         if not is_valid:
             errors.append(
-                build_error("settings_id", constants.INVALID_SETTINGS_ID_MESSAGE)
+                build_error("settings_id",
+                            constants.INVALID_SETTINGS_ID_MESSAGE)
             )
 
     if group_administrator:
@@ -198,7 +203,8 @@ def validate_before_insert(mapper, connection, target):
         )
         if not is_valid:
             errors.append(
-                build_error("package_unit", constants.INVALID_PACKAGE_UNITS_MESSAGE)
+                build_error("package_unit",
+                            constants.INVALID_PACKAGE_UNITS_MESSAGE)
             )
     check_errors_and_return(errors)
 
@@ -229,7 +235,8 @@ def validate_before_update(mapper, connection, target):
 
     if "name" in params_input:
         is_valid, message = job_function_utils.is_valid_job_function_name(
-            connection, params_input.get("name", ""), params_input.get("id", "")
+            connection, params_input.get("name", ""), params_input.get(
+                "id", ""), params_input.get("warehouse_id", "")
         )
         if not is_valid:
             errors.append(build_error("name", message))
@@ -240,7 +247,8 @@ def validate_before_update(mapper, connection, target):
         )
         if not is_valid:
             errors.append(
-                build_error("warehouse_id", constants.INVALID_WAREHOUSE_ID_MESSAGE)
+                build_error("warehouse_id",
+                            constants.INVALID_WAREHOUSE_ID_MESSAGE)
             )
 
     if "settings_id" in params_input:
@@ -249,7 +257,8 @@ def validate_before_update(mapper, connection, target):
         )
         if not is_valid:
             errors.append(
-                build_error("settings_id", constants.INVALID_SETTINGS_ID_MESSAGE)
+                build_error("settings_id",
+                            constants.INVALID_SETTINGS_ID_MESSAGE)
             )
 
     if "group_administrator" in params_input:
@@ -288,7 +297,8 @@ def validate_before_update(mapper, connection, target):
         )
         if not is_valid:
             errors.append(
-                build_error("package_unit", constants.INVALID_PACKAGE_UNIT_MESSAGE)
+                build_error("package_unit",
+                            constants.INVALID_PACKAGE_UNIT_MESSAGE)
             )
 
     check_errors_and_return(errors)
