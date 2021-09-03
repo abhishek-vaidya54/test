@@ -115,8 +115,8 @@ def validate_before_insert(mapper, connection, target):
     errors = []
     # Name
     is_valid, message = shift_utils.is_valid_shift_name(
-        connection, param_input.get("name", ""), param_input.get("id", "")
-    )
+        connection, param_input.get("name", ""), param_input.get("id", ""), param_input.get("warehouseId", ""))
+    
     if not is_valid:
         errors.append(build_error("name", message))
     # Warehouse ID
@@ -154,8 +154,8 @@ def validate_before_update(mapper, connection, target):
     # Name
     if "name" in param_input:
         is_valid, message = shift_utils.is_valid_shift_name(
-            connection, param_input.get("name", ""), param_input.get("id", "")
-        )
+            connection, param_input.get("name", ""), param_input.get("id", ""), param_input.get("warehouseId", ""))
+        
         if not is_valid:
             errors.append(build_error("name", message))
     # Warehouse ID

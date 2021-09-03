@@ -76,12 +76,12 @@ def is_valid_shift_id(connection, id, warehouse_id):
         return False
 
 
-def is_valid_shift_name(connection, name, id=None):
+def is_valid_shift_name(connection, name, id=None, warehouseId= None):
     is_valid, message = utils.is_valid_string(name)
     if not is_valid:
         return False, message
 
-    shifts = shift_queries.get_shift_by_name(connection, name)
+    shifts = shift_queries.get_shift_by_name(connection, name, warehouseId)
 
     if shifts is None:
         return True, None
