@@ -111,11 +111,9 @@ INVALID_EX_ADMIN_PUT_ACTION_ERROR_MESSAGE = "Action should be enable or disable.
 
 EX_ADMIN_VALID_PUT_ACTIONS = ("enable", "disable")
 
-INVALID_TARGET_TYPE_MESSAGE = (
-    "target_type should be one of 'group', 'warehouse', 'industrial_athlete'"
-)
+INVALID_TARGET_TYPE_MESSAGE = "target_type should be one of 'group', 'warehouse', 'job_function', 'industrial_athlete', 'shifts'"
 
-VALID_TARGET_TYPES = ("group", "warehouse", "industrial_athlete")
+VALID_TARGET_TYPES = ("group", "warehouse", "job_function", "shifts")
 
 INVALID_TARGET_ID_MESSAGE = "target_id should be id of target_type table"
 

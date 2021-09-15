@@ -21,6 +21,7 @@ import datetime
 # Third Party Imports
 from sqlalchemy import ForeignKey, Column, Integer, DateTime, Text, String, event
 from sqlalchemy.orm import relationship, validates
+from sqlalchemy.dialects.mysql import TINYINT
 
 # Local Application Import
 from sat_orm.pipeline_orm.pipeline_base import Base
@@ -42,6 +43,7 @@ class Shifts(Base):
     group_administrator = Column(String(255), nullable=True)
     description = Column(Text, nullable=True)
     color = Column(String(255), nullable=True)
+    override_settings = Column(TINYINT(1), nullable=False)
     db_created_at = Column(DateTime, default=datetime.datetime.utcnow, nullable=False)
     db_modified_at = Column(
         DateTime,
@@ -90,6 +92,7 @@ class Shifts(Base):
             "shiftStart": self.shift_start,
             "shiftEnd": self.shift_end,
             "color": self.color,
+            "override_settings": self.override_settings,
             "description": self.description,
             "group_administrator": self.group_administrator,
             "db_created_at": self.db_created_at,
@@ -112,8 +115,8 @@ def validate_before_insert(mapper, connection, target):
     errors = []
     # Name
     is_valid, message = shift_utils.is_valid_shift_name(
-        connection, param_input.get("name", ""), param_input.get("id", "")
-    )
+        connection, param_input.get("name", ""), param_input.get("id", ""), param_input.get("warehouseId", ""))
+    
     if not is_valid:
         errors.append(build_error("name", message))
     # Warehouse ID
@@ -151,8 +154,8 @@ def validate_before_update(mapper, connection, target):
     # Name
     if "name" in param_input:
         is_valid, message = shift_utils.is_valid_shift_name(
-            connection, param_input.get("name", ""), param_input.get("id", "")
-        )
+            connection, param_input.get("name", ""), param_input.get("id", ""), param_input.get("warehouseId", ""))
+        
         if not is_valid:
             errors.append(build_error("name", message))
     # Warehouse ID

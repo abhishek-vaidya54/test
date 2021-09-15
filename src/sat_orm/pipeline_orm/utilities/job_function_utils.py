@@ -18,12 +18,12 @@ def is_valid_package_unit(param_input):
     return param_input in constants.VALID_PACKAGE_UNITS
 
 
-def is_valid_job_function_name(connection, name, id=None):
+def is_valid_job_function_name(connection, name, id=None, warehouse_id=None):
     is_valid, message = utils.is_valid_string(name)
     if not is_valid:
         return False, message
 
-    job_function = job_function_queries.get_job_function_by_name(connection, name)
+    job_function = job_function_queries.get_job_function_by_name(connection, name, warehouse_id)
 
     if job_function is None:
         return True, None
