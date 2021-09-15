@@ -1,4 +1,4 @@
-def get_ia_by_external_id(connection, external_id, warehouse_id):
+def get_ia_by_external_id(connection, external_id, warehouse_id, hire_date):
     """
         Helper method to retrieve the IA object from the database
         Input:
@@ -8,8 +8,8 @@ def get_ia_by_external_id(connection, external_id, warehouse_id):
             user: The IA object retrieved from the database
     """
     ia = connection.execute(
-        "SELECT * FROM industrial_athlete WHERE external_id='{}' AND warehouse_id={} AND termination_date IS NULL".format(
-            external_id, warehouse_id
+        "SELECT * FROM industrial_athlete WHERE external_id='{}' AND warehouse_id={} AND (termination_date >= '{}' OR  termination_date is null )  ".format(
+            external_id, warehouse_id, hire_date
         )
     ).fetchone()
     return ia
