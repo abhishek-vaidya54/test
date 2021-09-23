@@ -233,11 +233,12 @@ RBAC_VALID_ROLES = (
     "admin",
     "superuser",
     "bulk_upload",
-    "looker_ergo",
-    "looker_prox",
+    "looker",
+
 )
 
-CREATE_VALID_ROLES = ("manager", "admin", "bulk_upload", "looker_ergo", "looker_prox")
+CREATE_VALID_ROLES = ("manager", "admin", "bulk_upload",
+                      "looker")
 
 RBAC_VALID_RESOURCES = (
     "athletes",
@@ -252,8 +253,7 @@ RBAC_VALID_RESOURCES = (
     "users",
     "settings",
     "sensors",
-    "looker_ergo",
-    "looker_prox",
+    "looker",
 )
 
 RBAC_VALID_ACTIONS = ("read", "write", "update", "delete")
@@ -265,7 +265,8 @@ RBAC_ACTION_VALUES = {
     "delete": "delete",
 }
 
-RBAC_ACTION_KEYS = {"get": "read", "post": "write", "put": "update", "delete": "delete"}
+RBAC_ACTION_KEYS = {"get": "read", "post": "write",
+                    "put": "update", "delete": "delete"}
 
 METHOD_GET = "get"
 METHOD_POST = "post"
@@ -284,8 +285,7 @@ POLICY_GROUPS_OBJ = "groups"
 POLICY_EXTERNAL_ADMIN_USER_OBJ = "users"
 POLICY_SETTINGS_OBJ = "settings"
 POLICY_SENSORS_OBJ = "sensors"
-POLICY_LOOKER_ERGO_OBJ = "looker_ergo"
-POLICY_LOOKER_PROX_OBJ = "looker_prox"
+POLICY_LOOKER = "looker"
 
 # warehouse
 INVALID_LAT_LONG_DIRECTION_MESSAGE = 'should be one of ("N", "S", "E", "W")'
@@ -298,16 +298,21 @@ INVALID_LAT_LONG_MESSAGE = {
 
 IA_NAME_FORMAT_REGEX = {
     "FIRST_NAME_LAST_NAME": {
-        "First Name": "^[a-z]+(?:[ -.']?[a-z]+)*[.]?$",  # for maching strings with hyphen periods or single qoutes eg; a-a-aaaa-a or Aaaaa B.
-        "Last Name": "^[a-z]+(?:[ -.']?[a-z]*)*$",  # for maching strings with hyphen or periods or single qoutes or spaces eg; a-a-aa aa-a
+        # for maching strings with hyphen periods or single qoutes eg; a-a-aaaa-a or Aaaaa B.
+        "First Name": "^[a-z]+(?:[ -.']?[a-z]+)*[.]?$",
+        # for maching strings with hyphen or periods or single qoutes or spaces eg; a-a-aa aa-a
+        "Last Name": "^[a-z]+(?:[ -.']?[a-z]*)*$",
     },
     "FIRST_INITIAL_LAST_NAME": {
         "First Name": "^[a-z]{1}.?$",  # for maching strings eg; t. or t
-        "Last Name": "^[a-z]+(?:[ -.']?[a-z]*)*$",  # for maching strings with hyphen or periods or single qoutes or spaces eg; a-a-aa aa-a
+        # for maching strings with hyphen or periods or single qoutes or spaces eg; a-a-aa aa-a
+        "Last Name": "^[a-z]+(?:[ -.']?[a-z]*)*$",
     },
     "ANONYMOUS": {
-        "First Name": "^[a-z0-9]+(?:[ -.]?[a-z0-9]*)*$",  # for maching strings a12sa12
-        "Last Name": "^[a-z0-9]+(?:[ -.']?[a-z0-9]*)*$",  # for maching strings with hyphen eg; aa.aa
+        # for maching strings a12sa12
+        "First Name": "^[a-z0-9]+(?:[ -.]?[a-z0-9]*)*$",
+        # for maching strings with hyphen eg; aa.aa
+        "Last Name": "^[a-z0-9]+(?:[ -.']?[a-z0-9]*)*$",
     },
 }
 
