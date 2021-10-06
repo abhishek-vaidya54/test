@@ -234,11 +234,11 @@ RBAC_VALID_ROLES = (
     "superuser",
     "bulk_upload",
     "looker",
-
+    "client-portal"
 )
 
 CREATE_VALID_ROLES = ("manager", "admin", "bulk_upload",
-                      "looker")
+                      "looker", "client-portal")
 
 RBAC_VALID_RESOURCES = (
     "athletes",
@@ -254,6 +254,7 @@ RBAC_VALID_RESOURCES = (
     "settings",
     "sensors",
     "looker",
+    "client-portal"
 )
 
 RBAC_VALID_ACTIONS = ("read", "write", "update", "delete")
@@ -286,6 +287,7 @@ POLICY_EXTERNAL_ADMIN_USER_OBJ = "users"
 POLICY_SETTINGS_OBJ = "settings"
 POLICY_SENSORS_OBJ = "sensors"
 POLICY_LOOKER = "looker"
+POLICY_CLIENT_PORTAL = "client-portal"
 
 # warehouse
 INVALID_LAT_LONG_DIRECTION_MESSAGE = 'should be one of ("N", "S", "E", "W")'
