@@ -234,7 +234,7 @@ RBAC_VALID_ROLES = (
     "superuser",
     "bulk_upload",
     "looker",
-    "client-portal"
+    "client-portal",
     "data_analytics"
 )
 
@@ -255,7 +255,7 @@ RBAC_VALID_RESOURCES = (
     "settings",
     "sensors",
     "looker",
-    "client-portal"
+    "client-portal",
     "data_analytics",
 )
 
