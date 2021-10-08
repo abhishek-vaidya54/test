@@ -1,8 +1,8 @@
 """crestmead2
 
-Revision ID: faa7947d2dfa
+Revision ID: 08d52832ea79
 Revises: bc2e67312626
-Create Date: 2021-08-25 10:12:17.426046
+Create Date: 2021-08-25 16:26:01.993546
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'faa7947d2dfa'
+revision = '08d52832ea79'
 down_revision = 'bc2e67312626'
 branch_labels = None
 depends_on = None
@@ -20,20 +20,20 @@ def upgrade():
     warehouse_settings_json = """{ "handsFree": false,
             "eulaVersion": null,
             "enableMotion": true,
-            "hapticEnabled": true,
+            "hapticEnabled": false,
             "athleteEnabled": false,
             "showEngagement": true,
             "enableProximity": false,
             "showHapticModal": false,
             "enagementEnabled": false,
-            "hapticBendNumber": 1,
+            "hapticBendNumber": 4,
             "enableTemperature": true,
             "exposureRSSILimit": -48,
-            "hapticFeedbackGap": 0,
+            "hapticFeedbackGap": 120000,
             "showBaselineModal": true,
             "showSafetyJudgement": true,
             "hapticBendPercentile": 50,
-            "hapticFeedbackWindow": 0,
+            "hapticFeedbackWindow": 300000,
             "showSafetyScoreModal": true,
             "exposureHapticEnabled": true,
             "exposureHapticRepeatMS": 10000,
