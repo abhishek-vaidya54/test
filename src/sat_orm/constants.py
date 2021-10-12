@@ -290,7 +290,7 @@ POLICY_SETTINGS_OBJ = "settings"
 POLICY_SENSORS_OBJ = "sensors"
 POLICY_LOOKER = "looker"
 POLICY_CLIENT_PORTAL = "client-portal"
-POLICY_LOOKER = "data_analytics"
+POLICY_DATA_ANALYTICS = "data_analytics"
 
 # warehouse
 INVALID_LAT_LONG_DIRECTION_MESSAGE = 'should be one of ("N", "S", "E", "W")'
