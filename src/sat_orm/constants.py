@@ -49,7 +49,7 @@ INVALID_SHIFT_MESSAGE = "Invalid shift"
 
 INVALID_WAREHOUSE_MESSAGE = "Invalid warehouse"
 
-DUPLICATE_EXTERNAL_ID_MESSAGE = "An athlete with this external ID already exists."
+DUPLICATE_EXTERNAL_ID_MESSAGE = "The user id that you are trying to add is already in use. Please specify a different user id."
 
 INVALID_EXTERNAL_ID_MESSAGE = "Invalid external ID."
 

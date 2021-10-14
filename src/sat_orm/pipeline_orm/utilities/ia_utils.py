@@ -28,6 +28,10 @@ def is_valid_ia_first_last_name(connection, value, field, client_id):
     )
 
 
+def duplicate_external_id_with_termination_date(termination_date):
+    return 'The user id that you are trying to add is already in use and has a termination date of '+str(termination_date)+'. Please specify a different user id.'
+
+
 def is_valid_external_id(
     connection, external_id, warehouse_id, hire_date=None, ia=None, existing_ia_id=None
 ):
@@ -53,8 +57,10 @@ def is_valid_external_id(
         # check if comparing against same IA
         if str(existing_ia_id) == str(existing_ia.id):
             return True, None
-
-        return False, constants.DUPLICATE_EXTERNAL_ID_MESSAGE
+        if existing_ia.termination_date:
+            return False, duplicate_external_id_with_termination_date(existing_ia.termination_date)
+        else:
+            return False, constants.DUPLICATE_EXTERNAL_ID_MESSAGE
 
     pattern = re.compile(constants.EXTERNAL_ID_REGEX, flags=re.IGNORECASE)
     if re.match(pattern, external_id):
@@ -79,7 +85,8 @@ def is_valid_warehouse(connection, warehouse_id, client_id=None):
     Returns True if it is a valid warehouse
     Returns False if it is not
     """
-    warehouse = warehouse_queries.get_warehouse(connection, warehouse_id, client_id)
+    warehouse = warehouse_queries.get_warehouse(
+        connection, warehouse_id, client_id)
     return bool(warehouse)
 
 
