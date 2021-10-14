@@ -29,7 +29,7 @@ def is_valid_ia_first_last_name(connection, value, field, client_id):
 
 
 def duplicate_external_id_with_termination_date(termination_date):
-    return 'The user id that you are trying to add is already in use and has a termination date of '+str(termination_date)+'. Please specify a different user id.'
+    return 'The external id that you are trying to add is already in use and has a termination date of '+str(termination_date)+'. Please specify a different external id.'
 
 
 def is_valid_external_id(
