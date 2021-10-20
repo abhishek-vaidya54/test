@@ -257,6 +257,7 @@ RBAC_VALID_RESOURCES = (
     "looker",
     "client-portal",
     "data_analytics"
+
 )
 
 RBAC_VALID_ACTIONS = ("read", "write", "update", "delete")
