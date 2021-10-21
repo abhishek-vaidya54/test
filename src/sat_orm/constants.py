@@ -49,7 +49,7 @@ INVALID_SHIFT_MESSAGE = "Invalid shift"
 
 INVALID_WAREHOUSE_MESSAGE = "Invalid warehouse"
 
-DUPLICATE_EXTERNAL_ID_MESSAGE = "An athlete with this external ID already exists."
+DUPLICATE_EXTERNAL_ID_MESSAGE = "The external id that you are trying to add is already in use. Please specify a different external id."
 
 INVALID_EXTERNAL_ID_MESSAGE = "Invalid external ID."
 
@@ -234,11 +234,12 @@ RBAC_VALID_ROLES = (
     "superuser",
     "bulk_upload",
     "looker",
-    "client-portal"
+    "client-portal",
+    "data_analytics"
 )
 
 CREATE_VALID_ROLES = ("manager", "admin", "bulk_upload",
-                      "looker", "client-portal")
+                      "looker", "client-portal", "data_analytics")
 
 RBAC_VALID_RESOURCES = (
     "athletes",
@@ -254,7 +255,9 @@ RBAC_VALID_RESOURCES = (
     "settings",
     "sensors",
     "looker",
-    "client-portal"
+    "client-portal",
+    "data_analytics"
+
 )
 
 RBAC_VALID_ACTIONS = ("read", "write", "update", "delete")
@@ -288,6 +291,7 @@ POLICY_SETTINGS_OBJ = "settings"
 POLICY_SENSORS_OBJ = "sensors"
 POLICY_LOOKER = "looker"
 POLICY_CLIENT_PORTAL = "client-portal"
+POLICY_DATA_ANALYTICS = "data_analytics"
 
 # warehouse
 INVALID_LAT_LONG_DIRECTION_MESSAGE = 'should be one of ("N", "S", "E", "W")'
