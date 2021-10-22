@@ -57,8 +57,13 @@ class IndustrialAthlete(Base):
     termination_date = Column(DateTime, nullable=True)
     warehouse_id = Column(Integer, ForeignKey("warehouse.id"), nullable=False)
     shift_id = Column(Integer, ForeignKey("shifts.id"), nullable=False)
-    job_function_id = Column(Integer, ForeignKey("job_function.id"), nullable=False)
-    db_created_at = Column(DateTime, default=datetime.datetime.utcnow, nullable=False)
+    trained = Column(Boolean, nullable=True, default=False)
+    harness_provided = Column(Boolean, nullable=True, default=False)
+
+    job_function_id = Column(Integer, ForeignKey(
+        "job_function.id"), nullable=False)
+    db_created_at = Column(
+        DateTime, default=datetime.datetime.utcnow, nullable=False)
     db_modified_at = Column(
         DateTime,
         default=datetime.datetime.utcnow,
@@ -72,15 +77,18 @@ class IndustrialAthlete(Base):
     # is_active = Column(Boolean, nullable=True, server_default=None)
 
     # Table Relationships
-    client = relationship("Client", back_populates="industrial_athletes", uselist=False)
+    client = relationship(
+        "Client", back_populates="industrial_athletes", uselist=False)
     warehouse = relationship(
         "Warehouse", back_populates="industrial_athletes", uselist=False
     )
-    shifts = relationship("Shifts", back_populates="industrial_athletes", uselist=False)
+    shifts = relationship(
+        "Shifts", back_populates="industrial_athletes", uselist=False)
     job_function = relationship(
         "JobFunction", back_populates="industrial_athletes", uselist=False
     )
-    groups = relationship("Groups", back_populates="industrial_athletes", uselist=False)
+    groups = relationship(
+        "Groups", back_populates="industrial_athletes", uselist=False)
 
     @validates("client_id")
     def validate_client_id(self, key, client_id):
@@ -177,13 +185,15 @@ def validate_before_insert(mapper, connection, target):
     errors = []
 
     is_valid, message = ia_utils.is_valid_ia_first_last_name(
-        connection, param_input.get("firstName", ""), "First Name", target.client_id
+        connection, param_input.get(
+            "firstName", ""), "First Name", target.client_id
     )
     if not is_valid:
         errors.append(build_error("firstName", message))
 
     is_valid, message = ia_utils.is_valid_ia_first_last_name(
-        connection, param_input.get("lastName", ""), "Last Name", target.client_id
+        connection, param_input.get(
+            "lastName", ""), "Last Name", target.client_id
     )
     if not is_valid:
         errors.append(build_error("lastName", message))
@@ -213,7 +223,8 @@ def validate_before_insert(mapper, connection, target):
         connection, param_input.get("warehouseId", ""), target.client_id
     )
     if not is_valid:
-        errors.append(build_error("warehouseId", constants.INVALID_WAREHOUSE_MESSAGE))
+        errors.append(build_error(
+            "warehouseId", constants.INVALID_WAREHOUSE_MESSAGE))
 
     is_valid = ia_utils.is_valid_shift(
         connection, param_input.get("shiftId", ""), target.warehouse_id
@@ -226,7 +237,8 @@ def validate_before_insert(mapper, connection, target):
     )
     if not is_valid:
         errors.append(
-            build_error("jobFunctionId", constants.INVALID_JOB_FUNCTION_MESSAGE)
+            build_error("jobFunctionId",
+                        constants.INVALID_JOB_FUNCTION_MESSAGE)
         )
 
     is_valid, date_obj = utils.is_valid_date(param_input.get("hireDate", ""))
@@ -276,14 +288,16 @@ def validate_before_update(mapper, connection, target):
 
     if "firstName" in param_input:
         is_valid, message = ia_utils.is_valid_ia_first_last_name(
-            connection, param_input.get("firstName", ""), "First Name", ia.client_id
+            connection, param_input.get(
+                "firstName", ""), "First Name", ia.client_id
         )
         if not is_valid:
             errors.append(build_error("firstName", message))
 
     if "lastName" in param_input:
         is_valid, message = ia_utils.is_valid_ia_first_last_name(
-            connection, param_input.get("lastName", ""), "Last Name", ia.client_id
+            connection, param_input.get(
+                "lastName", ""), "Last Name", ia.client_id
         )
         if not is_valid:
             errors.append(build_error("lastName", message))
@@ -303,7 +317,8 @@ def validate_before_update(mapper, connection, target):
     if "sex" in param_input:
         is_valid = param_input.get("sex", "") in ("m", "f")
         if not is_valid:
-            errors.append(build_error("sex", constants.INVALID_PARAM_SEX_MESSAGE))
+            errors.append(build_error(
+                "sex", constants.INVALID_PARAM_SEX_MESSAGE))
 
     if "clientId" in param_input:
         is_valid = client_utils.is_valid_client_id(
@@ -311,7 +326,8 @@ def validate_before_update(mapper, connection, target):
         )
         if not is_valid:
             errors.append(
-                utils.build_error("clientId", constants.INVALID_CLIENT_ID_MESSAGE)
+                utils.build_error(
+                    "clientId", constants.INVALID_CLIENT_ID_MESSAGE)
             )
 
     if "warehouseId" in param_input:
@@ -330,7 +346,8 @@ def validate_before_update(mapper, connection, target):
             param_input.get("warehouseId", ia.warehouse_id),
         )
         if not is_valid:
-            errors.append(build_error("shiftId", constants.INVALID_SHIFT_MESSAGE))
+            errors.append(build_error(
+                "shiftId", constants.INVALID_SHIFT_MESSAGE))
 
     if "jobFunctionId" in param_input:
         is_valid = ia_utils.is_valid_job_function(
@@ -340,16 +357,20 @@ def validate_before_update(mapper, connection, target):
         )
         if not is_valid:
             errors.append(
-                build_error("jobFunctionId", constants.INVALID_JOB_FUNCTION_MESSAGE)
+                build_error("jobFunctionId",
+                            constants.INVALID_JOB_FUNCTION_MESSAGE)
             )
 
     if "hireDate" in param_input:
-        is_valid, date_obj = utils.is_valid_date(param_input.get("hireDate", ""))
+        is_valid, date_obj = utils.is_valid_date(
+            param_input.get("hireDate", ""))
         if not is_valid:
-            errors.append(build_error("hireDate", constants.INVALID_DATE_MESSAGE))
+            errors.append(build_error(
+                "hireDate", constants.INVALID_DATE_MESSAGE))
 
     if "terminationDate" in param_input:
-        is_valid, date_obj = utils.is_valid_date(param_input.get("terminationDate", ""))
+        is_valid, date_obj = utils.is_valid_date(
+            param_input.get("terminationDate", ""))
         if not is_valid:
             errors.append(
                 build_error("terminationDate", constants.INVALID_DATE_MESSAGE)
@@ -440,7 +461,6 @@ def dockv5_getUpdatedAthletes_select_by_db_modified(session, last_checked_timest
 def dockv5_getUpdatedAthletes_select_by_client_warehouse_db_modified(
     session, client_id, warehouse_id, last_athlete_check
 ):
-
     """
     Implements the below query in DockV5-API getUpdatedAthletes lambda:
     'select * from industrial_athlete where client_id = %s and warehouse_id = %s and db_modified_at > %s order by db_modified_at DESC'
