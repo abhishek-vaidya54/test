@@ -47,15 +47,6 @@ class DockPhase(Base):
     # Table inputs
     id = Column(Integer, primary_key=True, autoincrement=True)
     dock_id = Column(String, ForeignKey("config.dock_id"), nullable=False)
-    description = Column(String(255), nullable=False)
-
-    warehouse_id = Column(Integer, ForeignKey(Warehouse.id), nullable=False)
-    warehouse = relationship(Warehouse, foreign_keys=warehouse_id, backref="dock_phase")
-
-    client_id = Column(Integer, ForeignKey(Client.id), nullable=False)
-    client = relationship(Client, foreign_keys=client_id, backref="dock_phase")
-    dock_firmware = Column(Boolean, nullable=True, default=False)
-    dock_firmware_version = Column(String(10), nullable=False)
     timestamp = Column(
         DateTime, server_default=text("CURRENT_TIMESTAMP"), nullable=False
     )
@@ -64,10 +55,8 @@ class DockPhase(Base):
         nullable=False,
         default="NOT DEPLOYED",
     )
-    phase_date = Column(DateTime, nullable=True)
-    deployment_stage = Column(Enum("DEV", "PROD"), nullable=False, default="dev")
-    # config = relationship("Config", back_populates="dock_phase")
-    # configs = relationship("Config", back_populates="dock_phases")
+    deployment_stage = Column(
+        Enum("DEV", "PROD"), nullable=False, default="dev")
 
     @validates("dock_id")
     def validate_dock_id(self, key, dock_id):
@@ -101,13 +90,8 @@ class DockPhase(Base):
         return {
             "id": self.id,
             "dock_id": self.dock_id,
-            "client_id": self.client_id,
-            "warehouse_id": self.warehouse_id,
             "phase": self.phase,
-            "phase_date": self.phase_date,
             "deployment_stage": self.deployment_stage,
-            "dock_firmware_version": self.dock_firmware_version,
-            "description": self.description,
         }
 
     def __repr__(self):
@@ -129,35 +113,18 @@ def validate_before_insert(mapper, connection, target):
     errors = []
 
     dock_id = params_input.get("dock_id", "")
-    client_id = params_input.get("client_id", "")
-    warehouse_id = params_input.get("warehouse_id", "")
     phase = params_input.get("phase", "")
-    phase_date = params_input.get("phase_date", "")
     deployment_stage = params_input.get("deployment_stage", "")
-    dock_firmware_version = params_input.get("dock_firmware_version", "")
-    description = params_input.get("description", "")
 
     is_valid = dock_utils.is_non_empty_string(dock_id)
     if not is_valid:
-        errors.append(build_error("dock_id", constants.EMPTY_STRING_ERROR_MESSAGE))
-
-    is_valid = ia_utils.is_valid_client(connection, client_id)
-    if not is_valid:
-        errors.append(build_error("client_id", constants.INVALID_CLIENT_ID_MESSAGE))
-
-    is_valid = ia_utils.is_valid_warehouse(connection, warehouse_id)
-    if not is_valid:
-        errors.append(
-            build_error("warehouse_id", constants.INVALID_WAREHOUSE_ID_MESSAGE)
-        )
+        errors.append(build_error(
+            "dock_id", constants.EMPTY_STRING_ERROR_MESSAGE))
 
     is_valid = dock_utils.is_valid_dock_phase(phase)
     if not is_valid:
-        errors.append(build_error("phase", constants.INVALID_DOCK_PHASE_MESSAGE))
-
-    is_valid, date_obj = utils.is_valid_date(phase_date)
-    if not is_valid:
-        errors.append(build_error("phase_date", constants.INVALID_DATE_MESSAGE))
+        errors.append(build_error(
+            "phase", constants.INVALID_DOCK_PHASE_MESSAGE))
 
     is_valid = dock_utils.is_valid_dock_deployment_stage(deployment_stage)
     if not is_valid:
@@ -166,19 +133,6 @@ def validate_before_insert(mapper, connection, target):
                 "deployment_stage", constants.INVALID_DOCK_DEPLOYMENT_STAGE_MESSAGE
             )
         )
-
-    is_valid = dock_utils.is_valid_dock_firmware_version(dock_firmware_version)
-    if not is_valid:
-        errors.append(
-            build_error(
-                "dock_firmware_version", constants.INVALID_DOCK_FIRMWARE_VERSION_MESSAGE
-            )
-        )
-
-    if description.strip():
-        is_valid, message = utils.is_valid_string(description.strip())
-        if not is_valid:
-            errors.append(build_error("description", message))
 
     check_errors_and_return(errors)
 
@@ -198,35 +152,18 @@ def validate_before_update(mapper, connection, target):
     errors = []
 
     if "dock_id" in params_input:
-        is_valid = dock_utils.is_non_empty_string(params_input.get("dock_id", ""))
+        is_valid = dock_utils.is_non_empty_string(
+            params_input.get("dock_id", ""))
         if not is_valid:
-            errors.append(build_error("dock_id", constants.EMPTY_STRING_ERROR_MESSAGE))
-
-    if "client_id" in params_input:
-        is_valid = ia_utils.is_valid_client(
-            connection, params_input.get("client_id", "")
-        )
-        if not is_valid:
-            errors.append(build_error("client_id", constants.INVALID_CLIENT_ID_MESSAGE))
-
-    if "warehouse_id" in params_input:
-        is_valid = ia_utils.is_valid_warehouse(
-            connection, params_input.get("warehouse_id", "")
-        )
-        if not is_valid:
-            errors.append(
-                build_error("warehouse_id", constants.INVALID_WAREHOUSE_ID_MESSAGE)
-            )
+            errors.append(build_error(
+                "dock_id", constants.EMPTY_STRING_ERROR_MESSAGE))
 
     if "phase" in params_input:
-        is_valid = dock_utils.is_valid_dock_phase(params_input.get("phase", ""))
+        is_valid = dock_utils.is_valid_dock_phase(
+            params_input.get("phase", ""))
         if not is_valid:
-            errors.append(build_error("phase", constants.INVALID_DOCK_PHASE_MESSAGE))
-
-    if "phase_date" in params_input:
-        is_valid, message = utils.is_valid_date(params_input.get("phase_date", ""))
-        if not is_valid:
-            errors.append(build_error("phase_date", message))
+            errors.append(build_error(
+                "phase", constants.INVALID_DOCK_PHASE_MESSAGE))
 
     if "deployment_stage" in params_input:
         is_valid = dock_utils.is_valid_dock_deployment_stage(
@@ -238,26 +175,6 @@ def validate_before_update(mapper, connection, target):
                     "deployment_stage", constants.INVALID_DOCK_DEPLOYMENT_STAGE_MESSAGE
                 )
             )
-
-    if "dock_firmware_version" in params_input:
-        is_valid = dock_utils.is_valid_dock_firmware_version(
-            params_input.get("dock_firmware_version", "")
-        )
-        if not is_valid:
-            errors.append(
-                build_error(
-                    "dock_firmware_version",
-                    constants.INVALID_DOCK_FIRMWARE_VERSION_MESSAGE,
-                )
-            )
-
-    if "description" in params_input:
-        is_valid, message = utils.is_valid_string(
-            params_input.get("description", "").strip()
-        )
-        if not is_valid:
-            errors.append(build_error("description", message))
-
     check_errors_and_return(errors)
 
 
@@ -267,7 +184,8 @@ def update_phase(session, data):
     add the new dock_id
     """
     current_config = (
-        session.query(Config).filter_by(dock_id=data.get("dock_id", None)).first()
+        session.query(Config).filter_by(
+            dock_id=data.get("dock_id", None)).first()
     )
     if (
         current_config.dock_phase == None
