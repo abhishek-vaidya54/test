@@ -49,6 +49,8 @@ INVALID_SHIFT_MESSAGE = "Invalid shift"
 
 INVALID_WAREHOUSE_MESSAGE = "Invalid warehouse"
 
+INVALID_WAREHOUSE_CLIENT_MESSAGE = "Invalid combination of warehouse and client"
+
 DUPLICATE_EXTERNAL_ID_MESSAGE = "The external id that you are trying to add is already in use. Please specify a different external id."
 
 INVALID_EXTERNAL_ID_MESSAGE = "Invalid external ID."
@@ -77,7 +79,13 @@ INVALID_CLIENT_ID_MESSAGE = "Invalid client ID."
 
 INVALID_SHIFT_TIMEZONE_MESSAGE = "Invalid shift time zone."
 
-INVALID_DOCK_PHASE_MESSAGE = "Invalid dock phase."
+INVALID_DEPLOYMENT_STAGE_MESSAGE = "Invalid deployment stage., It should be in [dev, prod]"
+
+INVALID_DOCK_ID_MESSAGE = "Invalid dock id."
+
+DUPLICATE_DOCK_ID_MESSAGE = "Duplicate dock id."
+
+INVALID_DOCK_ID_LENGTH_MESSAGE = "Invalid dock id length, it should be of 12 characters"
 
 INVALID_DOCK_DEPLOYMENT_STAGE_MESSAGE = "Invalid dock deployment stage."
 
