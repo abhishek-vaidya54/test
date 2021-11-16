@@ -49,6 +49,8 @@ INVALID_SHIFT_MESSAGE = "Invalid shift"
 
 INVALID_WAREHOUSE_MESSAGE = "Invalid warehouse"
 
+INVALID_WAREHOUSE_CLIENT_MESSAGE = "Invalid combination of warehouse and client"
+
 DUPLICATE_EXTERNAL_ID_MESSAGE = "The external id that you are trying to add is already in use. Please specify a different external id."
 
 INVALID_EXTERNAL_ID_MESSAGE = "Invalid external ID."
@@ -77,7 +79,13 @@ INVALID_CLIENT_ID_MESSAGE = "Invalid client ID."
 
 INVALID_SHIFT_TIMEZONE_MESSAGE = "Invalid shift time zone."
 
-INVALID_DOCK_PHASE_MESSAGE = "Invalid dock phase."
+INVALID_DEPLOYMENT_STAGE_MESSAGE = "Invalid deployment stage., It should be in [dev, prod]"
+
+INVALID_DOCK_ID_MESSAGE = "Invalid dock id."
+
+DUPLICATE_DOCK_ID_MESSAGE = "Duplicate dock id."
+
+INVALID_DOCK_ID_LENGTH_MESSAGE = "Invalid dock id length, it should be of 12 characters"
 
 INVALID_DOCK_DEPLOYMENT_STAGE_MESSAGE = "Invalid dock deployment stage."
 
@@ -234,12 +242,12 @@ RBAC_VALID_ROLES = (
     "superuser",
     "bulk_upload",
     "looker",
-    "client-portal",
-    "data_analytics"
+    "data_analytics",
+    "shift_manager"
 )
 
 CREATE_VALID_ROLES = ("manager", "admin", "bulk_upload",
-                      "looker", "client-portal", "data_analytics")
+                      "looker", "data_analytics", "shift_manager")
 
 RBAC_VALID_RESOURCES = (
     "athletes",
@@ -255,9 +263,8 @@ RBAC_VALID_RESOURCES = (
     "settings",
     "sensors",
     "looker",
-    "client-portal",
-    "data_analytics"
-
+    "data_analytics",
+    "shift_manager"
 )
 
 RBAC_VALID_ACTIONS = ("read", "write", "update", "delete")
@@ -290,8 +297,8 @@ POLICY_EXTERNAL_ADMIN_USER_OBJ = "users"
 POLICY_SETTINGS_OBJ = "settings"
 POLICY_SENSORS_OBJ = "sensors"
 POLICY_LOOKER = "looker"
-POLICY_CLIENT_PORTAL = "client-portal"
 POLICY_DATA_ANALYTICS = "data_analytics"
+POLICY_SHIFT_MANAGER = "shift_manager"
 
 # warehouse
 INVALID_LAT_LONG_DIRECTION_MESSAGE = 'should be one of ("N", "S", "E", "W")'
