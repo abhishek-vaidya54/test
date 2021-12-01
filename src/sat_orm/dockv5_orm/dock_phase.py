@@ -51,7 +51,7 @@ class DockPhase(Base):
         DateTime, server_default=text("CURRENT_TIMESTAMP"), nullable=False
     )
     phase = Column(
-        Enum("DEPLOYED", "NOT DEPLOYED", "MAINTENANCE"),
+        Enum("DEPLOYED", "NOT DEPLOYED", "MAINTENANCE", "RETIRED"),
         nullable=False,
         default="NOT DEPLOYED",
     )
