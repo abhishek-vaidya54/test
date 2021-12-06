@@ -241,13 +241,14 @@ RBAC_VALID_ROLES = (
     "admin",
     "superuser",
     "bulk_upload",
-    "looker",
+    "looker_ergo",
+    "looker_prox",
     "data_analytics",
     "shift_manager"
 )
 
 CREATE_VALID_ROLES = ("manager", "admin", "bulk_upload",
-                      "looker", "data_analytics", "shift_manager")
+                      "looker_ergo", "looker_prox", "data_analytics", "shift_manager")
 
 RBAC_VALID_RESOURCES = (
     "athletes",
@@ -262,7 +263,8 @@ RBAC_VALID_RESOURCES = (
     "users",
     "settings",
     "sensors",
-    "looker",
+    "looker_ergo",
+    "looker_prox",
     "data_analytics",
     "shift_manager"
 )
@@ -296,7 +298,8 @@ POLICY_GROUPS_OBJ = "groups"
 POLICY_EXTERNAL_ADMIN_USER_OBJ = "users"
 POLICY_SETTINGS_OBJ = "settings"
 POLICY_SENSORS_OBJ = "sensors"
-POLICY_LOOKER = "looker"
+POLICY_LOOKER_PROX_OBJ = "looker_prox"
+POLICY_LOOKER_ERGO_OBJ = "looker_ergo"
 POLICY_DATA_ANALYTICS = "data_analytics"
 POLICY_SHIFT_MANAGER = "shift_manager"
 
