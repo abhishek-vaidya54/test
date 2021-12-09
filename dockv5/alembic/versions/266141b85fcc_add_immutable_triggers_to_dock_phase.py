@@ -17,24 +17,24 @@ depends_on = None
 
 
 def upgrade():
-    sql_trigger = "CREATE TRIGGER dock_phase_block_row_update BEFORE UPDATE ON dock_phase \
-                    FOR EACH ROW\
-                    BEGIN \
-                        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'You can not update dock_phase';\
-                    END;"
+    pass
+    # sql_trigger = "CREATE TRIGGER dock_phase_block_row_update BEFORE UPDATE ON dock_phase \
+    #                 FOR EACH ROW\
+    #                 BEGIN \
+    #                     SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'You can not update dock_phase';\
+    #                 END;"
 
-    op.execute(sql_trigger)
-    sql_trigger = "CREATE TRIGGER dock_phase_block_row_delete BEFORE DELETE ON dock_phase \
-                    FOR EACH ROW\
-                    BEGIN \
-                        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'You can not delete dock_phase';\
-                    END;"
+    # op.execute(sql_trigger)
+    # sql_trigger = "CREATE TRIGGER dock_phase_block_row_delete BEFORE DELETE ON dock_phase \
+    #                 FOR EACH ROW\
+    #                 BEGIN \
+    #                     SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'You can not delete dock_phase';\
+    #                 END;"
 
-    op.execute(sql_trigger)
-
-
+    # op.execute(sql_trigger)
 
 
 def downgrade():
-    op.execute('DROP TRIGGER IF EXISTS dock_phase_block_row_update')
-    op.execute('DROP TRIGGER IF EXISTS dock_phase_block_row_delete')
+    pass
+    # op.execute('DROP TRIGGER IF EXISTS dock_phase_block_row_update')
+    # op.execute('DROP TRIGGER IF EXISTS dock_phase_block_row_delete')
