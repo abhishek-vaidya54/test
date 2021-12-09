@@ -7,7 +7,7 @@ from sqlalchemy.orm import object_session
 
 from sat_orm.pipeline_orm.pipeline_base import Base
 
-from sqlalchemy import ForeignKey, Column, String, Integer, DateTime, desc, Enum
+from sqlalchemy import ForeignKey, Column, String, Integer, DateTime, desc, Enum, Boolean
 from sqlalchemy.orm import relationship, validates
 
 
@@ -41,7 +41,11 @@ class ImportedIndustrialAthlete(Base):
     shift_id = Column(Integer, nullable=True)
     job_function_id = Column(Integer, nullable=True)
 
-    db_created_at = Column(DateTime, default=datetime.datetime.utcnow, nullable=False)
+    trained = Column(Boolean, nullable=True, default=False)
+    harness_provided = Column(Boolean, nullable=True, default=False)
+
+    db_created_at = Column(
+        DateTime, default=datetime.datetime.utcnow, nullable=False)
     db_updated_at = Column(
         DateTime,
         default=datetime.datetime.utcnow,
@@ -72,6 +76,8 @@ class ImportedIndustrialAthlete(Base):
             "height": self.height,
             "hire_date": self.hire_date,
             "termination_date": self.termination_date,
+            "trained": self.trained,
+            "harness_provided": self.harness_provided,
         }
 
     @classmethod
