@@ -38,7 +38,8 @@ class DockPhase(Base):
         default="NOT DEPLOYED",
     )
     phase_date = sa.Column(sa.DateTime, nullable=True)
-    deployment_stage = sa.Column(sa.Enum("DEV", "PROD"), nullable=False, default="dev")
+    deployment_stage = sa.Column(
+        sa.Enum("DEV", "PROD"), nullable=False, default="dev")
 
 
 def get_records(session):
@@ -62,16 +63,17 @@ def get_records(session):
 
 
 def upgrade():
-    bind = op.get_bind()
-    session = orm.Session(bind=bind)
-    records = get_records(session)
+    pass
+    # bind = op.get_bind()
+    # session = orm.Session(bind=bind)
+    # records = get_records(session)
 
-    op.drop_table("dock_phase")
-    DockPhase.__table__.create(bind)
+    # op.drop_table("dock_phase")
+    # DockPhase.__table__.create(bind)
 
-    session.add_all(records)
-    session.commit()
-    session.close()
+    # session.add_all(records)
+    # session.commit()
+    # session.close()
 
 
 def downgrade():
