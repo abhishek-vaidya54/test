@@ -63,6 +63,11 @@ jobs:
         run: |
           echo "MAPPED_DATABASE_URI=${{  secrets.STAGING_CONNECTION_STRING  }}" >> $GITHUB_ENV
 
+      - name: qa Enviroment
+        if: github.ref == 'refs/heads/qa'
+        run: |
+          echo "MAPPED_DATABASE_URI=${{  secrets.QA_CONNECTION_STRING  }}" >> $GITHUB_ENV
+
       - name: dev Enviroment
         if: github.ref == 'refs/heads/dev'
         run: |
