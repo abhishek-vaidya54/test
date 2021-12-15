@@ -55,6 +55,8 @@ DUPLICATE_EXTERNAL_ID_MESSAGE = "The external id that you are trying to add is a
 
 INVALID_EXTERNAL_ID_MESSAGE = "Invalid external ID."
 
+INVALID_PARAM_SHIFT_MANAGER_MESSAGE = "Invalid Shift Manager ID."
+
 INVALID_REQUEST = "Invalid request."
 
 DUPLICATE_CLIENT_NAME_MESSAGE = "Client Name already exists."
