@@ -23,9 +23,9 @@ from sqlalchemy import Column, Integer, String, ForeignKey, DateTime, Enum, desc
 from sqlalchemy.dialects.mysql import insert
 
 # Local Application Imports
-from sat_orm.dockv5_orm.dockv5_base import Base
 from sat_orm.pipeline_orm.utilities.utils import build_error, check_errors_and_return
 import sat_orm.constants as constants
+from sat_orm.dockv5_orm.dockv5_base import Base
 from sat_orm.pipeline_orm.utilities import utils
 from sat_orm.pipeline_orm.utilities import ia_utils, client_utils
 from sat_orm.dockv5_orm.utilities import dock_utils
@@ -44,10 +44,12 @@ class Config(Base):
     barcode_regex = Column(String(45), nullable=True)
     firmware_version = Column(Integer, nullable=True)
     description = Column(String(500), nullable=True)
+    firmware_group_id = Column(Integer, ForeignKey(
+        "firmware_group.id"), nullable=False)
 
     # Relationships
-    # dock_phase = relationship('DockPhase',order_by='DockPhase.timestamp.desc()',back_populates='config',uselist=False)
-    # dock_phases = relationship('DockPhase',order_by='DockPhase.timestamp.desc()',back_populates='configs')
+    # firmware_group = relationship(
+    #     "FirmwareGroup", back_populates="configs", uselist=False)
 
     @validates('client_id')
     def validate_client_id(self, key, client_id):
