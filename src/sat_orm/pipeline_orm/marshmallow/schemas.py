@@ -14,6 +14,7 @@ from sat_orm.pipeline_orm.groups import Groups
 from sat_orm.pipeline_orm.user_warehouse_association import UserWarehouseAssociation
 from sat_orm.pipeline_orm.user_role_association import UserRoleAssociation
 from sat_orm.pipeline_orm.user_client_association import UserClientAssociation
+from sat_orm.pipeline_orm.notification import Notification
 
 
 def convert_date(date_input):
@@ -234,6 +235,15 @@ class GroupSchema(SQLAlchemyAutoSchema):
 
     class Meta:
         model = Groups
+        include_fk = True
+        include_relationships = True
+        load_instance = True
+
+class NotificationSchema(SQLAlchemyAutoSchema):
+    override_settings = fields.Function(lambda obj: bool(obj.override_settings))
+
+    class Meta:
+        model = Notification
         include_fk = True
         include_relationships = True
         load_instance = True
