@@ -1,5 +1,6 @@
 import datetime
 from sat_orm.dockv5_orm.dockv5_base import Base
+from sat_orm.dockv5_orm.firmware_group_association import FirmwareGroupAssociation
 from sqlalchemy import Column, String, Integer, DateTime
 from sqlalchemy.orm import relationship, validates
 
@@ -14,7 +15,10 @@ class FirmwareGroup(Base):
         DateTime, default=datetime.datetime.utcnow, nullable=False)
 
     # Relationships
-    # configs = relationship("Configs", back_populates="firmware_group")
+    firmwares = relationship(FirmwareGroupAssociation,
+                             back_populates=__tablename__)
+
+    configs = relationship("Config", back_populates="firmware_group")
 
     def as_dict(self):
         return {

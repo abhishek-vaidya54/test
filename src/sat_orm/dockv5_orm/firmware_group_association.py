@@ -16,12 +16,19 @@ class FirmwareGroupAssociation(Base):
         DateTime, default=datetime.datetime.utcnow, nullable=False)
 
     # Relationships
+
     firmware_group = relationship(
         "FirmwareGroup", uselist=False, back_populates="firmwares"
     )
-
     firmware = relationship("Firmware", uselist=False,
                             backref="firmware_groups")
+
+    # firmware_group = relationship(
+    #     "FirmwareGroup", uselist=False, back_populates="firmwares"
+    # )
+
+    # firmware = relationship("Firmware", uselist=False,
+    #                         backref="firmware_groups")
 
     def as_dict(self):
         return {

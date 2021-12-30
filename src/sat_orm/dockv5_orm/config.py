@@ -48,8 +48,8 @@ class Config(Base):
         "firmware_group.id"), nullable=False)
 
     # Relationships
-    # firmware_group = relationship(
-    #     "FirmwareGroup", back_populates="configs", uselist=False)
+    firmware_group = relationship(
+        "FirmwareGroup", back_populates="configs")
 
     @validates('client_id')
     def validate_client_id(self, key, client_id):
