@@ -38,6 +38,7 @@ class Config(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     dock_id = Column(String(45), nullable=True, unique=True)
     dock_imei = Column(String(45), nullable=True)
+    serial_number = Column(String(45), nullable=True)
     client_id = Column(Integer, nullable=True)
     warehouse_id = Column(Integer, nullable=True)
     deployment_stage = Column(String(45), default="DEV", nullable=True)
@@ -97,6 +98,7 @@ class Config(Base):
             "id": self.id,
             "dock_id": self.dock_id,
             "dock_imei": self.dock_imei,
+            "serial_number": self.serial_number,
             "client_id": self.client_id,
             "warehouse_id": self.warehouse_id,
             "deployment_stage": self.deployment_stage,
@@ -135,7 +137,7 @@ def insert_or_update(session, data):
         config = Config(dock_id=data.get('dock_id', None), client_id=data.get('client_id', None), warehouse_id=data.get('warehouse_id', None),
                         deployment_stage=data.get('deployment_stage', 'dev'), barcode_regex=data.get('barcode_regex', None),
                         firmware_version=data.get('firmware_version', None), description=data.get('description', None),
-                        dock_imei=data.get('dock_imei', None))
+                        dock_imei=data.get('dock_imei', None), serial_number=data.get('serial_number', None))
         session.add(config)
         session.commit()
 
