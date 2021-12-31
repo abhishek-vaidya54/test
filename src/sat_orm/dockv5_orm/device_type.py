@@ -13,7 +13,7 @@ class DeviceType(Base):
         DateTime, default=datetime.datetime.utcnow, nullable=False)
 
     # Relationships
-    firmwares = relationship("Firmwares", back_populates="device_type")
+    firmwares = relationship("Firmware", back_populates="device_type")
 
     def as_dict(self):
         return {
