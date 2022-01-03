@@ -19,13 +19,10 @@ class Firmware(Base):
         DateTime, default=datetime.datetime.utcnow, nullable=False)
 
     # Relationships
-    device_type = relationship(
-        "DeviceType", back_populates="firmware", uselist=False)
     hardware = relationship(
-        "Hardware", back_populates="firmware", uselist=False)
-
-    firmware_groups = relationship(
-        FirmwareGroupAssociation, back_populates=__tablename__)
+        "Hardware", back_populates="firmwares")
+    device_type = relationship(
+        "DeviceType", back_populates="firmwares")
 
     def as_dict(self):
         return {
