@@ -7,7 +7,7 @@ Create Date: 2022-01-03 16:11:08.592228
 """
 from alembic import op
 import sqlalchemy as sa
-
+import datetime
 
 # revision identifiers, used by Alembic.
 revision = '3fd026717c02'
@@ -38,6 +38,7 @@ def upgrade():
             nullable=False,
         ),
         sa.PrimaryKeyConstraint('id')
+
     )
 
 
