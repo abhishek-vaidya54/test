@@ -240,10 +240,9 @@ class GroupSchema(SQLAlchemyAutoSchema):
         load_instance = True
 
 class NotificationSchema(SQLAlchemyAutoSchema):
-    override_settings = fields.Function(lambda obj: bool(obj.override_settings))
 
     class Meta:
         model = Notification
         include_fk = True
-        include_relationships = True
+        # include_relationships = True
         load_instance = True
