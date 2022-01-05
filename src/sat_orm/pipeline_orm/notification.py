@@ -17,6 +17,7 @@ from sqlalchemy import (
 # Local Application Imports
 from sat_orm.pipeline_orm.pipeline_base import Base
 
+
 class Notification(Base):
     __tablename__ = "notification"
 
@@ -27,11 +28,11 @@ class Notification(Base):
     type = Column(
         Enum("update", "news", "warning", "event"),
         nullable=False,
-        default="JPEG",
+        default="news",
     )
     url = Column(String(255), nullable=False)
     created_by = Column(
-        Integer, ForeignKey("external_admin_user.id"), primary_key=True
+        Integer, ForeignKey("external_admin_user.id"), nullable=False
     )
     is_active = Column(Boolean, nullable=True, default=False)
     db_created_at = Column(
@@ -48,13 +49,12 @@ class Notification(Base):
     def as_dict(self):
         return {
             "id": self.id,
-            "user_id": self.user_id,
+            "created_by": self.created_by,
             "title": self.title,
-            "short_description": self.short_description,
-            "icon_type": self.icon_type,
-            "hyperlink_address": self.hyperlink_address,
+            "description": self.description,
+            "type": self.type,
+            "url": self.url,
             "is_active": self.is_active,
+            "db_created_at": self.db_created_at,
+            "db_modified_at": self.db_modified_at,
         }
-
-    def __repr__(self):
-        return str(self.as_dict())
