@@ -17,6 +17,7 @@ from sqlalchemy import (
 # Local Application Imports
 from sat_orm.pipeline_orm.pipeline_base import Base
 
+
 class Notification(Base):
     __tablename__ = "notification"
 
@@ -57,5 +58,3 @@ class Notification(Base):
             "db_created_at": self.db_created_at,
             "db_modified_at": self.db_modified_at,
         }
-
-    
