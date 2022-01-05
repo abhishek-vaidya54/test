@@ -31,7 +31,7 @@ class Notification(Base):
     )
     url = Column(String(255), nullable=False)
     created_by = Column(
-        Integer, ForeignKey("external_admin_user.id"), primary_key=True
+        Integer, ForeignKey("external_admin_user.id"), nullable=False
     )
     is_active = Column(Boolean, nullable=True, default=False)
     db_created_at = Column(
