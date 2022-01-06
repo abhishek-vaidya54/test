@@ -23,9 +23,9 @@ from sqlalchemy import Column, Integer, String, ForeignKey, DateTime, Enum, desc
 from sqlalchemy.dialects.mysql import insert
 
 # Local Application Imports
-from sat_orm.dockv5_orm.dockv5_base import Base
 from sat_orm.pipeline_orm.utilities.utils import build_error, check_errors_and_return
 import sat_orm.constants as constants
+from sat_orm.dockv5_orm.dockv5_base import Base
 from sat_orm.pipeline_orm.utilities import utils
 from sat_orm.pipeline_orm.utilities import ia_utils, client_utils
 from sat_orm.dockv5_orm.utilities import dock_utils
@@ -38,16 +38,19 @@ class Config(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     dock_id = Column(String(45), nullable=True, unique=True)
     dock_imei = Column(String(45), nullable=True)
+    serial_number = Column(String(45), nullable=True)
     client_id = Column(Integer, nullable=True)
     warehouse_id = Column(Integer, nullable=True)
     deployment_stage = Column(String(45), default="DEV", nullable=True)
     barcode_regex = Column(String(45), nullable=True)
     firmware_version = Column(Integer, nullable=True)
     description = Column(String(500), nullable=True)
+    firmware_group_id = Column(Integer, ForeignKey(
+        "firmware_group.id"), nullable=False)
 
     # Relationships
-    # dock_phase = relationship('DockPhase',order_by='DockPhase.timestamp.desc()',back_populates='config',uselist=False)
-    # dock_phases = relationship('DockPhase',order_by='DockPhase.timestamp.desc()',back_populates='configs')
+    firmware_group = relationship(
+        "FirmwareGroup", back_populates="configs")
 
     @validates('client_id')
     def validate_client_id(self, key, client_id):
@@ -95,6 +98,7 @@ class Config(Base):
             "id": self.id,
             "dock_id": self.dock_id,
             "dock_imei": self.dock_imei,
+            "serial_number": self.serial_number,
             "client_id": self.client_id,
             "warehouse_id": self.warehouse_id,
             "deployment_stage": self.deployment_stage,
@@ -133,7 +137,7 @@ def insert_or_update(session, data):
         config = Config(dock_id=data.get('dock_id', None), client_id=data.get('client_id', None), warehouse_id=data.get('warehouse_id', None),
                         deployment_stage=data.get('deployment_stage', 'dev'), barcode_regex=data.get('barcode_regex', None),
                         firmware_version=data.get('firmware_version', None), description=data.get('description', None),
-                        dock_imei=data.get('dock_imei', None))
+                        dock_imei=data.get('dock_imei', None), serial_number=data.get('serial_number', None))
         session.add(config)
         session.commit()
 
