@@ -32,6 +32,7 @@ from sat_orm.pipeline import (
     UserWarehouseAssociation,
     UserRoleAssociation,
 )
+import sat_orm.constants as sat_orm_constants
 
 
 def random_str():
@@ -282,23 +283,23 @@ class ImportedIndustrialAthleteFactory(factory.alchemy.SQLAlchemyModelFactory):
         sqlalchemy_session_persistence = "commit"
 
 
-class CasbinRuleFactory(factory.alchemy.SQLAlchemyModelFactory):
+class CasbinRulePolicyFactory(factory.alchemy.SQLAlchemyModelFactory):
     id = factory.Sequence(lambda n: n)
     ptype = "p"
-    v0 = factory.fuzzy.FuzzyChoice(["admin", "manager"])
-    v1 = factory.fuzzy.FuzzyChoice(
-        [
-            "athletes",
-            "clients",
-            "shifts",
-            "docks",
-            "warehouses",
-            "jobfunctions",
-            "roles",
-            "bulkupload",
-        ]
-    )
-    v2 = factory.fuzzy.FuzzyChoice(["get", "post", "put", "delete"])
+    v0 = factory.fuzzy.FuzzyChoice(sat_orm_constants.RBAC_ROLES)
+    v1 = factory.fuzzy.FuzzyChoice(sat_orm_constants.RBAC_RESOURCES.values())
+    v2 = factory.fuzzy.FuzzyChoice(sat_orm_constants.RBAC_ACTION_TO_VALUE_MAP.values())
+
+    class Meta:
+        model = CasbinRule
+        sqlalchemy_session_persistence = "commit"
+
+
+class CasbinRuleGroupFactory(factory.alchemy.SQLAlchemyModelFactory):
+    id = factory.Sequence(lambda n: n)
+    ptype = "g"
+    v0 = factory.Sequence(lambda n: n)
+    v1 = factory.fuzzy.FuzzyChoice(sat_orm_constants.RBAC_ROLES)
 
     class Meta:
         model = CasbinRule

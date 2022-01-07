@@ -101,11 +101,15 @@ NO_PERMISSION_MESSAGE = "You don't have the required permissions."
 
 POLICY_POST_ERROR = "Error while saving the policy."
 
+INVALID_POLICY_TYPE_ERROR_MESSAGE = "Invalid policy type, must be of type 'p' or 'g'."
+
 INVALID_ROLE_ERROR_MESSAGE = "Invalid role."
 
 INVALID_RESOURCE_ERROR_MESSAGE = "Invalid resource."
 
 INVALID_ACTION_ERROR_MESSAGE = "Invalid action."
+
+INVALID_EXTERNAL_ADMIN_USER_ID_ERROR_MESSAGE = "Invalid external_admin_user_id format. Must be a string type in integer format."
 
 BULK_UPLOAD_IN_PROGRESS_ERROR_MESSAGE = "Bulk upload is already in progress."
 
@@ -237,8 +241,11 @@ XLSX_FILE_CONTENT_TYPE = (
 )
 
 
-# --------- RBAC CONSTS
-RBAC_VALID_ROLES = (
+# RBAC constants
+
+RBAC_POLICY_TYPES = ("p", "g")
+
+RBAC_ROLES = (
     "manager",
     "admin",
     "superuser",
@@ -249,61 +256,32 @@ RBAC_VALID_ROLES = (
     "shift_manager"
 )
 
-CREATE_VALID_ROLES = ("manager", "admin", "bulk_upload",
-                      "looker_ergo", "looker_prox", "data_analytics", "shift_manager")
+RBAC_RESOURCES = {
+    "ATHLETES": "athletes",
+    "CLIENTS": "clients",
+    "SHIFTS": "shifts",
+    "DOCKS": "docks",
+    "WAREHOUSES": "warehouses",
+    "JOBFUNCTIONS": "jobfunctions",
+    "ROLES": "roles",
+    "BULKUPLOAD": "bulkupload",
+    "GROUPS": "groups",
+    "USERS": "users",
+    "SETTINGS": "settings",
+    "SENSORS": "sensors",
+    "LOOKER_ERGO": "looker_ergo",
+    "LOOKER_PROX": "looker_prox",
+    "DATA_ANALYTICS": "data_analytics",
+    "SHIFT_MANAGER": "shift_manager"
+}
 
-RBAC_VALID_RESOURCES = (
-    "athletes",
-    "clients",
-    "shifts",
-    "docks",
-    "warehouses",
-    "jobfunctions",
-    "roles",
-    "bulkupload",
-    "groups",
-    "users",
-    "settings",
-    "sensors",
-    "looker_ergo",
-    "looker_prox",
-    "data_analytics",
-    "shift_manager"
-)
-
-RBAC_VALID_ACTIONS = ("read", "write", "update", "delete")
-
-RBAC_ACTION_VALUES = {
+RBAC_ACTION_TO_VALUE_MAP = {
     "read": "get",
     "write": "post",
     "update": "put",
     "delete": "delete",
+    "modify": "patch",
 }
-
-RBAC_ACTION_KEYS = {"get": "read", "post": "write",
-                    "put": "update", "delete": "delete"}
-
-METHOD_GET = "get"
-METHOD_POST = "post"
-METHOD_PUT = "put"
-METHOD_DELETE = "delete"
-
-POLICY_ATHLETES_OBJ = "athletes"
-POLICY_CLIENTS_OBJ = "clients"
-POLICY_SHIFTS_OBJ = "shifts"
-POLICY_DOCKS_OBJ = "docks"
-POLICY_WAREHOUSES_OBJ = "warehouses"
-POLICY_JOBFUNCTIONS_OBJ = "jobfunctions"
-POLICY_ROLES_OBJ = "roles"
-POLICY_BULK_UPLOAD_OBJ = "bulkupload"
-POLICY_GROUPS_OBJ = "groups"
-POLICY_EXTERNAL_ADMIN_USER_OBJ = "users"
-POLICY_SETTINGS_OBJ = "settings"
-POLICY_SENSORS_OBJ = "sensors"
-POLICY_LOOKER_PROX_OBJ = "looker_prox"
-POLICY_LOOKER_ERGO_OBJ = "looker_ergo"
-POLICY_DATA_ANALYTICS = "data_analytics"
-POLICY_SHIFT_MANAGER = "shift_manager"
 
 # warehouse
 INVALID_LAT_LONG_DIRECTION_MESSAGE = 'should be one of ("N", "S", "E", "W")'
