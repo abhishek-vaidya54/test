@@ -18,8 +18,8 @@ from sqlalchemy import (
 # Local Application Imports
 from sat_orm.pipeline_orm.pipeline_base import Base
 import sat_orm.constants as constants
-import sat_orm.pipeline_orm.utilities.firmware_notification_utils as nu
-import sat_orm.pipeline_orm.queries.firmware_notification_queries as nq
+import sat_orm.pipeline_orm.utilities.notification_utils as nu
+import sat_orm.pipeline_orm.queries.notification_queries as nq
 from sat_orm.pipeline_orm.utilities.utils import build_error, check_errors_and_return
 
 
@@ -98,7 +98,7 @@ def validate_before_insert(mapper, connection, target):
     is_valid = nu.is_valid_type(type)
     if not is_valid:
         errors.append(build_error(
-            "type", constants.INVALID_FIRMWARE_NOTIFICATION_TYPE_MESSAGE))
+            "type", constants.INVALID_NOTIFICATION_TYPE_MESSAGE))
 
     # is_valid = nu.is_non_empty_string(url)
     # if not is_valid:
@@ -136,7 +136,7 @@ def validate_before_update(mapper, connection, target):
     errors = []
 
     if "id" in params_input:
-        is_valid = nq.get_firmware_notification_exists(
+        is_valid = nq.get_notification_exists(
             connection, params_input.get("id", ""))
         if not is_valid:
             errors.append(build_error(
@@ -161,7 +161,7 @@ def validate_before_update(mapper, connection, target):
             params_input.get("type", ""))
         if not is_valid:
             errors.append(build_error(
-                "type", constants.INVALID_FIRMWARE_NOTIFICATION_TYPE_MESSAGE))
+                "type", constants.INVALID_NOTIFICATION_TYPE_MESSAGE))
 
     # if "url" in params_input:
     #     is_valid = nu.is_non_empty_string(
