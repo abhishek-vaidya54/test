@@ -356,4 +356,19 @@ INVALID_IA_WEIGHT_UNIT_MESSAGE = "Invalid weight unit: Should be one of LBS or K
 
 INVALID_PACKAGE_UNIT_MESSAGE = "Invalid weight unit: Should be one of LBS or KG."
 
+INVALID_DEVICE_TYPE_MESSAGE = "Invalid Device Type Id"
+
+INVALID_HARDWARE_MESSAGE = "Invalid Hardware Id"
+
+INVALID_FIRMWARE_ID = "Invalid Firmware Id"
+
+INVALID_FIRMWARE_NOTIFICATION_TYPE_MESSAGE = "Invalid notification type"
+
+VALID_FIRMWARE_NOTIFICATION_TYPE = ["update", "news", "warning", "event"]
+
+INVALID_CREATED_BY_MESSAGE = "Invalid Created_by id"
+
+INVALID_IS_ACTIVE_MESSAGE = "Invlaid is_active"
+
+
 VALID_TIMEZONES = valid_timezones.TIMEZONES
