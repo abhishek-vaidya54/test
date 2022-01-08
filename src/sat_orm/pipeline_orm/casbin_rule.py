@@ -47,7 +47,7 @@ def validate_before_insert(mapper, connection, target):
                 errors.append(build_error("action", constants.INVALID_ACTION_ERROR_MESSAGE))
         else:
             try:
-                v0_as_int = int(target.v0)
+                v0_as_int = int(target.v0) # Don't need the value, just testing that it's an int
                 is_valid = True
             except:
                 is_valid = False
