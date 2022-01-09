@@ -42,7 +42,7 @@ def validate_before_insert(mapper, connection, target):
             if not is_valid:
                 errors.append(build_error("resource", constants.INVALID_RESOURCE_ERROR_MESSAGE))
 
-            is_valid = target.v2 in constants.RBAC_ACTION_TO_VALUE_MAP.values()
+            is_valid = target.v2 in constants.RBAC_ACTION_NAME_TO_METHOD_MAP.values()
             if not is_valid:
                 errors.append(build_error("action", constants.INVALID_ACTION_ERROR_MESSAGE))
         else:

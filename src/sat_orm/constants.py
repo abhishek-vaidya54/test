@@ -257,31 +257,38 @@ RBAC_ROLES = (
 )
 
 RBAC_RESOURCES = {
-    "ATHLETES": "athletes",
-    "CLIENTS": "clients",
-    "SHIFTS": "shifts",
-    "DOCKS": "docks",
-    "WAREHOUSES": "warehouses",
-    "JOBFUNCTIONS": "jobfunctions",
-    "ROLES": "roles",
-    "BULKUPLOAD": "bulkupload",
-    "GROUPS": "groups",
-    "USERS": "users",
-    "SETTINGS": "settings",
-    "SENSORS": "sensors",
-    "LOOKER_ERGO": "looker_ergo",
-    "LOOKER_PROX": "looker_prox",
-    "DATA_ANALYTICS": "data_analytics",
-    "SHIFT_MANAGER": "shift_manager"
+    "athletes"              : "athletes",
+    "bulkupload"            : "bulkupload",
+    "clients"               : "clients",
+    "data_analytics"        : "data_analytics",
+    "docks"                 : "docks",
+    "docks_firmware_version": "docks_firmware_version",
+    "firmware_groups"       : "firmware_groups",
+    "firmwares"             : "firmwares",
+    "groups"                : "groups",
+    "jobfunctions"          : "jobfunctions",
+    "looker_ergo"           : "looker_ergo",
+    "looker_prox"           : "looker_prox",
+    "roles"                 : "roles",
+    "sensors"               : "sensors",
+    "settings"              : "settings",
+    "shift_manager"         : "shift_manager",
+    "shifts"                : "shifts",
+    "users"                 : "users",
+    "warehouses"            : "warehouses",
 }
 
-RBAC_ACTION_TO_VALUE_MAP = {
-    "read": "get",
-    "write": "post",
+RBAC_ACTION_NAME_TO_METHOD_MAP = {
+    "read"  : "get",
+    "write" : "post",
     "update": "put",
     "delete": "delete",
     "modify": "patch",
 }
+
+RBAC_ACTION_METHOD_TO_NAME_MAP = { value: key for (key, value) in RBAC_ACTION_NAME_TO_METHOD_MAP.items() }
+
+RBAC_ACTION_METHODS = { method: method for method in RBAC_ACTION_NAME_TO_METHOD_MAP.items() }
 
 # warehouse
 INVALID_LAT_LONG_DIRECTION_MESSAGE = 'should be one of ("N", "S", "E", "W")'

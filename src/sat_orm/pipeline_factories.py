@@ -288,7 +288,7 @@ class CasbinRulePolicyFactory(factory.alchemy.SQLAlchemyModelFactory):
     ptype = "p"
     v0 = factory.fuzzy.FuzzyChoice(sat_orm_constants.RBAC_ROLES)
     v1 = factory.fuzzy.FuzzyChoice(sat_orm_constants.RBAC_RESOURCES.values())
-    v2 = factory.fuzzy.FuzzyChoice(sat_orm_constants.RBAC_ACTION_TO_VALUE_MAP.values())
+    v2 = factory.fuzzy.FuzzyChoice(sat_orm_constants.RBAC_ACTION_NAME_TO_METHOD_MAP.values())
 
     class Meta:
         model = CasbinRule
