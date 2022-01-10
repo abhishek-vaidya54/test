@@ -34,8 +34,6 @@ def upgrade():
     # op.execute(sql_trigger)
 
 
-
-
 def downgrade():
     pass
     # op.execute('DROP TRIGGER IF EXISTS dock_phase_block_row_update')
