@@ -26,7 +26,7 @@ from sat_orm.pipeline_orm.utilities.utils import build_error, check_errors_and_r
 class Notification(Base):
     __tablename__ = "notification"
 
-    # Table Columns
+    # Notification Table Columns
     id = Column(Integer, primary_key=True, autoincrement=True)
     title = Column(String(150), nullable=False)
     description = Column(VARCHAR(255), nullable=False)
