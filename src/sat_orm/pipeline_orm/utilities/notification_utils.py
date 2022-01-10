@@ -2,10 +2,10 @@ import sat_orm.constants as constants
 from sat_orm.pipeline_orm.utilities import external_admin_user_utils
 
 
-# def is_valid_firmware_notification(notification):
+# def is_valid_notification(notification):
 #     """
-#     Helper method to check if input is a valid firmware_notification
-#     Return True if it is a valid firmware_notification
+#     Helper method to check if input is a valid notification
+#     Return True if it is a valid notification
 #     Returns False if it is not valid
 #     """
 #     return notification.upper() in constants.VALID_DOCK_PHASES
@@ -26,7 +26,7 @@ def is_valid_type(type):
     Return True if it is correct
     Returns False if it is not correct
     """
-    if type in constants.VALID_FIRMWARE_NOTIFICATION_TYPE:
+    if type in constants.VALID_NOTIFICATION_TYPE:
         return True
     return False
 

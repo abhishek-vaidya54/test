@@ -379,9 +379,9 @@ INVALID_HARDWARE_MESSAGE = "Invalid Hardware Id"
 
 INVALID_FIRMWARE_ID = "Invalid Firmware Id"
 
-INVALID_FIRMWARE_NOTIFICATION_TYPE_MESSAGE = "Invalid notification type"
+INVALID_NOTIFICATION_TYPE_MESSAGE = "Invalid notification type"
 
-VALID_FIRMWARE_NOTIFICATION_TYPE = ["update", "news", "warning", "event"]
+VALID_NOTIFICATION_TYPE = ["update", "news", "warning", "event"]
 
 INVALID_CREATED_BY_MESSAGE = "Invalid Created_by id"
 

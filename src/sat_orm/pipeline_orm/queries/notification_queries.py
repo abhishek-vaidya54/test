@@ -1,7 +1,7 @@
 from sat_orm.pipeline_orm.utilities import utils
 
 
-def get_firmware_notification_exists(connection, notification_id):
+def get_notification_exists(connection, notification_id):
     """
     Helper method to retrieve the Notification object from the database
     Input:
