@@ -269,6 +269,7 @@ RBAC_RESOURCES = {
     "jobfunctions"          : "jobfunctions",
     "looker_ergo"           : "looker_ergo",
     "looker_prox"           : "looker_prox",
+    "notification"          : "notification",
     "roles"                 : "roles",
     "sensors"               : "sensors",
     "settings"              : "settings",
