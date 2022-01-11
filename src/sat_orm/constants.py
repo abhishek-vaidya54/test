@@ -289,7 +289,7 @@ RBAC_ACTION_NAME_TO_METHOD_MAP = {
 
 RBAC_ACTION_METHOD_TO_NAME_MAP = { value: key for (key, value) in RBAC_ACTION_NAME_TO_METHOD_MAP.items() }
 
-RBAC_ACTION_METHODS = { method: method for method in RBAC_ACTION_NAME_TO_METHOD_MAP.items() }
+RBAC_ACTION_METHODS = { value: value for (key, value) in RBAC_ACTION_NAME_TO_METHOD_MAP.items() }
 
 # warehouse
 INVALID_LAT_LONG_DIRECTION_MESSAGE = 'should be one of ("N", "S", "E", "W")'
