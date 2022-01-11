@@ -2,13 +2,13 @@
 LICENSE:
     This file is subject to the terms and conditions defined in
     file 'LICENSE.txt', which is part of this source code package.
-
-CONTRIBUTORS:
+ 
+CONTRIBUTORS: 
             Vincent Turnier
             Hashmat Ibrahimi
 
-CLASSIFICATION:
-            Highly Sensitive
+CLASSIFICATION: 
+            Highly Sensitive 
 
     **** Add Contributors name if you have contributed to this file ****
 *********************************************************************************
@@ -82,7 +82,7 @@ def validate_role_before_insert(mapper, connection, target):
             )
         )
 
-    is_valid = params_input.get("role") in constants.RBAC_ROLES
+    is_valid = params_input.get("role") in constants.RBAC_VALID_ROLES
     if not is_valid:
         errors.append(build_error("role", constants.INVALID_ROLE_ERROR_MESSAGE))
 

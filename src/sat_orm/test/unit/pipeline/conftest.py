@@ -22,7 +22,7 @@ from sat_orm.pipeline_factories import (
     ExternalAdminUserFactory,
     AthleteUploadStatusFactory,
     ImportedIndustrialAthleteFactory,
-    CasbinRulePolicyFactory,
+    CasbinRuleFactory,
     UserWarehouseAssociationFactory,
     SensorsFactory,
     GroupsFactory,
@@ -53,6 +53,9 @@ from sat_orm.constants import (
     VALID_CLIENT_STATUSES,
     VALID_SHIFT_TIMEZONES,
     VALID_CLIENT_IA_NAME_FORMATS,
+    RBAC_VALID_ROLES,
+    RBAC_VALID_RESOURCES,
+    RBAC_VALID_ACTIONS,
     VALID_CSV_STRING,
     INVALID_CSV_STRING_MISSING_HEADER,
 )
@@ -111,7 +114,7 @@ def test_session():
             ExternalAdminUserFactory._meta.sqlalchemy_session = session
             AthleteUploadStatusFactory._meta.sqlalchemy_session = session
             ImportedIndustrialAthleteFactory._meta.sqlalchemy_session = session
-            CasbinRulePolicyFactory._meta.sqlalchemy_session = session
+            CasbinRuleFactory._meta.sqlalchemy_session = session
             UserWarehouseAssociationFactory._meta.sqlalchemy_session = session
             UserRoleAssociationFactory._meta.sqlalchemy_session = session
             GroupsFactory._meta.sqlalchemy_session = session
@@ -176,7 +179,7 @@ def test_session():
             ExternalAdminUserFactory.reset_sequence(external_admin_user_max_id)
             AthleteUploadStatusFactory.reset_sequence(athlete_upload_status_max_id)
             ImportedIndustrialAthleteFactory.reset_sequence(imported_id_max_id)
-            CasbinRulePolicyFactory.reset_sequence(casbin_rule_max_id)
+            CasbinRuleFactory.reset_sequence(casbin_rule_max_id)
             GroupsFactory.reset_sequence(group_max_id)
             SensorsFactory.reset_sequence(sensor_max_id)
 
