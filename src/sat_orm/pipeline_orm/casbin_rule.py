@@ -1,6 +1,6 @@
 from sqlalchemy import Column, String, Integer, event
 
-import sat_orm.constants as constants 
+import sat_orm.constants as constants
 from sat_orm.pipeline_orm.utilities.utils import build_error, check_errors_and_return
 
 from sat_orm.pipeline_orm.pipeline_base import Base
@@ -22,11 +22,11 @@ class CasbinRule(Base):
 @event.listens_for(CasbinRule, "before_insert")
 def validate_before_insert(mapper, connection, target):
     """
-    Event hook method that fires before insert to check if 
+    Event hook method that fires before insert to check if
     params are valid for adding a single CasbinRule entry
     """
     errors = []
-    
+
     is_valid = target.v0 in constants.RBAC_VALID_ROLES
     if not is_valid:
         errors.append(build_error("role", constants.INVALID_ROLE_ERROR_MESSAGE))
