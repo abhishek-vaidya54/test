@@ -10,8 +10,8 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'd02757a43ac1'
-down_revision = 'ac32b3b8ec9d'
+revision = "d02757a43ac1"
+down_revision = "ac32b3b8ec9d"
 branch_labels = None
 depends_on = None
 
@@ -19,11 +19,7 @@ depends_on = None
 def upgrade():
     op.add_column(
         "client",
-        sa.Column(
-            "sso_provider",
-            sa.String(length=45),
-            nullable=True
-        ),
+        sa.Column("sso_provider", sa.String(length=45), nullable=True),
     )
     op.execute('UPDATE client SET sso_provider = "okta" WHERE subdomain = "strongarm"')
 

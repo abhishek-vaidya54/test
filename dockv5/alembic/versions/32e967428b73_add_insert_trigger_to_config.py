@@ -10,8 +10,8 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '32e967428b73'
-down_revision = '98fff9715050'
+revision = "32e967428b73"
+down_revision = "98fff9715050"
 branch_labels = None
 depends_on = None
 
@@ -27,4 +27,4 @@ def upgrade():
 
 
 def downgrade():
-    op.execute('DROP TRIGGER IF EXISTS insert_dock_id_in_dock_phase')
+    op.execute("DROP TRIGGER IF EXISTS insert_dock_id_in_dock_phase")

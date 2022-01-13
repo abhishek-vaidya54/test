@@ -1,4 +1,4 @@
-'''
+"""
 LICENSE:
     This file is subject to the terms and conditions defined in
     file 'LICENSE.txt', which is part of this source code package.
@@ -14,7 +14,7 @@ CLASSIFICATION:
 
 DESCRIPTION:
             view __init__.py file
-'''
+"""
 
 # Standard Library Imports
 import datetime
@@ -24,10 +24,11 @@ from sqlalchemy import Column, Integer, String, DateTime, CHAR, JSON
 from sqlalchemy.orm import validates
 
 # Local Application Imports
-from sat_orm.dockv5_eventslog_orm.dockv5_eventslog_base import Base 
+from sat_orm.dockv5_eventslog_orm.dockv5_eventslog_base import Base
+
 
 class KeepaliveEvents(Base):
-    __tablename__ = 'keepalive_events'
+    __tablename__ = "keepalive_events"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     timestamp = Column(DateTime, nullable=False)
@@ -38,16 +39,16 @@ class KeepaliveEvents(Base):
     charge_status = Column(String(45), nullable=True, default=None)
     clientID = Column(String(50), nullable=True, default=None)
     warehouseID = Column(String(50), nullable=True, default=None)
-    dockIMEI = Column(String(45),nullable=True, default=None)
-    enum_ports = Column(String(100),nullable=True, default=None)
-    occupied_ports = Column(String(100),nullable=True, default=None)
-    local_sensor_fw = Column(Integer,nullable=True, default=None)
-    app_version = Column(String(45),nullable=True, default=None)
+    dockIMEI = Column(String(45), nullable=True, default=None)
+    enum_ports = Column(String(100), nullable=True, default=None)
+    occupied_ports = Column(String(100), nullable=True, default=None)
+    local_sensor_fw = Column(Integer, nullable=True, default=None)
+    app_version = Column(String(45), nullable=True, default=None)
 
-    @validates('timestamp')
-    def validate_timestamp(self,key,timestamp):
+    @validates("timestamp")
+    def validate_timestamp(self, key, timestamp):
         if timestamp == None:
-            raise Exception('timestamp cannot be Null')
+            raise Exception("timestamp cannot be Null")
         else:
             return timestamp
 
@@ -62,12 +63,12 @@ class KeepaliveEvents(Base):
             "charge_status": self.charge_status,
             "clientID": self.clientID,
             "warehouseID": self.warehouseID,
-            "dockIMEI":self.dockIMEI,
-            "enum_porta":self.enum_ports,
-            "occupied_ports":self.occupied_ports,
-            "local_sensor_fw":self.local_sensor_fw,
-            "app_version":self.app_version
+            "dockIMEI": self.dockIMEI,
+            "enum_porta": self.enum_ports,
+            "occupied_ports": self.occupied_ports,
+            "local_sensor_fw": self.local_sensor_fw,
+            "app_version": self.app_version,
         }
 
     def __repr__(self):
-        return 'keepalive event for dock %s' % (self.dockID)
+        return "keepalive event for dock %s" % (self.dockID)

@@ -11,8 +11,8 @@ from sqlalchemy import orm
 from sqlalchemy.ext.declarative import declarative_base
 
 # revision identifiers, used by Alembic.
-revision = '589cabbef055'
-down_revision = 'e618e32273b3'
+revision = "589cabbef055"
+down_revision = "e618e32273b3"
 branch_labels = None
 depends_on = None
 
@@ -39,9 +39,7 @@ def upgrade():
     session.query(CasbinRule).filter_by(v0="superuser").filter_by(
         v1="external_admin_user"
     ).delete()
-    session.query(CasbinRule).filter_by(v0="superuser").filter_by(
-        v1="user"
-    ).delete()
+    session.query(CasbinRule).filter_by(v0="superuser").filter_by(v1="user").delete()
     records = [
         CasbinRule(v0="superuser", v1="users", v2=action)
         for action in ["get", "post", "put"]
@@ -55,7 +53,9 @@ def downgrade():
     bind = op.get_bind()
     session = orm.Session(bind=bind)
     session.query(CasbinRule).filter_by(v0="superuser").filter_by(v1="users").delete()
-    session.query(CasbinRule).filter_by(v0="superuser").filter_by(v1="external_admin_user").delete()
+    session.query(CasbinRule).filter_by(v0="superuser").filter_by(
+        v1="external_admin_user"
+    ).delete()
     records = [
         CasbinRule(v0="superuser", v1="external_admin_user", v2=action)
         for action in ["get", "post", "put", "delete"]

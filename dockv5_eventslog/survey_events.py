@@ -4,8 +4,9 @@ from sqlalchemy import ForeignKey
 
 from . import db
 
+
 class SurveyEvents(db.Model):
-    __tablename__ = 'survey_events'
+    __tablename__ = "survey_events"
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
 
@@ -19,7 +20,7 @@ class SurveyEvents(db.Model):
     firmware_version = db.Column(db.String(45), nullable=True, default=None)
     clientID = db.Column(db.String(50), nullable=True, default=None)
     warehouseID = db.Column(db.String(50), nullable=True, default=None)
-    
+
     def as_dict(self):
         return {
             "id": self.id,
@@ -32,8 +33,11 @@ class SurveyEvents(db.Model):
             "db_inserted_at": self.db_inserted_at,
             "firmware_version": self.firmware_version,
             "clientID": self.clientID,
-            "warehouseID": self.warehouseID  
+            "warehouseID": self.warehouseID,
         }
 
     def __repr__(self):
-        return 'survey events. for %s, response is: %s' % (self.survey_type, self.response)
+        return "survey events. for %s, response is: %s" % (
+            self.survey_type,
+            self.response,
+        )

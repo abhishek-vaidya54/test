@@ -76,7 +76,7 @@ def is_valid_shift_id(connection, id, warehouse_id):
         return False
 
 
-def is_valid_shift_name(connection, name, id=None, warehouseId= None):
+def is_valid_shift_name(connection, name, id=None, warehouseId=None):
     is_valid, message = utils.is_valid_string(name)
     if not is_valid:
         return False, message

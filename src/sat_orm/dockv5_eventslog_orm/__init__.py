@@ -1,4 +1,4 @@
-'''
+"""
 NAME: Dockv5 Events Log ORM
 
 DESCRIPTION:
@@ -22,4 +22,4 @@ DESCRIPTION:
             +-------------------+
 
             **** Edit This File If tables are added or removed ****
-'''
+"""

@@ -8,11 +8,11 @@ Create Date: 2019-09-12 15:00:59.780075
 from alembic import op
 import sqlalchemy as sa
 
-#updating trigger
+# updating trigger
 
 # revision identifiers, used by Alembic.
-revision = 'eb8099f52707'
-down_revision = '38886a28cf02'
+revision = "eb8099f52707"
+down_revision = "38886a28cf02"
 branch_labels = None
 depends_on = None
 
@@ -32,4 +32,4 @@ def upgrade():
 
 
 def downgrade():
-    op.execute('DROP TRIGGER IF EXISTS update_dock_phase_deployment_stage')
+    op.execute("DROP TRIGGER IF EXISTS update_dock_phase_deployment_stage")

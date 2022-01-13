@@ -4,8 +4,9 @@ from sqlalchemy import ForeignKey
 
 from . import db
 
+
 class SensorEvents(db.Model):
-    __tablename__ = 'sensor_events'
+    __tablename__ = "sensor_events"
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
 
@@ -38,8 +39,8 @@ class SensorEvents(db.Model):
             "port": self.port,
             "db_inserted_at": self.db_inserted_at,
             "firmware_version": self.firmware_version,
-            "sessionID": self.sessionID
+            "sessionID": self.sessionID,
         }
 
     def __repr__(self):
-        return 'sensor events. event type: %s' % (self.event_type)
+        return "sensor events. event type: %s" % (self.event_type)

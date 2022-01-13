@@ -10,8 +10,8 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '6cc5224d7039'
-down_revision = '15d94d1d8ceb'
+revision = "6cc5224d7039"
+down_revision = "15d94d1d8ceb"
 branch_labels = None
 depends_on = None
 
@@ -20,7 +20,7 @@ def upgrade():
     op.execute(
         """
             UPDATE groups SET override_settings=1 WHERE id in (207,208,209);
-        """  
+        """
     )
 
     settings_json_groupa_canada = """{"handsFree": false,
@@ -45,10 +45,14 @@ def upgrade():
         "exposureHapticRepeatMS": 10000,
         "hapticSingleBendWindow": 600,
         "hapticSagAngleThreshold": 65,
-        "exposureHapticSuppressMS": 30000}""".replace('\n', '')
+        "exposureHapticSuppressMS": 30000}""".replace(
+        "\n", ""
+    )
 
     print(settings_json_groupa_canada)
-    sql = """insert into settings (value, target_type, target_id) values ('{0}','group', 207);""".format(settings_json_groupa_canada)
+    sql = """insert into settings (value, target_type, target_id) values ('{0}','group', 207);""".format(
+        settings_json_groupa_canada
+    )
 
     print(sql)
     op.execute(sql)
@@ -75,10 +79,14 @@ def upgrade():
         "exposureHapticRepeatMS": 10000,
         "hapticSingleBendWindow": 600,
         "hapticSagAngleThreshold": 65,
-        "exposureHapticSuppressMS": 30000}""".replace('\n', '')
+        "exposureHapticSuppressMS": 30000}""".replace(
+        "\n", ""
+    )
 
     print(settings_json_groupb_canada)
-    sql = """insert into settings (value, target_type, target_id) values ('{0}','group', 208);""".format(settings_json_groupb_canada)
+    sql = """insert into settings (value, target_type, target_id) values ('{0}','group', 208);""".format(
+        settings_json_groupb_canada
+    )
 
     print(sql)
     op.execute(sql)
@@ -105,15 +113,19 @@ def upgrade():
         "exposureHapticRepeatMS": 10000,
         "hapticSingleBendWindow": 600,
         "hapticSagAngleThreshold": 65,
-        "exposureHapticSuppressMS": 30000}""".replace('\n', '')
+        "exposureHapticSuppressMS": 30000}""".replace(
+        "\n", ""
+    )
 
     print(settings_json_groupc_canada)
-    sql = """insert into settings (value, target_type, target_id) values ('{0}','group', 209);""".format(settings_json_groupc_canada)
+    sql = """insert into settings (value, target_type, target_id) values ('{0}','group', 209);""".format(
+        settings_json_groupc_canada
+    )
 
     print(sql)
     op.execute(sql)
 
-    warehouse_settings  = """{ "handsFree": false,
+    warehouse_settings = """{ "handsFree": false,
                 "eulaVersion": null,
                 "enableMotion": true,
                 "hapticEnabled": false,
@@ -135,15 +147,20 @@ def upgrade():
                 "exposureHapticRepeatMS": 10000,
                 "hapticSingleBendWindow": 600,
                 "hapticSagAngleThreshold": 60,
-                "exposureHapticSuppressMS": 30000}""".replace('\n', '')
+                "exposureHapticSuppressMS": 30000}""".replace(
+        "\n", ""
+    )
 
     for warehouse in [230]:
         sql = """
             insert into settings (value, target_type, target_id)
             values ('{0}',
                 'warehouse', {1})
-        """.format(warehouse_settings, warehouse)
+        """.format(
+            warehouse_settings, warehouse
+        )
         op.execute(sql)
+
 
 def downgrade():
     pass

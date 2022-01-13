@@ -27,7 +27,6 @@ from sat_orm.pipeline_factories import (
     SensorsFactory,
     GroupsFactory,
     UserRoleAssociationFactory,
-
 )
 from sat_orm.pipeline import (
     get_session,
@@ -65,7 +64,7 @@ os.environ["ENV_NAME"] = "test"
 
 
 def pytest_configure(config):
-    """ Adds custom test makers"""
+    """Adds custom test makers"""
     config.addinivalue_line(
         "markers", "input_validation: mark test to run only database validations"
     )
@@ -215,7 +214,7 @@ def get_external_admin_user(test_session):
             warehouse=new_warehouse,
             shifts=new_shift,
             job_function=new_jf,
-            external_id= str(uuid.uuid4())
+            external_id=str(uuid.uuid4()),
         )
         ImportedIndustrialAthleteFactory(
             athlete_upload_status=athlete_upload_status,
@@ -249,7 +248,7 @@ def get_industrial_athlete(get_external_admin_user, test_session):
 
 @pytest.fixture(scope="function")
 def get_setting_type_athlete(get_industrial_athlete):
-    """ Builds settings from the Factories module"""
+    """Builds settings from the Factories module"""
     ia = get_industrial_athlete
     return SettingsFactory.create(target_type="industrial_athlete", target_id=ia.id)
 
@@ -263,26 +262,26 @@ def get_sensor_object(test_session):
 
 @pytest.fixture(scope="function")
 def get_sensor_from_db(test_session):
-    """ Builds sensors from the Factories module"""
+    """Builds sensors from the Factories module"""
     session = test_session
     return SensorsFactory.create()
 
 
 @pytest.fixture(scope="function")
 def get_warehouse_from_db(test_session):
-    """ Creates warehouse from the Factories module"""
+    """Creates warehouse from the Factories module"""
     return WarehouseFactory.create()
 
 
 @pytest.fixture(scope="function")
 def get_group_from_db(test_session):
-    """ Creates group from the Factories module"""
+    """Creates group from the Factories module"""
     return GroupsFactory.create()
 
 
 @pytest.fixture(scope="function")
 def get_job_function_from_db(test_session):
-    """ Creates a JobFunction From the Factory"""
+    """Creates a JobFunction From the Factory"""
     return JobFunctionFactory.create()
 
 
@@ -397,17 +396,15 @@ def valid_shift_fields():
 
 @pytest.fixture(scope="function")
 def valid_external_admin_user_fields():
-    return (
-        [
-            "id",
-            "email",
-            "username",
-            "is_active",
-            "warehouses",
-            "client",
-            "client_id",
-        ]
-    )
+    return [
+        "id",
+        "email",
+        "username",
+        "is_active",
+        "warehouses",
+        "client",
+        "client_id",
+    ]
 
 
 @pytest.fixture(scope="function")
@@ -423,13 +420,13 @@ def create_external_admin_user_params(get_external_admin_user):
 
 @pytest.fixture(scope="function")
 def settings_factory(request):
-    """ Builds settings from the Factories module"""
+    """Builds settings from the Factories module"""
     return SettingsFactory.create()
 
 
 @pytest.fixture(scope="function")
 def client_factory(request):
-    """ Builds clients from the Factories module"""
+    """Builds clients from the Factories module"""
     return ClientFactory.create()
 
 

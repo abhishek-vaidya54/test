@@ -10,8 +10,8 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'e7338c9b18c7'
-down_revision = '2cdbc1d28383'
+revision = "e7338c9b18c7"
+down_revision = "2cdbc1d28383"
 branch_labels = None
 depends_on = None
 
@@ -36,4 +36,5 @@ def downgrade():
         """
     DELETE FROM pipeline.casbin_rule WHERE v0='data_analytics' AND v1='data_analytics';
     
-    """)
+    """
+    )

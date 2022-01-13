@@ -9,8 +9,7 @@ def test_external_admin_user_serializer(
     input - valid external admin user fields, valid external admin user
     output - valid external admin user dict
     """
-    user_dict = Schemas.ExternalAdminUserSchema(
-    ).dump(get_external_admin_user)
+    user_dict = Schemas.ExternalAdminUserSchema().dump(get_external_admin_user)
     for field in valid_external_admin_user_fields:
         assert field in user_dict
 

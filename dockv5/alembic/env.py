@@ -1,4 +1,3 @@
-
 from __future__ import with_statement
 
 import os
@@ -28,26 +27,28 @@ target_metadata = None
 # my_important_option = config.get_main_option("my_important_option")
 # ... etc.
 
-VAULT_TOKEN = os.environ.get('VAULT_TOKEN', '')
+VAULT_TOKEN = os.environ.get("VAULT_TOKEN", "")
 
 # TODO: fix verify SSL error (and remove verify=False flag)
 def get_vault_config(configName):
-  config = None
-  return config
+    config = None
+    return config
+
 
 def get_url():
     # if running in GitHub Action CI/CD
-    if os.environ.get('CI'):
+    if os.environ.get("CI"):
         # grab the database uri input by the user
-        uri_interim = os.environ.get('INPUT_DATABASE_URI')
+        uri_interim = os.environ.get("INPUT_DATABASE_URI")
     else:
-        local_db = os.environ.get('LOCAL_DOCK_DB_URI')
-        dev_db = os.environ.get('DEV_DOCK_DB_URI')
-        staging_db = os.environ.get('STAGING_DOCK_DB_URI')
-        prod_db = os.environ.get('PROD_DOCK_DB_URI')
+        local_db = os.environ.get("LOCAL_DOCK_DB_URI")
+        dev_db = os.environ.get("DEV_DOCK_DB_URI")
+        staging_db = os.environ.get("STAGING_DOCK_DB_URI")
+        prod_db = os.environ.get("PROD_DOCK_DB_URI")
         uri_interim = local_db
     print("database URI:", uri_interim)
     return uri_interim
+
 
 def run_migrations_offline():
     """Run migrations in 'offline' mode.
@@ -62,8 +63,7 @@ def run_migrations_offline():
 
     """
     url = get_url()
-    context.configure(
-        url=url, target_metadata=target_metadata, literal_binds=True)
+    context.configure(url=url, target_metadata=target_metadata, literal_binds=True)
 
     with context.begin_transaction():
         context.run_migrations()
@@ -79,13 +79,11 @@ def run_migrations_online():
     connectable = create_engine(get_url())
 
     with connectable.connect() as connection:
-        context.configure(
-            connection=connection,
-            target_metadata=target_metadata
-        )
+        context.configure(connection=connection, target_metadata=target_metadata)
 
         with context.begin_transaction():
             context.run_migrations()
+
 
 if context.is_offline_mode():
     run_migrations_offline()

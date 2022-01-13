@@ -1,6 +1,7 @@
 from sat_orm.dockv5 import Schemas
 from sat_orm.pipeline_orm.industrial_athlete import IndustrialAthlete
 
+
 def test_dock_phase_schema_exist(get_dock_from_db):
     """
     checks if all the mentioned fields are present in the dict
