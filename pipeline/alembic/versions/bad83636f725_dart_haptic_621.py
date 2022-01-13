@@ -10,14 +10,14 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'bad83636f725'
-down_revision = '55196d0a0f19'
+revision = "bad83636f725"
+down_revision = "55196d0a0f19"
 branch_labels = None
 depends_on = None
 
 
 def upgrade():
-    mtm_settings  = """{ "handsFree": false,
+    mtm_settings = """{ "handsFree": false,
                 "eulaVersion": null,
                 "enableMotion": true,
                 "hapticEnabled": true,
@@ -39,17 +39,21 @@ def upgrade():
                 "exposureHapticRepeatMS": 10000,
                 "hapticSingleBendWindow": 600,
                 "hapticSagAngleThreshold": 60,
-                "exposureHapticSuppressMS": 30000}""".replace('\n', '')
+                "exposureHapticSuppressMS": 30000}""".replace(
+        "\n", ""
+    )
 
     for warehouse in [259]:
         sql = """
             insert into settings (value, target_type, target_id)
             values ('{0}',
                 'warehouse', {1})
-        """.format(mtm_settings, warehouse)
+        """.format(
+            mtm_settings, warehouse
+        )
         op.execute(sql)
 
-    mason_settings  = """{ "handsFree": false,
+    mason_settings = """{ "handsFree": false,
                 "eulaVersion": null,
                 "enableMotion": true,
                 "hapticEnabled": true,
@@ -71,17 +75,21 @@ def upgrade():
                 "exposureHapticRepeatMS": 10000,
                 "hapticSingleBendWindow": 600,
                 "hapticSagAngleThreshold": 60,
-                "exposureHapticSuppressMS": 30000}""".replace('\n', '')
+                "exposureHapticSuppressMS": 30000}""".replace(
+        "\n", ""
+    )
 
     for warehouse in [260]:
         sql = """
             insert into settings (value, target_type, target_id)
             values ('{0}',
                 'warehouse', {1})
-        """.format(mason_settings, warehouse)
+        """.format(
+            mason_settings, warehouse
+        )
         op.execute(sql)
 
-    shipping_settings  = """{ "handsFree": false,
+    shipping_settings = """{ "handsFree": false,
                 "eulaVersion": null,
                 "enableMotion": true,
                 "hapticEnabled": true,
@@ -103,16 +111,19 @@ def upgrade():
                 "exposureHapticRepeatMS": 10000,
                 "hapticSingleBendWindow": 600,
                 "hapticSagAngleThreshold": 60,
-                "exposureHapticSuppressMS": 30000}""".replace('\n', '')
+                "exposureHapticSuppressMS": 30000}""".replace(
+        "\n", ""
+    )
 
     for warehouse in [261]:
         sql = """
             insert into settings (value, target_type, target_id)
             values ('{0}',
                 'warehouse', {1})
-        """.format(shipping_settings, warehouse)
+        """.format(
+            shipping_settings, warehouse
+        )
         op.execute(sql)
-
 
 
 def downgrade():

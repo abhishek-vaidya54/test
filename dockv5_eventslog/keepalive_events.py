@@ -4,8 +4,9 @@ from sqlalchemy import ForeignKey
 
 from . import db
 
+
 class KeepaliveEvents(db.Model):
-    __tablename__ = 'keepalive_events'
+    __tablename__ = "keepalive_events"
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
 
@@ -28,8 +29,8 @@ class KeepaliveEvents(db.Model):
             "batt_percent": self.batt_percent,
             "charge_status": self.charge_status,
             "clientID": self.clientID,
-            "warehouseID": self.warehouseID
+            "warehouseID": self.warehouseID,
         }
 
     def __repr__(self):
-        return 'keepalive event for dock %s' % (self.dockID)
+        return "keepalive event for dock %s" % (self.dockID)

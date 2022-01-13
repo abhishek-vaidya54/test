@@ -51,10 +51,7 @@ def upgrade():
                     SET termination_date = FROM_UNIXTIME({new_timestamp})
                     WHERE id={current_id}
                 """
-            op.execute(
-                sql
-            )
-        
+            op.execute(sql)
 
     query = """
                 SELECT t1.id, t1.client_id, t1.warehouse_id, t1.external_id, t1.termination_date
@@ -70,10 +67,12 @@ def upgrade():
             """
     result = connection.execute(query).fetchall()
 
-
     for index, record in list(enumerate(result)):
         current_id = record["id"]
-        new_timestamp = (datetime.combine(record["termination_date"], time.min) + timedelta(seconds=index+1)).timestamp()
+        new_timestamp = (
+            datetime.combine(record["termination_date"], time.min)
+            + timedelta(seconds=index + 1)
+        ).timestamp()
 
         sql = f"""
                 UPDATE industrial_athlete 
@@ -81,11 +80,9 @@ def upgrade():
                 WHERE id={current_id}
             """
 
-        op.execute(
-            sql
-        )
+        op.execute(sql)
 
-    #10659,10710,10711,10712,9906,9908,9809,10728,9884,10693,9901,10809,10680,10802,10683,10800,10682,10799,9880,9882,10726,10795,10679,10798,10672,10803,10697,10788,22889,22948,10685,10780,22884,22949,10684,10785,21951,22063,21950,22068,22839,22843,9890,9892,9876,10812,10694,10810,9985,10673,9824,10687,10832,10856,23056,23062,10731,10772,22395,22493,22396,22494,9813,10807,10730,10773,30828,30833,9729,10648,9747,10138,10675,10814,10894,21948,10033,21859,10681,10801,9919,10208,10047,10792,21945,21947,9844,22865
+    # 10659,10710,10711,10712,9906,9908,9809,10728,9884,10693,9901,10809,10680,10802,10683,10800,10682,10799,9880,9882,10726,10795,10679,10798,10672,10803,10697,10788,22889,22948,10685,10780,22884,22949,10684,10785,21951,22063,21950,22068,22839,22843,9890,9892,9876,10812,10694,10810,9985,10673,9824,10687,10832,10856,23056,23062,10731,10772,22395,22493,22396,22494,9813,10807,10730,10773,30828,30833,9729,10648,9747,10138,10675,10814,10894,21948,10033,21859,10681,10801,9919,10208,10047,10792,21945,21947,9844,22865
     query = """
                 SELECT t1.id, t1.hire_date, t1.external_id, t1.warehouse_id, t1.termination_date
                 FROM pipeline.industrial_athlete t1
@@ -117,11 +114,10 @@ def upgrade():
                     SET termination_date = FROM_UNIXTIME({new_timestamp})
                     WHERE id={current_id}
                 """
-            op.execute(
-                sql
-            )
+            op.execute(sql)
 
-    #raise "Test"
+    # raise "Test"
+
 
 def downgrade():
     pass

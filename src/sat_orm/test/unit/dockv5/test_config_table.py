@@ -1,4 +1,4 @@
-'''
+"""
 Author = Vincent Turnier
 Created = September 16, 2019
 Note:
@@ -13,18 +13,21 @@ Description:
     4 - insert into the dock_phase table
     5 - query dock_phase table 
     6 - the relationship between the tables
-'''
+"""
 import pytest
 
 from sat_orm.dockv5 import Config
 
-def test_insert_into_config_table(session,config_factory):
+
+def test_insert_into_config_table(session, config_factory):
     config_factory = config_factory
     before_insert = session.query(Config).count()
-    config = Config(dock_id=config_factory.dock_id,
-                    client_id = config_factory.client_id,
-                    warehouse_id = config_factory.warehouse_id,
-                    deployment_stage=config_factory.deployment_stage)
+    config = Config(
+        dock_id=config_factory.dock_id,
+        client_id=config_factory.client_id,
+        warehouse_id=config_factory.warehouse_id,
+        deployment_stage=config_factory.deployment_stage,
+    )
     session.add(config)
     session.commit()
     after_insert = session.query(Config).count()
@@ -52,13 +55,3 @@ def test_insert_into_config_table(session,config_factory):
 #     new_dock_phase_count = len(config.dock_phases)
 #     assert dock_phase_count != new_dock_phase_count
 #     assert new_dock_phase_deployment_stage == dock_phase.deployment_stage.lower()
-
-
-
-
-
-
-
-
-    
-

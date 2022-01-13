@@ -13,19 +13,15 @@ from utilities import util
 
 
 class Risk(db.Model):
-    __tablename__ = 'risk'
+    __tablename__ = "risk"
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
 
     processed_file_id = db.Column(
-        db.Integer,
-        sa.ForeignKey('processed_file.id'),
-        nullable=True
+        db.Integer, sa.ForeignKey("processed_file.id"), nullable=True
     )
     processed_file = db.relationship(
-        'ProcessedFile',
-        foreign_keys=[processed_file_id],
-        backref='risks'
+        "ProcessedFile", foreign_keys=[processed_file_id], backref="risks"
     )
 
     start_time = db.Column(db.DateTime)
@@ -41,34 +37,33 @@ class Risk(db.Model):
     risk_score = db.Column(db.Float)
 
     db_created_at = db.Column(
-        db.DateTime,
-        default=datetime.datetime.utcnow,
-        nullable=False
+        db.DateTime, default=datetime.datetime.utcnow, nullable=False
     )
     db_modified_at = db.Column(
         db.DateTime,
         default=datetime.datetime.utcnow,
         onupdate=datetime.datetime.utcnow,
-        nullable=False
+        nullable=False,
     )
 
-    __table_args__ = (
-        Index('risk_start_end_index', 'start_time', 'end_time'),
-    )
+    __table_args__ = (Index("risk_start_end_index", "start_time", "end_time"),)
 
     @hybrid_property
     def safety_score(self):
         return 100 - self.risk_score
 
     def __repr__(self):
-        return 'Risk from %s for %s' % (
-            self.processed_file.name, self.processed_file.athlete.name)
+        return "Risk from %s for %s" % (
+            self.processed_file.name,
+            self.processed_file.athlete.name,
+        )
 
 
 def create(rows, processed_file_id, commit=True):
     # assert all((isinstance(row, util.OutputRow) for row in rows))
 
-    risk = [ Risk(
+    risk = [
+        Risk(
             processed_file_id=processed_file_id,
             start_time=row.window_start,
             end_time=row.window_end,
@@ -80,9 +75,11 @@ def create(rows, processed_file_id, commit=True):
             average_lateral=row.average_lateral,
             avg_twist_velocity=row.avg_twist_velocity,
             risk_score=row.risk_score,
-            max_moment=row.max_moment
-    ) for row in rows]
-    
+            max_moment=row.max_moment,
+        )
+        for row in rows
+    ]
+
     db.session.bulk_save_objects(risk)
 
     # for row in rows:

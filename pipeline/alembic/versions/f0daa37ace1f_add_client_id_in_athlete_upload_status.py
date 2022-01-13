@@ -18,7 +18,8 @@ depends_on = None
 
 def upgrade():
     op.add_column(
-        "athlete_upload_status", sa.Column("client_id", sa.Integer(), nullable=False),
+        "athlete_upload_status",
+        sa.Column("client_id", sa.Integer(), nullable=False),
     )
 
 

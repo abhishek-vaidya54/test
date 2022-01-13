@@ -8,5 +8,3 @@ from sat_orm.dockv5_eventslog_orm.monthly_safety import MonthlySafety
 from sat_orm.dockv5_eventslog_orm.raw_event_log import RawEvemtLog
 from sat_orm.dockv5_eventslog_orm.sensor_events import SensorEvents
 from sat_orm.dockv5_eventslog_orm.survey_events import SurveyEvents
-
-

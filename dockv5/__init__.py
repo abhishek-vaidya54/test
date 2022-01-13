@@ -9,13 +9,13 @@ from sqlalchemy.exc import DBAPIError
 from sqlalchemy_wrapper import SQLAlchemy
 
 
-if RUNTIME_ENV == 'LAMBDA':
+if RUNTIME_ENV == "LAMBDA":
     from config import Config
 else:
     from pipeline.config import Config
 
 db = SQLAlchemy(Config.DB_URL)
-UTC_TIMEZONE = 'UTC'
+UTC_TIMEZONE = "UTC"
 
 
 def commit_or_rollback(session):
@@ -24,6 +24,7 @@ def commit_or_rollback(session):
     except DBAPIError:
         session.rollback()
         raise
+
 
 class convert_tz(GenericFunction):
     type = DateTime

@@ -4,8 +4,9 @@ from sqlalchemy import ForeignKey
 
 from . import db
 
+
 class Dockv5AppcrashLog(db.Model):
-    __tablename__ = 'dockv5_appcrash_log'
+    __tablename__ = "dockv5_appcrash_log"
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
 
@@ -18,8 +19,8 @@ class Dockv5AppcrashLog(db.Model):
             "id": self.id,
             "timestamp": self.timestamp,
             "log": self.log,
-            "dockID": self.dockID
+            "dockID": self.dockID,
         }
 
     def __repr__(self):
-        return 'Dock %s Log: %s' % (self.dockID, self.log)
+        return "Dock %s Log: %s" % (self.dockID, self.log)

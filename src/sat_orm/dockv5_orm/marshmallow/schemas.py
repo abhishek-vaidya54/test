@@ -17,9 +17,7 @@ class DockPhaseSchema(SQLAlchemyAutoSchema):
 
 
 class ConfigSchema(SQLAlchemyAutoSchema):
-    phase = fields.Function(
-        lambda obj: obj.phase if obj.phase else None
-    )
+    phase = fields.Function(lambda obj: obj.phase if obj.phase else None)
 
     class Meta:
         model = Config
