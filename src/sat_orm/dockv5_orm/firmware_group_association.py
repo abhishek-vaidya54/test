@@ -12,16 +12,14 @@ class FirmwareGroupAssociation(Base):
     )
     firmware_id = Column(Integer, ForeignKey("firmware.id"), primary_key=True)
 
-    db_created_at = Column(
-        DateTime, default=datetime.datetime.utcnow, nullable=False)
+    db_created_at = Column(DateTime, default=datetime.datetime.utcnow, nullable=False)
 
     # Relationships
 
     firmware_group = relationship(
         "FirmwareGroup", uselist=False, back_populates="firmwares"
     )
-    firmware = relationship("Firmware", uselist=False,
-                            backref="firmware_groups")
+    firmware = relationship("Firmware", uselist=False, backref="firmware_groups")
 
     # firmware_group = relationship(
     #     "FirmwareGroup", uselist=False, back_populates="firmwares"
@@ -34,5 +32,5 @@ class FirmwareGroupAssociation(Base):
         return {
             "id": getattr(self, "id"),
             "name": getattr(self, "name"),
-            "description": getattr(self, "description")
+            "description": getattr(self, "description"),
         }

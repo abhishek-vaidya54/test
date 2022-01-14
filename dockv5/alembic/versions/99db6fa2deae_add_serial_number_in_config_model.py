@@ -10,8 +10,8 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '99db6fa2deae'
-down_revision = 'af7c34ee8bed'
+revision = "99db6fa2deae"
+down_revision = "af7c34ee8bed"
 branch_labels = None
 depends_on = None
 
@@ -19,9 +19,7 @@ depends_on = None
 def upgrade():
     op.add_column(
         "config",
-        sa.Column(
-            "serial_number", sa.String(length=255), nullable=True
-        ),
+        sa.Column("serial_number", sa.String(length=255), nullable=True),
     )
 
 

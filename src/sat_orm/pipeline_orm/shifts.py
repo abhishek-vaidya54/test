@@ -47,8 +47,7 @@ class Shifts(Base):
     description = Column(Text, nullable=True)
     color = Column(String(255), nullable=True)
     override_settings = Column(TINYINT(1), nullable=False)
-    db_created_at = Column(
-        DateTime, default=datetime.datetime.utcnow, nullable=False)
+    db_created_at = Column(DateTime, default=datetime.datetime.utcnow, nullable=False)
     db_modified_at = Column(
         DateTime,
         default=datetime.datetime.utcnow,
@@ -57,13 +56,9 @@ class Shifts(Base):
     )
 
     # Table Relationships
-    industrial_athletes = relationship(
-        "IndustrialAthlete", back_populates="shifts")
-    warehouse = relationship(
-        "Warehouse", back_populates="shifts", uselist=False)
-    external_admin_user = relationship(
-        "ExternalAdminUser",  back_populates="shifts"
-    )
+    industrial_athletes = relationship("IndustrialAthlete", back_populates="shifts")
+    warehouse = relationship("Warehouse", back_populates="shifts", uselist=False)
+    external_admin_user = relationship("ExternalAdminUser", back_populates="shifts")
 
     @validates("warehouse_id")
     def validate_warehouse_id(self, key, warehouse_id):
@@ -125,8 +120,11 @@ def validate_before_insert(mapper, connection, target):
     errors = []
     # Name
     is_valid, message = shift_utils.is_valid_shift_name(
-        connection, param_input.get("name", ""), param_input.get("id", ""), param_input.get("warehouseId", ""))
-
+        connection,
+        param_input.get("name", ""),
+        param_input.get("id", ""),
+        param_input.get("warehouseId", ""),
+    )
 
     if not is_valid:
         errors.append(build_error("name", message))
@@ -139,14 +137,11 @@ def validate_before_insert(mapper, connection, target):
             build_error("warehouse_id", constants.INVALID_WAREHOUSE_ID_MESSAGE)
         )
     # Shift start
-    is_valid, message = shift_utils.is_valid_time(
-        param_input.get("shiftStart", ""))
+    is_valid, message = shift_utils.is_valid_time(param_input.get("shiftStart", ""))
     if not is_valid:
-        errors.append(build_error(
-            "shift_start", constants.INVALID_DATE_MESSAGE))
+        errors.append(build_error("shift_start", constants.INVALID_DATE_MESSAGE))
     # Shift end
-    is_valid, message = shift_utils.is_valid_time(
-        param_input.get("shiftEnd", ""))
+    is_valid, message = shift_utils.is_valid_time(param_input.get("shiftEnd", ""))
     if not is_valid:
         errors.append(build_error("shift_end", constants.INVALID_DATE_MESSAGE))
 
@@ -179,8 +174,11 @@ def validate_before_update(mapper, connection, target):
     # Name
     if "name" in param_input:
         is_valid, message = shift_utils.is_valid_shift_name(
-            connection, param_input.get("name", ""), param_input.get("id", ""), param_input.get("warehouseId", ""))
-
+            connection,
+            param_input.get("name", ""),
+            param_input.get("id", ""),
+            param_input.get("warehouseId", ""),
+        )
 
         if not is_valid:
             errors.append(build_error("name", message))
@@ -191,23 +189,18 @@ def validate_before_update(mapper, connection, target):
         )
         if not is_valid:
             errors.append(
-                build_error("warehouse_id",
-                            constants.INVALID_WAREHOUSE_ID_MESSAGE)
+                build_error("warehouse_id", constants.INVALID_WAREHOUSE_ID_MESSAGE)
             )
     # Shift start
     if "shiftStart" in param_input:
-        is_valid, message = shift_utils.is_valid_time(
-            param_input.get("shiftStart", ""))
+        is_valid, message = shift_utils.is_valid_time(param_input.get("shiftStart", ""))
         if not is_valid:
-            errors.append(build_error(
-                "shift_start", constants.INVALID_DATE_MESSAGE))
+            errors.append(build_error("shift_start", constants.INVALID_DATE_MESSAGE))
     # Shift end
     if "shiftEnd" in param_input:
-        is_valid, message = shift_utils.is_valid_time(
-            param_input.get("shiftEnd", ""))
+        is_valid, message = shift_utils.is_valid_time(param_input.get("shiftEnd", ""))
         if not is_valid:
-            errors.append(build_error(
-                "shift_end", constants.INVALID_DATE_MESSAGE))
+            errors.append(build_error("shift_end", constants.INVALID_DATE_MESSAGE))
         # Shift Manager
     if "shift_manager_id" in param_input:
         is_valid = external_admin_user_utils.is_valid_user_id(
@@ -216,7 +209,8 @@ def validate_before_update(mapper, connection, target):
         if not is_valid:
             errors.append(
                 build_error(
-                    "external_admin_user_id", constants.INVALID_PARAM_SHIFT_MANAGER_MESSAGE
+                    "external_admin_user_id",
+                    constants.INVALID_PARAM_SHIFT_MANAGER_MESSAGE,
                 )
             )
 
