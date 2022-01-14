@@ -10,15 +10,15 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '2bba7abb93dd'
-down_revision = '9eb6e8b682a1'
+revision = "2bba7abb93dd"
+down_revision = "9eb6e8b682a1"
 branch_labels = None
 depends_on = None
 
 
 def upgrade():
     op.execute(
-    """
+        """
     INSERT INTO pipeline.casbin_rule
         (ptype, v0, v1, v2)
     VALUES
@@ -31,7 +31,7 @@ def upgrade():
 
 def downgrade():
     op.execute(
-    """
+        """
     DELETE FROM pipeline.casbin_rule WHERE v0='admin' AND v1='settings';    
     """
     )

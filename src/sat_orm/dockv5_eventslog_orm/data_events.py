@@ -1,4 +1,4 @@
-'''
+"""
 LICENSE:
     This file is subject to the terms and conditions defined in
     file 'LICENSE.txt', which is part of this source code package.
@@ -14,7 +14,7 @@ CLASSIFICATION:
 
 DESCRIPTION:
             view __init__.py file
-'''
+"""
 
 # Standard Library Imports
 import datetime
@@ -24,10 +24,11 @@ from sqlalchemy import Column, Integer, String, DateTime, CHAR, JSON
 from sqlalchemy.orm import validates
 
 # Local Application Imports
-from sat_orm.dockv5_eventslog_orm.dockv5_eventslog_base import Base 
+from sat_orm.dockv5_eventslog_orm.dockv5_eventslog_base import Base
+
 
 class DataEvents(Base):
-    __tablename__ = 'data_events'
+    __tablename__ = "data_events"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
 
@@ -62,7 +63,7 @@ class DataEvents(Base):
             "athleteID": self.athleteID,
             "clientID": self.clientID,
             "port": self.port,
-            "sessionID": self.sessionID
+            "sessionID": self.sessionID,
         }
 
     def __repr__(self):

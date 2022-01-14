@@ -27,7 +27,9 @@ def upgrade():
         SELECT external_admin_user_id, "bulk_upload", "{0}", "{0}" 
         FROM pipeline.user_role_association
         where role="superuser" or role="admin"
-        """.format(datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
+        """.format(
+            datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        )
     )
 
     for action in actions:
@@ -40,7 +42,5 @@ def upgrade():
 
 def downgrade():
     op.execute('DELETE FROM pipeline.casbin_rule WHERE v0="bulk_upload"')
-   
-    op.execute(
-        'DELETE FROM pipeline.user_role_association WHERE role="bulk_upload"'
-    )
+
+    op.execute('DELETE FROM pipeline.user_role_association WHERE role="bulk_upload"')

@@ -19,10 +19,12 @@ depends_on = None
 
 def upgrade():
     op.add_column(
-        "client", sa.Column("status", sa.String(length=20), nullable=False),
+        "client",
+        sa.Column("status", sa.String(length=20), nullable=False),
     )
     op.add_column(
-        "client", sa.Column("contracted_users", sa.Integer(), nullable=False),
+        "client",
+        sa.Column("contracted_users", sa.Integer(), nullable=False),
     )
     op.add_column(
         "client",
@@ -39,4 +41,3 @@ def downgrade():
     op.drop_column("client", "status")
     op.drop_column("client", "contracted_users")
     op.drop_column("client", "active_inactive_date")
-

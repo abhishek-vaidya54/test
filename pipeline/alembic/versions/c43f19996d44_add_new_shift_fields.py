@@ -18,10 +18,10 @@ depends_on = None
 
 def upgrade():
     op.add_column(
-        "shifts", sa.Column("timezone", sa.String(length=30), nullable=False),
+        "shifts",
+        sa.Column("timezone", sa.String(length=30), nullable=False),
     )
 
 
 def downgrade():
     op.drop_column("shifts", "timezone")
-

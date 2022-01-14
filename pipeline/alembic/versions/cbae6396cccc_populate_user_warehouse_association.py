@@ -17,10 +17,11 @@ Base = declarative_base()
 
 
 # revision identifiers, used by Alembic.
-revision = 'cbae6396cccc'
-down_revision = '61bb059d421a'
+revision = "cbae6396cccc"
+down_revision = "61bb059d421a"
 branch_labels = None
 depends_on = None
+
 
 class UserWarehouseAssociation(Base):
     __tablename__ = "user_warehouse_association"
@@ -29,9 +30,8 @@ class UserWarehouseAssociation(Base):
     warehouse_id = sa.Column(sa.Integer, primary_key=True)
 
     db_created_at = sa.Column(
-        sa.DateTime,
-        default=datetime.datetime.utcnow,
-        nullable=False)
+        sa.DateTime, default=datetime.datetime.utcnow, nullable=False
+    )
     db_modified_at = sa.Column(
         sa.DateTime,
         default=datetime.datetime.utcnow,
@@ -40,13 +40,11 @@ class UserWarehouseAssociation(Base):
     )
 
 
-
 def upgrade():
     bind = op.get_bind()
     session = orm.Session(bind=bind)
     res = session.execute("SELECT id, warehouse_id FROM external_admin_user")
 
-    
     existing_records = res.fetchall()
     new_records = []
 
@@ -54,14 +52,13 @@ def upgrade():
     for record in existing_records:
         new_records.append(
             UserWarehouseAssociation(
-                external_admin_user_id=record.id,
-                warehouse_id=record.warehouse_id)
+                external_admin_user_id=record.id, warehouse_id=record.warehouse_id
+            )
         )
     # finally:
     session.add_all(new_records)
     session.commit()
     session.close()
-            
 
 
 def downgrade():

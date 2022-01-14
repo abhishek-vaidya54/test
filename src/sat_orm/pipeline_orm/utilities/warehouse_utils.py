@@ -2,6 +2,7 @@ from sat_orm.pipeline_orm.utilities import utils
 from sat_orm.pipeline_orm.queries import warehouse_queries
 from sat_orm import constants
 
+
 def is_valid_lat_long(key, value):
     """
     Helper method that checks if input is valid latitude or longitude

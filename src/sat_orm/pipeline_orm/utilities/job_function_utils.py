@@ -23,7 +23,9 @@ def is_valid_job_function_name(connection, name, id=None, warehouse_id=None):
     if not is_valid:
         return False, message
 
-    job_function = job_function_queries.get_job_function_by_name(connection, name, warehouse_id)
+    job_function = job_function_queries.get_job_function_by_name(
+        connection, name, warehouse_id
+    )
 
     if job_function is None:
         return True, None

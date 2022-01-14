@@ -162,3 +162,8 @@ copy .envrc.sample in this directory to .envrc and set the vault token
 
 To build docker container to run mysql locally and test changes locally
 `./docker/start_database_server`
+
+## linting rules
+Our tool for linting at time of pull requests is called "Black". The following format rules are in place: https://black.readthedocs.io/en/stable/the_black_code_style/current_style.html
+
+For adding the linter at editor time, run `pip install black`. For further information: https://github.com/psf/black#editor-integration.

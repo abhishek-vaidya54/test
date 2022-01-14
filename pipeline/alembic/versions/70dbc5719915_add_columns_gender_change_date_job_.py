@@ -10,17 +10,19 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '70dbc5719915'
-down_revision = 'f4daaa2c2953'
+revision = "70dbc5719915"
+down_revision = "f4daaa2c2953"
 branch_labels = None
 depends_on = None
 
 
 def upgrade():
-    op.add_column('industrial_athlete', sa.Column('gender_change_date', sa.DateTime))
-    op.add_column('industrial_athlete', sa.Column('job_function_change_date', sa.DateTime))
+    op.add_column("industrial_athlete", sa.Column("gender_change_date", sa.DateTime))
+    op.add_column(
+        "industrial_athlete", sa.Column("job_function_change_date", sa.DateTime)
+    )
 
 
 def downgrade():
-    op.drop_column('industrial_athlete','gender_change_date')
-    op.drop_column('industrial_athlete','job_function_change_date')
+    op.drop_column("industrial_athlete", "gender_change_date")
+    op.drop_column("industrial_athlete", "job_function_change_date")

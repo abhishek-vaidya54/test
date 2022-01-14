@@ -10,8 +10,8 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '2af95c711733'
-down_revision = '9eb6e8b682a1'
+revision = "2af95c711733"
+down_revision = "9eb6e8b682a1"
 branch_labels = None
 depends_on = None
 
@@ -39,10 +39,14 @@ def upgrade():
         "exposureHapticRepeatMS": 10000,
         "hapticSingleBendWindow": 600,
         "hapticSagAngleThreshold": 75,
-        "exposureHapticSuppressMS": 30000}""".replace('\n', '')
+        "exposureHapticSuppressMS": 30000}""".replace(
+        "\n", ""
+    )
 
     print(settings_json)
-    sql = """insert into settings (value, target_type, target_id) values ('{0}','group', 206);""".format(settings_json)
+    sql = """insert into settings (value, target_type, target_id) values ('{0}','group', 206);""".format(
+        settings_json
+    )
 
     print(sql)
     op.execute(sql)
@@ -50,17 +54,14 @@ def upgrade():
     op.execute(
         """
             UPDATE industrial_athlete SET group_id=206 WHERE job_function_id in (1217, 1218, 1219, 1220, 1243);
-        """  
+        """
     )
 
     op.execute(
         """
             UPDATE groups SET override_settings=1 WHERE id=206;
-        """  
+        """
     )
-
-
-
 
 
 def downgrade():

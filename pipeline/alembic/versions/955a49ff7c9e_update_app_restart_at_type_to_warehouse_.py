@@ -24,14 +24,16 @@ def upgrade():
             "app_restart_at",
             sa.TIME(),
             server_default=str(
-            datetime.datetime.now().replace(hour=0, minute=0, second=0).strftime("%H:%M:%S")
+                datetime.datetime.now()
+                .replace(hour=0, minute=0, second=0)
+                .strftime("%H:%M:%S")
             ),
             nullable=True,
         ),
     )
 
 
-def downgrade():   
+def downgrade():
     op.alter_column(
         "warehouse",
         sa.Column(
