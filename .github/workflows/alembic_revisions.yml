@@ -31,15 +31,15 @@ jobs:
         run: sudo apt install openvpn
 
       - name: Write .ovpn file
-        run: echo "${{  secrets.CONFIG_OVPN  }}" > .github/vpn/config.ovpn
+        run: echo "${{  secrets.DEVOPS_VPN_CONFIG  }}" > .github/vpn/config.ovpn
       
       - name: Connect to VPN
         uses: golfzaptw/action-connect-ovpn@master
         id: connect_vpn
         env:
-          CA_CRT: ${{  secrets.CA_CRT  }}
-          USER_CRT: ${{  secrets.USER_CRT  }}
-          USER_KEY: ${{  secrets.USER_KEY  }}
+          CA_CRT: ${{  secrets.DEVOPS_CA_CERT  }}
+          USER_CRT: ${{  secrets.DEVOPS_USER_CERT  }}
+          USER_KEY: ${{  secrets.DEVOPS_USER_KEY  }}
         with:
           FILE_OVPN: '.github/vpn/config.ovpn'
           PING_URL: '127.0.0.1'

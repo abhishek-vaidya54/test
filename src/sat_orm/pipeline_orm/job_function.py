@@ -58,7 +58,6 @@ class JobFunction(Base):
         default="LBS",
     )
     max_package_mass = Column(Float, default=6.6)
-    group_administrator = Column(String(255), nullable=False)
     max_package_weight = Column(Integer, nullable=True)
     min_package_weight = Column(Integer, nullable=True)
     avg_package_weight = Column(Integer, nullable=True)
@@ -106,19 +105,11 @@ class JobFunction(Base):
         else:
             return name
 
-    @validates("group_administrator")
-    def validate_group_administrator(self, key, group_administrator):
-        if group_administrator == None:
-            raise Exception("group_administrator cannot be Null")
-        else:
-            return group_administrator
-
     def as_dict(self):
         return {
             "id": self.id,
             "name": self.name,
             "package_unit": self.package_unit,
-            "group_administrator": self.group_administrator,
             "description": self.description,
             "warehouse_id": self.warehouse_id,
             "settings_id": self.settings_id,
@@ -145,7 +136,6 @@ def validate_before_insert(mapper, connection, target):
     errors = []
 
     name = params_input.get("name", "")
-    group_administrator = params_input.get("group_administrator", "")
     description = params_input.get("description", "")
     warehouse_id = params_input.get("warehouse_id", "")
     settings_id = params_input.get("settings_id", "")
@@ -172,15 +162,6 @@ def validate_before_insert(mapper, connection, target):
         if not is_valid:
             errors.append(
                 build_error("settings_id", constants.INVALID_SETTINGS_ID_MESSAGE)
-            )
-
-    if group_administrator:
-        is_valid = job_function_utils.is_valid_group_admin(group_administrator)
-        if not is_valid:
-            errors.append(
-                build_error(
-                    "group_administrator", constants.INVALID_GROUP_ADMIN_MESSAGE
-                )
             )
 
     if description:
@@ -256,17 +237,6 @@ def validate_before_update(mapper, connection, target):
         if not is_valid:
             errors.append(
                 build_error("settings_id", constants.INVALID_SETTINGS_ID_MESSAGE)
-            )
-
-    if "group_administrator" in params_input:
-        is_valid = job_function_utils.is_valid_group_admin(
-            params_input.get("group_administrator", "")
-        )
-        if not is_valid:
-            errors.append(
-                build_error(
-                    "group_administrator", constants.INVALID_GROUP_ADMIN_MESSAGE
-                )
             )
 
     # if "description" in params_input:

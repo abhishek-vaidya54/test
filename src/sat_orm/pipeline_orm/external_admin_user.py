@@ -10,6 +10,7 @@ from sat_orm.pipeline_orm.warehouse import Warehouse
 from sat_orm.pipeline_orm.client import Client
 from sat_orm.pipeline_orm.user_warehouse_association import UserWarehouseAssociation
 from sat_orm.pipeline_orm.user_role_association import UserRoleAssociation
+from sat_orm.pipeline_orm.shifts import Shifts
 from sat_orm.pipeline_orm.user_client_association import UserClientAssociation
 from sat_orm.pipeline_orm.pipeline_base import Base
 import sat_orm.constants as constants
@@ -29,14 +30,19 @@ class ExternalAdminUser(Base):
 
     email = Column(String(255), nullable=False)
     username = Column(String(255), nullable=False)
-    account_status = Column(String(255), nullable=False, server_default="inactive")
+    account_status = Column(String(255), nullable=False,
+                            server_default="inactive")
 
     #  Table relationships
     clients = relationship(UserClientAssociation, back_populates=__tablename__)
-    warehouses = relationship(UserWarehouseAssociation, back_populates=__tablename__)
+    warehouses = relationship(UserWarehouseAssociation,
+                              back_populates=__tablename__)
     roles = relationship(UserRoleAssociation, back_populates=__tablename__)
+    shifts = relationship(Shifts, back_populates=__tablename__)
+
     deleted_at = Column(DateTime, nullable=True)
-    db_created_at = Column(DateTime, default=datetime.datetime.utcnow, nullable=False)
+    db_created_at = Column(
+        DateTime, default=datetime.datetime.utcnow, nullable=False)
     db_modified_at = Column(
         DateTime,
         default=datetime.datetime.utcnow,
@@ -100,7 +106,8 @@ class ExternalAdminUser(Base):
 
     @staticmethod
     def get_by_id(session, id):
-        external_admin_user = session.query(ExternalAdminUser).filter_by(id=id).first()
+        external_admin_user = session.query(
+            ExternalAdminUser).filter_by(id=id).first()
         return external_admin_user
 
     @staticmethod
@@ -126,7 +133,6 @@ class ExternalAdminUser(Base):
 
 @event.listens_for(ExternalAdminUser, "before_insert")
 def validate_role_before_insert(mapper, connection, target):
-    print("->>>>>>>>>>>>>>>CHECK CI?CD PIPELINE ")
     """
     Event hook method that fires before insert
     to check if params are valid for inserting a single external_admin_user
@@ -141,12 +147,14 @@ def validate_role_before_insert(mapper, connection, target):
 
     is_valid = utils.is_valid_email(email)
     if not is_valid:
-        errors.append(build_error("email", constants.INVALID_EMAIL_ERROR_MESSAGE))
+        errors.append(build_error(
+            "email", constants.INVALID_EMAIL_ERROR_MESSAGE))
 
     if "account_status" in params_input:
         account_status = params_input.get("account_status", "").lower()
 
-        is_valid = external_admin_user_utils.is_valid_account_status(account_status)
+        is_valid = external_admin_user_utils.is_valid_account_status(
+            account_status)
         if not is_valid:
             errors.append(
                 build_error(
