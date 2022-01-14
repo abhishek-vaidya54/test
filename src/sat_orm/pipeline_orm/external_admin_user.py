@@ -10,6 +10,7 @@ from sat_orm.pipeline_orm.warehouse import Warehouse
 from sat_orm.pipeline_orm.client import Client
 from sat_orm.pipeline_orm.user_warehouse_association import UserWarehouseAssociation
 from sat_orm.pipeline_orm.user_role_association import UserRoleAssociation
+from sat_orm.pipeline_orm.shifts import Shifts
 from sat_orm.pipeline_orm.user_client_association import UserClientAssociation
 from sat_orm.pipeline_orm.pipeline_base import Base
 import sat_orm.constants as constants
@@ -35,6 +36,8 @@ class ExternalAdminUser(Base):
     clients = relationship(UserClientAssociation, back_populates=__tablename__)
     warehouses = relationship(UserWarehouseAssociation, back_populates=__tablename__)
     roles = relationship(UserRoleAssociation, back_populates=__tablename__)
+    shifts = relationship(Shifts, back_populates=__tablename__)
+
     deleted_at = Column(DateTime, nullable=True)
     db_created_at = Column(DateTime, default=datetime.datetime.utcnow, nullable=False)
     db_modified_at = Column(
@@ -126,7 +129,6 @@ class ExternalAdminUser(Base):
 
 @event.listens_for(ExternalAdminUser, "before_insert")
 def validate_role_before_insert(mapper, connection, target):
-    print("->>>>>>>>>>>>>>>CHECK CI?CD PIPELINE ")
     """
     Event hook method that fires before insert
     to check if params are valid for inserting a single external_admin_user

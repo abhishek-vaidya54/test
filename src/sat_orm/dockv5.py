@@ -33,4 +33,10 @@ from sat_orm.dockv5_orm.dockv5_base import get_session
 from sat_orm.dockv5_orm.config import Config
 from sat_orm.dockv5_orm.dock_phase import DockPhase
 
+from sat_orm.dockv5_orm.firmware import Firmware
+from sat_orm.dockv5_orm.firmware_group import FirmwareGroup
+from sat_orm.dockv5_orm.firmware_group_association import FirmwareGroupAssociation
+from sat_orm.dockv5_orm.hardware import Hardware
+from sat_orm.dockv5_orm.device_type import DeviceType
+
 from sat_orm.dockv5_orm.marshmallow import schemas as Schemas

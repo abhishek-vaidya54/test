@@ -55,6 +55,8 @@ DUPLICATE_EXTERNAL_ID_MESSAGE = "The external id that you are trying to add is a
 
 INVALID_EXTERNAL_ID_MESSAGE = "Invalid external ID."
 
+INVALID_PARAM_SHIFT_MANAGER_MESSAGE = "Invalid Shift Manager ID."
+
 INVALID_REQUEST = "Invalid request."
 
 DUPLICATE_CLIENT_NAME_MESSAGE = "Client Name already exists."
@@ -361,5 +363,20 @@ INVALID_IA_HEIGHT_UNIT_MESSAGE = "Invalid height unit: Should be one of INCH or 
 INVALID_IA_WEIGHT_UNIT_MESSAGE = "Invalid weight unit: Should be one of LBS or KG."
 
 INVALID_PACKAGE_UNIT_MESSAGE = "Invalid weight unit: Should be one of LBS or KG."
+
+INVALID_DEVICE_TYPE_MESSAGE = "Invalid Device Type Id"
+
+INVALID_HARDWARE_MESSAGE = "Invalid Hardware Id"
+
+INVALID_FIRMWARE_ID = "Invalid Firmware Id"
+
+INVALID_NOTIFICATION_TYPE_MESSAGE = "Invalid notification type"
+
+VALID_NOTIFICATION_TYPE = ["update", "news", "warning", "event"]
+
+INVALID_CREATED_BY_MESSAGE = "Invalid Created_by id"
+
+INVALID_IS_ACTIVE_MESSAGE = "Invlaid is_active"
+
 
 VALID_TIMEZONES = valid_timezones.TIMEZONES

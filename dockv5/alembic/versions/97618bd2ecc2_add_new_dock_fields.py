@@ -41,10 +41,12 @@ def upgrade():
     # )
     # op.add_column(
     #     "dock_phase",
-    #     sa.Column("dock_firmware_version", sa.String(length=10), nullable=False),
+    #     sa.Column("dock_firmware_version", sa.String(
+    #         length=10), nullable=False),
     # )
     # op.add_column(
-    #     "dock_phase", sa.Column("description", sa.String(length=255), nullable=True),
+    #     "dock_phase", sa.Column(
+    #         "description", sa.String(length=255), nullable=True),
     # )
     # op.add_column(
     #     "dock_phase",

@@ -3,6 +3,7 @@ from marshmallow import validates, fields, ValidationError, Schema, post_dump
 from datetime import datetime
 
 from sat_orm.dockv5_orm.dock_phase import DockPhase, Config
+from sat_orm.dockv5_orm.firmware_group import FirmwareGroup
 
 
 def convert_date(date_input):
@@ -12,6 +13,13 @@ def convert_date(date_input):
 class DockPhaseSchema(SQLAlchemyAutoSchema):
     class Meta:
         model = DockPhase
+        include_fk = True
+        load_instance = True
+
+
+class FirmwareGroupSchema(SQLAlchemyAutoSchema):
+    class Meta:
+        model = FirmwareGroup
         include_fk = True
         load_instance = True
 

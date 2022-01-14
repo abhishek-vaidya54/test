@@ -29,6 +29,7 @@ import sat_orm.constants as constants
 from sat_orm.pipeline_orm.utilities import shift_utils
 from sat_orm.pipeline_orm.utilities import job_function_utils
 from sat_orm.pipeline_orm.utilities.utils import build_error, check_errors_and_return
+from sat_orm.pipeline_orm.utilities import external_admin_user_utils
 
 
 class Shifts(Base):
@@ -40,7 +41,9 @@ class Shifts(Base):
     name = Column(String(255), nullable=False)
     shift_start = Column(DateTime, nullable=False)
     shift_end = Column(DateTime, nullable=False)
-    group_administrator = Column(String(255), nullable=True)
+    shift_manager_id = Column(
+        Integer, ForeignKey("external_admin_user.id"), nullable=True
+    )
     description = Column(Text, nullable=True)
     color = Column(String(255), nullable=True)
     override_settings = Column(TINYINT(1), nullable=False)
@@ -55,6 +58,7 @@ class Shifts(Base):
     # Table Relationships
     industrial_athletes = relationship("IndustrialAthlete", back_populates="shifts")
     warehouse = relationship("Warehouse", back_populates="shifts", uselist=False)
+    external_admin_user = relationship("ExternalAdminUser", back_populates="shifts")
 
     @validates("warehouse_id")
     def validate_warehouse_id(self, key, warehouse_id):
@@ -94,7 +98,8 @@ class Shifts(Base):
             "color": self.color,
             "override_settings": self.override_settings,
             "description": self.description,
-            "group_administrator": self.group_administrator,
+            "external_admin_user": self.external_admin_user,
+            "shift_manager_id": self.shift_manager_id,
             "db_created_at": self.db_created_at,
             "db_modified_at": self.db_modified_at,
         }
@@ -140,6 +145,17 @@ def validate_before_insert(mapper, connection, target):
     if not is_valid:
         errors.append(build_error("shift_end", constants.INVALID_DATE_MESSAGE))
 
+    # Shift Manager
+
+    is_valid = external_admin_user_utils.is_valid_user_id(
+        connection, param_input.get("shift_manager_id")
+    )
+    if not is_valid:
+        errors.append(
+            build_error(
+                "external_admin_user_id", constants.INVALID_PARAM_SHIFT_MANAGER_MESSAGE
+            )
+        )
     check_errors_and_return(errors)
 
 
@@ -185,5 +201,17 @@ def validate_before_update(mapper, connection, target):
         is_valid, message = shift_utils.is_valid_time(param_input.get("shiftEnd", ""))
         if not is_valid:
             errors.append(build_error("shift_end", constants.INVALID_DATE_MESSAGE))
+        # Shift Manager
+    if "shift_manager_id" in param_input:
+        is_valid = external_admin_user_utils.is_valid_user_id(
+            connection, param_input.get("shift_manager_id")
+        )
+        if not is_valid:
+            errors.append(
+                build_error(
+                    "external_admin_user_id",
+                    constants.INVALID_PARAM_SHIFT_MANAGER_MESSAGE,
+                )
+            )
 
     check_errors_and_return(errors)
