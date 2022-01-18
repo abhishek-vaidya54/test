@@ -40,7 +40,7 @@ def random_str():
 
 
 class ClientFactory(factory.alchemy.SQLAlchemyModelFactory):
-    """ Client Factory: creates a fake client with its relationships"""
+    """Client Factory: creates a fake client with its relationships"""
 
     id = factory.Sequence(lambda n: n)
     name = factory.Sequence(lambda n: "Test Client {0}".format(random_str()))
@@ -68,7 +68,7 @@ class ClientFactory(factory.alchemy.SQLAlchemyModelFactory):
 
 
 class WarehouseFactory(factory.alchemy.SQLAlchemyModelFactory):
-    """ Warehouse Factory: creates a fake warehouse with its relationships if the relationships are not None"""
+    """Warehouse Factory: creates a fake warehouse with its relationships if the relationships are not None"""
 
     id = factory.Sequence(lambda n: n)
     client = factory.SubFactory(ClientFactory)
@@ -128,7 +128,7 @@ class WarehouseFactory(factory.alchemy.SQLAlchemyModelFactory):
 
 
 class ShiftsFactory(factory.alchemy.SQLAlchemyModelFactory):
-    """ Shift Factory: creates a fake shift as well as any of its relationships"""
+    """Shift Factory: creates a fake shift as well as any of its relationships"""
 
     id = factory.Sequence(lambda n: n)
     warehouse = factory.SubFactory(WarehouseFactory)
@@ -237,6 +237,7 @@ class UserWarehouseAssociationFactory(factory.alchemy.SQLAlchemyModelFactory):
     class Meta:
         model = UserWarehouseAssociation
         sqlalchemy_session_persistence = "commit"
+
 
 class UserRoleAssociationFactory(factory.alchemy.SQLAlchemyModelFactory):
     external_admin_user = factory.SubFactory(ExternalAdminUserFactory)

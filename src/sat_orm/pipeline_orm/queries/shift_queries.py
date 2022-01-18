@@ -20,6 +20,8 @@ def get_shift_by_name(connection, name, warehouseId):
     """
     Get the Shift via name
     """
-    shift = connection.execute(f'SELECT * FROM shifts WHERE name="{name}" and warehouse_id={warehouseId}').fetchone()
+    shift = connection.execute(
+        f'SELECT * FROM shifts WHERE name="{name}" and warehouse_id={warehouseId}'
+    ).fetchone()
 
     return shift

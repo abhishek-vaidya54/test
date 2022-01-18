@@ -10,8 +10,8 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '5a6ca826c31f'
-down_revision = '1d95f47f481e'
+revision = "5a6ca826c31f"
+down_revision = "1d95f47f481e"
 branch_labels = None
 depends_on = None
 
@@ -39,14 +39,18 @@ def upgrade():
                 "exposureHapticRepeatMS": 10000,
                 "hapticSingleBendWindow": 600,
                 "hapticSagAngleThreshold": 70,
-                "exposureHapticSuppressMS": 30000}""".replace('\n', '')
+                "exposureHapticSuppressMS": 30000}""".replace(
+        "\n", ""
+    )
 
     for warehouse in [243, 244, 246, 247, 248, 249]:
         sql = """
             insert into settings (value, target_type, target_id)
             values ('{0}',
                 'warehouse', {1})
-        """.format(wastepro_settings, warehouse)
+        """.format(
+            wastepro_settings, warehouse
+        )
         op.execute(sql)
 
 

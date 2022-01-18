@@ -1,6 +1,7 @@
 from sat_orm.pipeline_orm.queries import shift_queries
 import pytest
 
+
 def test_get_shift_success(test_session, get_random_shift):
     """
     input - valid shift id, valid warehouse id

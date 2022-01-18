@@ -36,12 +36,9 @@ class Notification(Base):
         default="news",
     )
     url = Column(String(255), nullable=False)
-    created_by = Column(
-        Integer, ForeignKey("external_admin_user.id"), nullable=False
-    )
+    created_by = Column(Integer, ForeignKey("external_admin_user.id"), nullable=False)
     is_active = Column(Boolean, nullable=True, default=False)
-    db_created_at = Column(
-        DateTime, default=datetime.datetime.utcnow, nullable=False)
+    db_created_at = Column(DateTime, default=datetime.datetime.utcnow, nullable=False)
     db_modified_at = Column(
         DateTime,
         default=datetime.datetime.utcnow,
@@ -97,8 +94,7 @@ def validate_before_insert(mapper, connection, target):
 
     is_valid = nu.is_valid_type(type)
     if not is_valid:
-        errors.append(build_error(
-            "type", constants.INVALID_NOTIFICATION_TYPE_MESSAGE))
+        errors.append(build_error("type", constants.INVALID_NOTIFICATION_TYPE_MESSAGE))
 
     # is_valid = nu.is_non_empty_string(url)
     # if not is_valid:
@@ -107,16 +103,11 @@ def validate_before_insert(mapper, connection, target):
 
     is_valid = nu.is_valid_created_by(connection, created_by)
     if not is_valid:
-        errors.append(build_error(
-            "created_by", constants.INVALID_CREATED_BY_MESSAGE))
+        errors.append(build_error("created_by", constants.INVALID_CREATED_BY_MESSAGE))
 
     is_valid = nu.is_valid_is_active(is_active)
     if not is_valid:
-        errors.append(
-            build_error(
-                "is_active", constants.INVALID_IS_ACTIVE_MESSAGE
-            )
-        )
+        errors.append(build_error("is_active", constants.INVALID_IS_ACTIVE_MESSAGE))
 
     check_errors_and_return(errors)
 
@@ -136,11 +127,9 @@ def validate_before_update(mapper, connection, target):
     errors = []
 
     if "id" in params_input:
-        is_valid = nq.get_notification_exists(
-            connection, params_input.get("id", ""))
+        is_valid = nq.get_notification_exists(connection, params_input.get("id", ""))
         if not is_valid:
-            errors.append(build_error(
-                "id", constants.INVALID_NOTIFICATION_ID))
+            errors.append(build_error("id", constants.INVALID_NOTIFICATION_ID))
 
     # if "title" in params_input:
     #     is_valid = nu.is_non_empty_string(
@@ -157,11 +146,11 @@ def validate_before_update(mapper, connection, target):
     #             "phase", constants.EMPTY_STRING_ERROR_MESSAGE))
 
     if "type" in params_input:
-        is_valid = nu.is_valid_type(
-            params_input.get("type", ""))
+        is_valid = nu.is_valid_type(params_input.get("type", ""))
         if not is_valid:
-            errors.append(build_error(
-                "type", constants.INVALID_NOTIFICATION_TYPE_MESSAGE))
+            errors.append(
+                build_error("type", constants.INVALID_NOTIFICATION_TYPE_MESSAGE)
+            )
 
     # if "url" in params_input:
     #     is_valid = nu.is_non_empty_string(
@@ -176,17 +165,13 @@ def validate_before_update(mapper, connection, target):
         )
         if not is_valid:
             errors.append(
-                build_error(
-                    "created_by", constants.INVALID_CREATED_BY_MESSAGE
-                )
+                build_error("created_by", constants.INVALID_CREATED_BY_MESSAGE)
             )
 
     if "is_active" in params_input:
-        is_valid = nu.is_valid_is_active(
-            params_input.get("is_active", ""))
+        is_valid = nu.is_valid_is_active(params_input.get("is_active", ""))
         if not is_valid:
-            errors.append(build_error(
-                "is_active", constants.INVALID_IS_ACTIVE_MESSAGE))
+            errors.append(build_error("is_active", constants.INVALID_IS_ACTIVE_MESSAGE))
 
     check_errors_and_return(errors)
     pass

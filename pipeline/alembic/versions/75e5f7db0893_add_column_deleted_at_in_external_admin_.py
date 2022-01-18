@@ -10,8 +10,8 @@ import sqlalchemy as sa
 import datetime
 
 # revision identifiers, used by Alembic.
-revision = '75e5f7db0893'
-down_revision = '6babc516b4da'
+revision = "75e5f7db0893"
+down_revision = "6babc516b4da"
 branch_labels = None
 depends_on = None
 
@@ -19,12 +19,9 @@ depends_on = None
 def upgrade():
     op.add_column(
         "external_admin_user",
-        sa.Column("deleted_at",
-            sa.DateTime,
-            nullable=True),
+        sa.Column("deleted_at", sa.DateTime, nullable=True),
     )
 
 
 def downgrade():
     op.drop_column("external_admin_user", "deleted_at")
-

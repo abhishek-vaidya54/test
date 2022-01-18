@@ -8,21 +8,22 @@ from sqlalchemy.types import DateTime
 from sqlalchemy.exc import DBAPIError
 from sqlalchemy_wrapper import SQLAlchemy
 
-DEPLOYMENT_STAGE = os.environ.get('DEPLOYMENT_STAGE','')
+DEPLOYMENT_STAGE = os.environ.get("DEPLOYMENT_STAGE", "")
 
 from config_DEV import Config as ConfigDev
 from config_PROD import Config as ConfigProd
 
 Config = None
 
-if DEPLOYMENT_STAGE == 'PROD':
-  Config = ConfigProd
+if DEPLOYMENT_STAGE == "PROD":
+    Config = ConfigProd
 else:
-  Config = ConfigDev
+    Config = ConfigDev
 
 
 db = SQLAlchemy(Config.DB_URL, pool_recycle=30, pool_pre_ping=True)
-UTC_TIMEZONE = 'UTC'
+UTC_TIMEZONE = "UTC"
+
 
 def commit_or_rollback(session):
     try:
@@ -31,13 +32,12 @@ def commit_or_rollback(session):
         session.rollback()
         raise
 
+
 class convert_tz(GenericFunction):
     type = DateTime
 
 
-from .client import (
-    Client
-)
+from .client import Client
 from .industrial_athlete import IndustrialAthlete
 from .warehouse import Warehouse
 from .processed_file import ProcessedFile

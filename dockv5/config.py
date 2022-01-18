@@ -4,8 +4,9 @@ from sqlalchemy import ForeignKey
 
 from . import db
 
+
 class Config(db.Model):
-    __tablename__ = 'config'
+    __tablename__ = "config"
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
 
@@ -20,8 +21,8 @@ class Config(db.Model):
             "dock_id": self.dock_id,
             "client_id": self.client_id,
             "warehouse_id": self.warehouse_id,
-            "deployment_stage": self.deployment_stage
+            "deployment_stage": self.deployment_stage,
         }
 
     def __repr__(self):
-        return 'dock %s for client %s' % (self.dock_id, self.client_id)
+        return "dock %s for client %s" % (self.dock_id, self.client_id)

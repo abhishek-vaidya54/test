@@ -22,22 +22,28 @@ def upgrade():
         sa.Column("number_of_user_allocated", sa.Integer(), nullable=False),
     )
     op.add_column(
-        "warehouse", sa.Column("city", sa.String(length=20), nullable=False),
+        "warehouse",
+        sa.Column("city", sa.String(length=20), nullable=False),
     )
     op.add_column(
-        "warehouse", sa.Column("state", sa.String(length=20), nullable=False),
+        "warehouse",
+        sa.Column("state", sa.String(length=20), nullable=False),
     )
     op.add_column(
-        "warehouse", sa.Column("country", sa.String(length=20), nullable=False),
+        "warehouse",
+        sa.Column("country", sa.String(length=20), nullable=False),
     )
     op.add_column(
-        "warehouse", sa.Column("industry", sa.String(length=20), nullable=False),
+        "warehouse",
+        sa.Column("industry", sa.String(length=20), nullable=False),
     )
     op.add_column(
-        "warehouse", sa.Column("latitude", sa.Float, nullable=False),
+        "warehouse",
+        sa.Column("latitude", sa.Float, nullable=False),
     )
     op.add_column(
-        "warehouse", sa.Column("longitude", sa.Float, nullable=False),
+        "warehouse",
+        sa.Column("longitude", sa.Float, nullable=False),
     )
 
 
@@ -49,4 +55,3 @@ def downgrade():
     op.drop_column("warehouse", "industry")
     op.drop_column("warehouse", "latitude")
     op.drop_column("warehouse", "longitude")
-

@@ -21,11 +21,10 @@ def upgrade():
     conn = op.get_bind()
     inspector = Inspector.from_engine(conn)
     tables = inspector.get_table_names()
-    
-    if 'imported_industrial_athlete' in tables:
+
+    if "imported_industrial_athlete" in tables:
         op.drop_table("imported_industrial_athlete")
 
 
 def downgrade():
     pass
-

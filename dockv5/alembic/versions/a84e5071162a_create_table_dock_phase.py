@@ -38,8 +38,7 @@ class DockPhase(Base):
         default="NOT DEPLOYED",
     )
     phase_date = sa.Column(sa.DateTime, nullable=True)
-    deployment_stage = sa.Column(
-        sa.Enum("DEV", "PROD"), nullable=False, default="dev")
+    deployment_stage = sa.Column(sa.Enum("DEV", "PROD"), nullable=False, default="dev")
 
 
 def get_records(session):

@@ -3,7 +3,7 @@ from . import db
 
 
 class MonthlySafety(db.Model):
-    __tablename__ = 'monthly_safety'
+    __tablename__ = "monthly_safety"
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
 
@@ -12,20 +12,17 @@ class MonthlySafety(db.Model):
     monthly_score = db.Column(db.FLOAT(), nullable=False, default=0.0)
     safety_standard = db.Column(db.FLOAT(), nullable=True, default=70.0)
     status = db.Column(db.Text(), nullable=False)
-    color = db.Column(db.Text(), nullable=True, default='#0CB074')
+    color = db.Column(db.Text(), nullable=True, default="#0CB074")
 
     db_created_at = db.Column(
-        db.DateTime,
-        default=datetime.datetime.utcnow,
-        nullable=False
+        db.DateTime, default=datetime.datetime.utcnow, nullable=False
     )
     db_modified_at = db.Column(
         db.DateTime,
         default=datetime.datetime.utcnow,
         onupdate=datetime.datetime.utcnow,
-        nullable=False
+        nullable=False,
     )
-
 
     def as_dict(self):
         return {
@@ -36,4 +33,3 @@ class MonthlySafety(db.Model):
 
     def __repr__(self):
         return self.name
-

@@ -10,17 +10,17 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'e7ff0ada0d27'
-down_revision = 'f36ba8ab8d50'
+revision = "e7ff0ada0d27"
+down_revision = "f36ba8ab8d50"
 branch_labels = None
 depends_on = None
 
 
 def upgrade():
-		op.rename_table('condition', 'rule_condition')
-		pass
+    op.rename_table("condition", "rule_condition")
+    pass
 
 
 def downgrade():
-		op.rename_table('rule_condition', 'condition')
-		pass
+    op.rename_table("rule_condition", "condition")
+    pass

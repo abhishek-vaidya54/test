@@ -98,5 +98,5 @@ def downgrade():
     inspector = Inspector.from_engine(conn)
     tables = inspector.get_table_names()
 
-    if 'casbin_rule' in tables:
+    if "casbin_rule" in tables:
         op.drop_table("casbin_rule")
