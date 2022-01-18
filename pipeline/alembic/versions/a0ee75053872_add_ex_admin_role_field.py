@@ -20,8 +20,12 @@ depends_on = None
 
 def upgrade():
     op.add_column(
-        "external_admin_user", sa.Column("role", sa.String(length=20), nullable=False, server_default='manager'),
+        "external_admin_user",
+        sa.Column(
+            "role", sa.String(length=20), nullable=False, server_default="manager"
+        ),
     )
+
 
 def downgrade():
     op.drop_column("external_admin_user", "role")

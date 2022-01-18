@@ -54,4 +54,3 @@ def upgrade():
 
 def downgrade():
     op.drop_table("temp_industrial_athlete")
-

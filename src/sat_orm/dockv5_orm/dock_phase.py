@@ -55,8 +55,7 @@ class DockPhase(Base):
         nullable=False,
         default="NOT DEPLOYED",
     )
-    deployment_stage = Column(
-        Enum("DEV", "PROD"), nullable=False, default="dev")
+    deployment_stage = Column(Enum("DEV", "PROD"), nullable=False, default="dev")
 
     @validates("dock_id")
     def validate_dock_id(self, key, dock_id):
@@ -118,13 +117,11 @@ def validate_before_insert(mapper, connection, target):
 
     is_valid = dock_utils.is_non_empty_string(dock_id)
     if not is_valid:
-        errors.append(build_error(
-            "dock_id", constants.EMPTY_STRING_ERROR_MESSAGE))
+        errors.append(build_error("dock_id", constants.EMPTY_STRING_ERROR_MESSAGE))
 
     is_valid = dock_utils.is_valid_dock_phase(phase)
     if not is_valid:
-        errors.append(build_error(
-            "phase", constants.INVALID_DOCK_PHASE_MESSAGE))
+        errors.append(build_error("phase", constants.INVALID_DOCK_PHASE_MESSAGE))
 
     is_valid = dock_utils.is_valid_dock_deployment_stage(deployment_stage)
     if not is_valid:
@@ -152,18 +149,14 @@ def validate_before_update(mapper, connection, target):
     errors = []
 
     if "dock_id" in params_input:
-        is_valid = dock_utils.is_non_empty_string(
-            params_input.get("dock_id", ""))
+        is_valid = dock_utils.is_non_empty_string(params_input.get("dock_id", ""))
         if not is_valid:
-            errors.append(build_error(
-                "dock_id", constants.EMPTY_STRING_ERROR_MESSAGE))
+            errors.append(build_error("dock_id", constants.EMPTY_STRING_ERROR_MESSAGE))
 
     if "phase" in params_input:
-        is_valid = dock_utils.is_valid_dock_phase(
-            params_input.get("phase", ""))
+        is_valid = dock_utils.is_valid_dock_phase(params_input.get("phase", ""))
         if not is_valid:
-            errors.append(build_error(
-                "phase", constants.INVALID_DOCK_PHASE_MESSAGE))
+            errors.append(build_error("phase", constants.INVALID_DOCK_PHASE_MESSAGE))
 
     if "deployment_stage" in params_input:
         is_valid = dock_utils.is_valid_dock_deployment_stage(
@@ -184,8 +177,7 @@ def update_phase(session, data):
     add the new dock_id
     """
     current_config = (
-        session.query(Config).filter_by(
-            dock_id=data.get("dock_id", None)).first()
+        session.query(Config).filter_by(dock_id=data.get("dock_id", None)).first()
     )
     if (
         current_config.dock_phase == None

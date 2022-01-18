@@ -10,8 +10,8 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'ec2d61078e37'
-down_revision = '29781eb89dbb'
+revision = "ec2d61078e37"
+down_revision = "29781eb89dbb"
 branch_labels = None
 depends_on = None
 
@@ -39,14 +39,18 @@ def upgrade():
                 "exposureHapticRepeatMS": 10000,
                 "hapticSingleBendWindow": 600,
                 "hapticSagAngleThreshold": 60,
-                "exposureHapticSuppressMS": 30000}""".replace('\n', '')
+                "exposureHapticSuppressMS": 30000}""".replace(
+        "\n", ""
+    )
 
     for warehouse in [265]:
         sql = """
             insert into settings (value, target_type, target_id)
             values ('{0}',
                 'warehouse', {1})
-        """.format(dallas_settings_json, warehouse)
+        """.format(
+            dallas_settings_json, warehouse
+        )
         op.execute(sql)
 
     houston_settings_json = """{ "handsFree": false,
@@ -71,14 +75,18 @@ def upgrade():
             "exposureHapticRepeatMS": 10000,
             "hapticSingleBendWindow": 600,
             "hapticSagAngleThreshold": 65,
-            "exposureHapticSuppressMS": 30000}""".replace('\n', '')
+            "exposureHapticSuppressMS": 30000}""".replace(
+        "\n", ""
+    )
 
     for warehouse in [262]:
         sql = """
             insert into settings (value, target_type, target_id)
             values ('{0}',
                 'warehouse', {1})
-        """.format(houston_settings_json, warehouse)
+        """.format(
+            houston_settings_json, warehouse
+        )
         op.execute(sql)
 
     philadelphia_settings_json = """{ "handsFree": false,
@@ -103,14 +111,18 @@ def upgrade():
                 "exposureHapticRepeatMS": 10000,
                 "hapticSingleBendWindow": 600,
                 "hapticSagAngleThreshold": 60,
-                "exposureHapticSuppressMS": 30000}""".replace('\n', '')
+                "exposureHapticSuppressMS": 30000}""".replace(
+        "\n", ""
+    )
 
     for warehouse in [263]:
         sql = """
             insert into settings (value, target_type, target_id)
             values ('{0}',
                 'warehouse', {1})
-        """.format(philadelphia_settings_json, warehouse)
+        """.format(
+            philadelphia_settings_json, warehouse
+        )
         op.execute(sql)
 
     sacramento_settings_json = """{ "handsFree": false,
@@ -135,16 +147,20 @@ def upgrade():
                 "exposureHapticRepeatMS": 10000,
                 "hapticSingleBendWindow": 600,
                 "hapticSagAngleThreshold": 60,
-                "exposureHapticSuppressMS": 30000}""".replace('\n', '')
+                "exposureHapticSuppressMS": 30000}""".replace(
+        "\n", ""
+    )
 
     for warehouse in [264]:
         sql = """
             insert into settings (value, target_type, target_id)
             values ('{0}',
                 'warehouse', {1})
-        """.format(sacramento_settings_json, warehouse)
+        """.format(
+            sacramento_settings_json, warehouse
+        )
         op.execute(sql)
-    
+
     waste_pro_settings = """{ "handsFree": false,
                 "eulaVersion": null,
                 "enableMotion": true,
@@ -167,14 +183,18 @@ def upgrade():
                 "exposureHapticRepeatMS": 10000,
                 "hapticSingleBendWindow": 600,
                 "hapticSagAngleThreshold": 70,
-                "exposureHapticSuppressMS": 30000}""".replace('\n', '')
+                "exposureHapticSuppressMS": 30000}""".replace(
+        "\n", ""
+    )
 
     for warehouse in [243, 244, 246, 247, 248, 249]:
         sql = """
             insert into settings (value, target_type, target_id)
             values ('{0}',
                 'warehouse', {1})
-        """.format(waste_pro_settings, warehouse)
+        """.format(
+            waste_pro_settings, warehouse
+        )
         op.execute(sql)
 
     albertsons_settings = """{ "handsFree": false,
@@ -199,17 +219,20 @@ def upgrade():
                 "exposureHapticRepeatMS": 10000,
                 "hapticSingleBendWindow": 600,
                 "hapticSagAngleThreshold": 70,
-                "exposureHapticSuppressMS": 30000}""".replace('\n', '')
+                "exposureHapticSuppressMS": 30000}""".replace(
+        "\n", ""
+    )
 
     for warehouse in [220, 221]:
         sql = """
             insert into settings (value, target_type, target_id)
             values ('{0}',
                 'warehouse', {1})
-        """.format(albertsons_settings, warehouse)
+        """.format(
+            albertsons_settings, warehouse
+        )
         op.execute(sql)
-        
 
-    
+
 def downgrade():
     pass

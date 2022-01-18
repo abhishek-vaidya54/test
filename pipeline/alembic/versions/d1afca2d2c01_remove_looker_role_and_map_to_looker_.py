@@ -10,19 +10,22 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'd1afca2d2c01'
-down_revision = '2dec19f9f0f0'
+revision = "d1afca2d2c01"
+down_revision = "2dec19f9f0f0"
 branch_labels = None
 depends_on = None
 
 
 def upgrade():
-    op.execute("""
+    op.execute(
+        """
         DELETE FROM pipeline.casbin_rule
         WHERE v0 = 'looker'
-    """)
+    """
+    )
 
-    op.execute("""
+    op.execute(
+        """
         DELETE FROM pipeline.user_role_association
         WHERE role = 'looker' AND external_admin_user_id IN (
             SELECT * FROM (
@@ -34,26 +37,32 @@ def upgrade():
                     ergoUser.role = 'looker_ergo'
             ) tblTmp
         )
-    """)
+    """
+    )
 
-    op.execute("""
+    op.execute(
+        """
         UPDATE pipeline.user_role_association
         SET role = 'looker_ergo'
         WHERE role = 'looker'
-    """)
+    """
+    )
 
 
 def downgrade():
-    op.execute("""
+    op.execute(
+        """
         INSERT INTO pipeline.casbin_rule (ptype, v0, v1, v2)
         VALUES
             ('p', 'looker', 'looker', 'get'),
             ('p', 'looker', 'looker', 'post'),
             ('p', 'looker', 'looker', 'put'),
             ('p', 'looker', 'looker', 'delete')
-    """)
+    """
+    )
 
-    op.execute("""
+    op.execute(
+        """
         INSERT INTO pipeline.user_role_association (external_admin_user_id, role, db_created_at, db_modified_at)
         SELECT
             external_admin_user_id,
@@ -65,4 +74,5 @@ def downgrade():
             FROM pipeline.user_role_association
             WHERE role = 'looker_ergo'
         ) tblTmp
-    """)
+    """
+    )

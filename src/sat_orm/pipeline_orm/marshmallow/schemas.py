@@ -36,6 +36,7 @@ def convert_time(date_input):
     except:
         return ""
 
+
 def convert_date_time(date_input):
     try:
         converted = datetime.strptime(str(date_input), "%Y-%m-%d %H:%M:%S").strftime(
@@ -45,10 +46,12 @@ def convert_date_time(date_input):
     except:
         return ""
 
+
 class SettingSchema(SQLAlchemyAutoSchema):
     db_created_at = fields.Function(
         lambda obj: convert_date_time(obj.db_created_at) if obj.db_created_at else None
     )
+
     class Meta:
         model = Setting
         include_relationships = True
@@ -239,8 +242,8 @@ class GroupSchema(SQLAlchemyAutoSchema):
         include_relationships = True
         load_instance = True
 
-class NotificationSchema(SQLAlchemyAutoSchema):
 
+class NotificationSchema(SQLAlchemyAutoSchema):
     class Meta:
         model = Notification
         include_fk = True

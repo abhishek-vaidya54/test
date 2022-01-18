@@ -29,7 +29,11 @@ def is_valid_ia_first_last_name(connection, value, field, client_id):
 
 
 def duplicate_external_id_with_termination_date(termination_date):
-    return 'The external id that you are trying to add is already in use and has a termination date of '+str(termination_date)+'. Please specify a different external id.'
+    return (
+        "The external id that you are trying to add is already in use and has a termination date of "
+        + str(termination_date)
+        + ". Please specify a different external id."
+    )
 
 
 def is_valid_external_id(
@@ -58,7 +62,9 @@ def is_valid_external_id(
         if str(existing_ia_id) == str(existing_ia.id):
             return True, None
         if existing_ia.termination_date:
-            return False, duplicate_external_id_with_termination_date(existing_ia.termination_date)
+            return False, duplicate_external_id_with_termination_date(
+                existing_ia.termination_date
+            )
         else:
             return False, constants.DUPLICATE_EXTERNAL_ID_MESSAGE
 
@@ -85,8 +91,7 @@ def is_valid_warehouse(connection, warehouse_id, client_id=None):
     Returns True if it is a valid warehouse
     Returns False if it is not
     """
-    warehouse = warehouse_queries.get_warehouse(
-        connection, warehouse_id, client_id)
+    warehouse = warehouse_queries.get_warehouse(connection, warehouse_id, client_id)
     return bool(warehouse)
 
 

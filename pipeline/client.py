@@ -16,29 +16,26 @@ logger = logging.getLogger(__name__)
 
 
 class Client(db.Model):
-    __tablename__ = 'client'
+    __tablename__ = "client"
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     prefix = db.Column(db.String(255), nullable=False)
     name = db.Column(db.String(255), nullable=False, unique=True)
     enable_processing = db.Column(db.Boolean, nullable=False, server_default=true())
     db_created_at = db.Column(
-        db.DateTime,
-        default=datetime.datetime.utcnow,
-        nullable=False
+        db.DateTime, default=datetime.datetime.utcnow, nullable=False
     )
     db_modified_at = db.Column(
         db.DateTime,
         default=datetime.datetime.utcnow,
         onupdate=datetime.datetime.utcnow,
-        nullable=False
+        nullable=False,
     )
-
 
     def as_dict(self):
         return {
-            'prefix': getattr(self, 'prefix'),
-            'name': getattr(self, 'name'),
+            "prefix": getattr(self, "prefix"),
+            "name": getattr(self, "name"),
         }
 
     def __repr__(self):
@@ -50,9 +47,10 @@ def get_all():
 
 
 def get(client_id):
-    return db.session.query(Client).filter(
-        Client.id == client_id,
-    ).scalar()
-
-
-
+    return (
+        db.session.query(Client)
+        .filter(
+            Client.id == client_id,
+        )
+        .scalar()
+    )

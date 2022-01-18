@@ -10,17 +10,17 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'ad928c35b90d'
-down_revision = '5a6ca826c31f'
+revision = "ad928c35b90d"
+down_revision = "5a6ca826c31f"
 branch_labels = None
 depends_on = None
 
 
 def upgrade():
-     op.execute(
+    op.execute(
         """
             UPDATE industrial_athlete SET group_id = 208 WHERE group_id != 208 and warehouse_id = 230;
-        """  
+        """
     )
 
 

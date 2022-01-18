@@ -9,7 +9,7 @@ from . import commit_or_rollback, db
 
 
 class Settings(db.Model):
-    __tablename__ = 'settings'
+    __tablename__ = "settings"
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
 
@@ -17,24 +17,23 @@ class Settings(db.Model):
     target_type = db.Column(db.Text)
 
     value = db.Column(db.JSON)
-  
+
     db_created_at = db.Column(
-        db.DateTime,
-        default=datetime.datetime.utcnow,
-        nullable=False
+        db.DateTime, default=datetime.datetime.utcnow, nullable=False
     )
 
     def as_dict(self):
-        return {
-        "id": self.id,
-        "value": self.value
-    }
+        return {"id": self.id, "value": self.value}
 
     def __repr__(self):
-        return '%s@%s' % (self.id, self.value)
+        return "%s@%s" % (self.id, self.value)
 
 
 def get(setting_id):
-    return db.session.query(Settings).filter(
-        Settings.id == setting_id,
-    ).scalar()
+    return (
+        db.session.query(Settings)
+        .filter(
+            Settings.id == setting_id,
+        )
+        .scalar()
+    )

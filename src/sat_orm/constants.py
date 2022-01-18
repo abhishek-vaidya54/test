@@ -81,7 +81,9 @@ INVALID_CLIENT_ID_MESSAGE = "Invalid client ID."
 
 INVALID_SHIFT_TIMEZONE_MESSAGE = "Invalid shift time zone."
 
-INVALID_DEPLOYMENT_STAGE_MESSAGE = "Invalid deployment stage., It should be in [dev, prod]"
+INVALID_DEPLOYMENT_STAGE_MESSAGE = (
+    "Invalid deployment stage., It should be in [dev, prod]"
+)
 
 INVALID_DOCK_ID_MESSAGE = "Invalid dock id."
 
@@ -246,11 +248,18 @@ RBAC_VALID_ROLES = (
     "looker_ergo",
     "looker_prox",
     "data_analytics",
-    "shift_manager"
+    "shift_manager",
 )
 
-CREATE_VALID_ROLES = ("manager", "admin", "bulk_upload",
-                      "looker_ergo", "looker_prox", "data_analytics", "shift_manager")
+CREATE_VALID_ROLES = (
+    "manager",
+    "admin",
+    "bulk_upload",
+    "looker_ergo",
+    "looker_prox",
+    "data_analytics",
+    "shift_manager",
+)
 
 RBAC_VALID_RESOURCES = (
     "athletes",
@@ -268,7 +277,7 @@ RBAC_VALID_RESOURCES = (
     "looker_ergo",
     "looker_prox",
     "data_analytics",
-    "shift_manager"
+    "shift_manager",
 )
 
 RBAC_VALID_ACTIONS = ("read", "write", "update", "delete")
@@ -280,8 +289,7 @@ RBAC_ACTION_VALUES = {
     "delete": "delete",
 }
 
-RBAC_ACTION_KEYS = {"get": "read", "post": "write",
-                    "put": "update", "delete": "delete"}
+RBAC_ACTION_KEYS = {"get": "read", "post": "write", "put": "update", "delete": "delete"}
 
 METHOD_GET = "get"
 METHOD_POST = "post"

@@ -10,15 +10,15 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'e761d90139c6'
-down_revision = '29f8c690d187'
+revision = "e761d90139c6"
+down_revision = "29f8c690d187"
 branch_labels = None
 depends_on = None
 
 
 def upgrade():
-    op.create_index('idx_type', 'sensor_events', ['type'])
+    op.create_index("idx_type", "sensor_events", ["type"])
 
 
 def downgrade():
-    op.drop_index('idx_type', 'sensor_events')
+    op.drop_index("idx_type", "sensor_events")

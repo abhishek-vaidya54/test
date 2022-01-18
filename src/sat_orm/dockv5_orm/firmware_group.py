@@ -14,12 +14,10 @@ class FirmwareGroup(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String(255), nullable=False)
     description = Column(String(255), nullable=False)
-    db_created_at = Column(
-        DateTime, default=datetime.datetime.utcnow, nullable=False)
+    db_created_at = Column(DateTime, default=datetime.datetime.utcnow, nullable=False)
 
     # Relationships
-    firmwares = relationship(FirmwareGroupAssociation,
-                             back_populates=__tablename__)
+    firmwares = relationship(FirmwareGroupAssociation, back_populates=__tablename__)
 
     configs = relationship("Config", back_populates="firmware_group")
 

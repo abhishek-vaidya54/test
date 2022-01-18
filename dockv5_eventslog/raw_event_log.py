@@ -4,8 +4,9 @@ from sqlalchemy import ForeignKey
 
 from . import db
 
+
 class RawEventLog(db.Model):
-    __tablename__ = 'raw_event_log'
+    __tablename__ = "raw_event_log"
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
 
@@ -48,8 +49,8 @@ class RawEventLog(db.Model):
             "batt_percent": self.batt_percent,
             "charge_status": self.charge_status,
             "event_blob": self.event_blob,
-            "sessionID": self.sessionID
+            "sessionID": self.sessionID,
         }
 
     def __repr__(self):
-        return 'raw event log. event type: %s' % (self.event_type)
+        return "raw event log. event type: %s" % (self.event_type)
