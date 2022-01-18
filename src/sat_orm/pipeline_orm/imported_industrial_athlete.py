@@ -31,6 +31,7 @@ class ImportedIndustrialAthlete(Base):
     first_name = Column(String(255), nullable=False)
     last_name = Column(String(255), nullable=False)
     external_id = Column(String(255), nullable=False)
+    shift_per_week = Column(Integer, nullable=False, default=0)
     weight = Column(Integer, nullable=True)
     height = Column(Integer, nullable=True)
     hire_date = Column(DateTime, default=datetime.date.today(), nullable=False)
@@ -72,6 +73,7 @@ class ImportedIndustrialAthlete(Base):
             "last_name": self.last_name,
             "gender": self.gender,
             "external_id": self.external_id,
+            "shift_per_week": self.shift_per_week,
             "weight": self.weight,
             "height": self.height,
             "hire_date": self.hire_date,

@@ -50,6 +50,7 @@ class IndustrialAthlete(Base):
     last_name = Column(String(255), nullable=False)
     external_id = Column(String(255), nullable=False)
     schedule = Column(String(255), nullable=True)
+    shift_per_week = Column(Integer, nullable=False, default=0)
     weight = Column(Integer, nullable=True)
     height = Column(Integer, nullable=True)
     prior_back_injuries = Column(String(255), nullable=True)
@@ -118,6 +119,13 @@ class IndustrialAthlete(Base):
         else:
             return last_name
 
+    @validates("shift_per_week")
+    def validate_shift_per_week(self, key, shift_per_week):
+        if shift_per_week == None:
+            raise Exception("shift_per_week cannot be Null")
+        else:
+            return shift_per_week
+
     @validates("external_id")
     def validate_external_id(self, key, external_id):
         if external_id == None:
@@ -152,6 +160,7 @@ class IndustrialAthlete(Base):
             "firstName": self.first_name,
             "lastName": self.last_name,
             "externalId": self.external_id,
+            "shift_per_week": self.shift_per_week,
             "sex": self.gender,
             "shiftId": self.shift_id,
             "jobFunctionId": self.job_function_id,

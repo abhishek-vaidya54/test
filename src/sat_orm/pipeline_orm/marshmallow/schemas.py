@@ -36,6 +36,7 @@ def convert_time(date_input):
     except:
         return ""
 
+
 def convert_date_time(date_input):
     try:
         converted = datetime.strptime(str(date_input), "%Y-%m-%d %H:%M:%S").strftime(
@@ -45,10 +46,13 @@ def convert_date_time(date_input):
     except:
         return ""
 
+
 class SettingSchema(SQLAlchemyAutoSchema):
     db_created_at = fields.Function(
-        lambda obj: convert_date_time(obj.db_created_at) if obj.db_created_at else None
+        lambda obj: convert_date_time(
+            obj.db_created_at) if obj.db_created_at else None
     )
+
     class Meta:
         model = Setting
         include_relationships = True
@@ -102,7 +106,8 @@ class JobFunctionSchema(SQLAlchemyAutoSchema):
     warehouse_id = fields.Function(
         lambda obj: obj.warehouse.id if obj.warehouse else None
     )
-    settings_id = fields.Function(lambda obj: obj.settings.id if obj.settings else None)
+    settings_id = fields.Function(
+        lambda obj: obj.settings.id if obj.settings else None)
 
     class Meta:
         model = JobFunction
@@ -140,12 +145,16 @@ class IndustrialAthleteSchema(SQLAlchemyAutoSchema):
 
     firstName = fields.Function(lambda obj: obj.first_name)
     lastName = fields.Function(lambda obj: obj.last_name)
+    shift_per_week = fields.Function(lambda obj: obj.shift_per_week)
+    trained = fields.Function(lambda obj: obj.trained)
+    harness_provided = fields.Function(lambda obj: obj.harness_provided)
     externalId = fields.Function(lambda obj: obj.external_id)
     sex = fields.Function(lambda obj: obj.gender)
     clientId = fields.Function(lambda obj: obj.client.id)
     warehouseId = fields.Function(lambda obj: obj.warehouse_id)
     shiftId = fields.Function(lambda obj: obj.shift_id)
-    shift = fields.Function(lambda obj: obj.shifts.name if obj.shifts else None)
+    shift = fields.Function(
+        lambda obj: obj.shifts.name if obj.shifts else None)
     jobFunctionId = fields.Function(lambda obj: obj.job_function_id)
     jobFunction = fields.Function(
         lambda obj: obj.job_function.name if obj.job_function else None
@@ -154,10 +163,12 @@ class IndustrialAthleteSchema(SQLAlchemyAutoSchema):
         lambda obj: convert_date(obj.hire_date) if obj.hire_date else None
     )
     terminationDate = fields.Function(
-        lambda obj: convert_date(obj.termination_date) if obj.termination_date else None
+        lambda obj: convert_date(
+            obj.termination_date) if obj.termination_date else None
     )
     lastModified = fields.Function(
-        lambda obj: convert_date(obj.db_modified_at) if obj.db_modified_at else None
+        lambda obj: convert_date(
+            obj.db_modified_at) if obj.db_modified_at else None
     )
 
     @post_dump(pass_many=True)
@@ -208,7 +219,8 @@ class ExternalAdminUserSchema(SQLAlchemyAutoSchema):
         UserWarehouseAssociationSchema(only=("warehouse",)), many=True
     )
     roles = fields.Nested(UserRoleAssociationSchema(only=("role",)), many=True)
-    clients = fields.Nested(UserClientAssociationSchema(only=("client",)), many=True)
+    clients = fields.Nested(
+        UserClientAssociationSchema(only=("client",)), many=True)
 
     @post_dump(pass_many=True)
     def unwind_warehouses(self, data, many, **kwargs):
@@ -231,13 +243,15 @@ class ExternalAdminUserSchema(SQLAlchemyAutoSchema):
 
 
 class GroupSchema(SQLAlchemyAutoSchema):
-    override_settings = fields.Function(lambda obj: bool(obj.override_settings))
+    override_settings = fields.Function(
+        lambda obj: bool(obj.override_settings))
 
     class Meta:
         model = Groups
         include_fk = True
         include_relationships = True
         load_instance = True
+
 
 class NotificationSchema(SQLAlchemyAutoSchema):
 
