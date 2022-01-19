@@ -244,10 +244,8 @@ class GroupSchema(SQLAlchemyAutoSchema):
 
 
 class NotificationSchema(SQLAlchemyAutoSchema):
-
     class Meta:
         model = Notification
         include_fk = True
         # include_relationships = True
         load_instance = True
-

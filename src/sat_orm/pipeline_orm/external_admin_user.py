@@ -30,19 +30,16 @@ class ExternalAdminUser(Base):
 
     email = Column(String(255), nullable=False)
     username = Column(String(255), nullable=False)
-    account_status = Column(String(255), nullable=False,
-                            server_default="inactive")
+    account_status = Column(String(255), nullable=False, server_default="inactive")
 
     #  Table relationships
     clients = relationship(UserClientAssociation, back_populates=__tablename__)
-    warehouses = relationship(UserWarehouseAssociation,
-                              back_populates=__tablename__)
+    warehouses = relationship(UserWarehouseAssociation, back_populates=__tablename__)
     roles = relationship(UserRoleAssociation, back_populates=__tablename__)
     shifts = relationship(Shifts, back_populates=__tablename__)
 
     deleted_at = Column(DateTime, nullable=True)
-    db_created_at = Column(
-        DateTime, default=datetime.datetime.utcnow, nullable=False)
+    db_created_at = Column(DateTime, default=datetime.datetime.utcnow, nullable=False)
     db_modified_at = Column(
         DateTime,
         default=datetime.datetime.utcnow,
@@ -106,8 +103,7 @@ class ExternalAdminUser(Base):
 
     @staticmethod
     def get_by_id(session, id):
-        external_admin_user = session.query(
-            ExternalAdminUser).filter_by(id=id).first()
+        external_admin_user = session.query(ExternalAdminUser).filter_by(id=id).first()
         return external_admin_user
 
     @staticmethod
@@ -147,14 +143,12 @@ def validate_role_before_insert(mapper, connection, target):
 
     is_valid = utils.is_valid_email(email)
     if not is_valid:
-        errors.append(build_error(
-            "email", constants.INVALID_EMAIL_ERROR_MESSAGE))
+        errors.append(build_error("email", constants.INVALID_EMAIL_ERROR_MESSAGE))
 
     if "account_status" in params_input:
         account_status = params_input.get("account_status", "").lower()
 
-        is_valid = external_admin_user_utils.is_valid_account_status(
-            account_status)
+        is_valid = external_admin_user_utils.is_valid_account_status(account_status)
         if not is_valid:
             errors.append(
                 build_error(
