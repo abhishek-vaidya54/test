@@ -79,6 +79,7 @@ class ConfigFactory(factory.alchemy.SQLAlchemyModelFactory):
         model = Config
         sqlalchemy_session_persistence = "commit"
 
+
 # @factory.post_generation
 # def dock_phases(self, create, extracted, **kwargs):
 #     if extracted is None:

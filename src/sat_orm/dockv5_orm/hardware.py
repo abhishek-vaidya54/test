@@ -9,14 +9,10 @@ class Hardware(Base):
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     version = Column(String(255), nullable=False)
-    db_created_at = Column(
-        DateTime, default=datetime.datetime.utcnow, nullable=False)
+    db_created_at = Column(DateTime, default=datetime.datetime.utcnow, nullable=False)
 
     # Relationships
     firmwares = relationship("Firmware", back_populates="hardware")
 
     def as_dict(self):
-        return {
-            "id": getattr(self, "id"),
-            "version": getattr(self, "version")
-        }
+        return {"id": getattr(self, "id"), "version": getattr(self, "version")}

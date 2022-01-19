@@ -14,12 +14,10 @@ class Firmware(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     version = Column(String(255), nullable=False)
     s3_url = Column(String(255), nullable=True)
-    device_type_id = Column(Integer, ForeignKey(
-        "device_type.id"), nullable=False)
+    device_type_id = Column(Integer, ForeignKey("device_type.id"), nullable=False)
     hardware_id = Column(Integer, ForeignKey("hardware.id"), nullable=False)
 
-    db_created_at = Column(
-        DateTime, default=datetime.datetime.utcnow, nullable=False)
+    db_created_at = Column(DateTime, default=datetime.datetime.utcnow, nullable=False)
 
     # Relationships
     hardware = relationship("Hardware", back_populates="firmwares")

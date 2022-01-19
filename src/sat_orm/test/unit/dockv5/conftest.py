@@ -15,7 +15,7 @@ from sat_orm.dockv5 import (
 
 @pytest.fixture(scope="session")
 def test_dock_session():
-    """ Database Session created from db connection fixture"""
+    """Database Session created from db connection fixture"""
     is_created, error = create_test_db("dock")
     if is_created:
         os.environ[
@@ -43,6 +43,8 @@ def get_dock_from_db(test_session, test_dock_session, get_external_admin_user):
     user = get_external_admin_user
     """ Creates dock from the Factories module"""
     dock = DockPhaseFactory(client_id=user.client_id, warehouse_id=user.warehouse_id)
-    config = ConfigFactory(dock_id=dock.dock_id, client_id=user.client_id, warehouse_id=user.warehouse_id)
+    config = ConfigFactory(
+        dock_id=dock.dock_id, client_id=user.client_id, warehouse_id=user.warehouse_id
+    )
 
     return dock

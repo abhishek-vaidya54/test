@@ -254,7 +254,6 @@ class GroupSchema(SQLAlchemyAutoSchema):
 
 
 class NotificationSchema(SQLAlchemyAutoSchema):
-
     class Meta:
         model = Notification
         include_fk = True

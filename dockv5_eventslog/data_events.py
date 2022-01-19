@@ -4,8 +4,9 @@ from sqlalchemy import ForeignKey
 
 from . import db
 
+
 class DataEvents(db.Model):
-    __tablename__ = 'data_events'
+    __tablename__ = "data_events"
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
 
@@ -40,8 +41,8 @@ class DataEvents(db.Model):
             "athleteID": self.athleteID,
             "clientID": self.clientID,
             "port": self.port,
-            "sessionID": self.sessionID
+            "sessionID": self.sessionID,
         }
 
     def __repr__(self):
-        return 'event type: %s' % (self.event_type)
+        return "event type: %s" % (self.event_type)

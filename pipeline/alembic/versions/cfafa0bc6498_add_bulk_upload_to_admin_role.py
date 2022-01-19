@@ -11,12 +11,13 @@ from sqlalchemy import orm
 from sqlalchemy.ext.declarative import declarative_base
 
 # revision identifiers, used by Alembic.
-revision = 'cfafa0bc6498'
-down_revision = 'c77a08526ef7'
+revision = "cfafa0bc6498"
+down_revision = "c77a08526ef7"
 branch_labels = None
 depends_on = None
 
 Base = declarative_base()
+
 
 class CasbinRule(Base):
     __tablename__ = "casbin_rule"
@@ -30,6 +31,7 @@ class CasbinRule(Base):
     v4 = sa.Column(sa.String(length=255), nullable=True)
     v5 = sa.Column(sa.String(length=255), nullable=True)
 
+
 def build_records():
     records = []
 
@@ -40,6 +42,7 @@ def build_records():
 
     return records
 
+
 def upgrade():
     bind = op.get_bind()
     session = orm.Session(bind=bind)
@@ -48,6 +51,7 @@ def upgrade():
     session.add_all(records)
     session.commit()
     session.close()
+
 
 def downgrade():
     bind = op.get_bind()

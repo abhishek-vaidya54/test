@@ -11,8 +11,8 @@ from sqlalchemy.engine.reflection import Inspector
 
 
 # revision identifiers, used by Alembic.
-revision = '4000b95a31a2'
-down_revision = '66296d19d35b'
+revision = "4000b95a31a2"
+down_revision = "66296d19d35b"
 branch_labels = None
 depends_on = None
 
@@ -25,6 +25,6 @@ def downgrade():
     conn = op.get_bind()
     inspector = Inspector.from_engine(conn)
     tables = inspector.get_table_names()
-    
-    if 'imported_industrial_athlete' in tables:
+
+    if "imported_industrial_athlete" in tables:
         op.drop_column("imported_industrial_athlete", "group_id")

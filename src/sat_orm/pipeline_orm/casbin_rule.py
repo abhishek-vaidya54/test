@@ -39,5 +39,4 @@ def validate_before_insert(mapper, connection, target):
     if not is_valid:
         errors.append(build_error("action", constants.INVALID_ACTION_ERROR_MESSAGE))
 
-
     check_errors_and_return(errors)

@@ -1,5 +1,6 @@
 from sat_orm.pipeline_orm.utilities import job_function_utils
 
+
 def test_is_valid_group_admin_valid(valid_email):
     """
     checks if function returns true for a valid group admin
