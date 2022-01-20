@@ -366,11 +366,9 @@ VALID_ATHLETES_FILTER = (
     "harness_provided", 
     "hire_date", 
     "job_function", 
-    "last_modified", 
     "last_name", 
     "sex", 
     "shift", 
-    "termination_date", 
     "trained",
     "warehouse"
     )
