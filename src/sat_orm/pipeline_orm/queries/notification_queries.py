@@ -10,6 +10,6 @@ def get_notification_exists(connection, notification_id):
         notification: The notification object retrieved from the database
     """
     notification = connection.execute(
-        "select * from Notification where id={}".format(notification_id)
+        "select * from notification where id={}".format(notification_id)
     ).fetchone()
     return notification
