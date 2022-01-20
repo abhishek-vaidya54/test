@@ -359,19 +359,19 @@ VALID_IA_WEIGHT_UNITS = ("LBS", "KG")
 VALID_PACKAGE_UNITS = ("LBS", "KG")
 
 VALID_ATHLETES_FILTER = (
-    "client", 
-    "external_id", 
-    "first_name", 
-    "group_id", 
-    "harness_provided", 
-    "hire_date", 
-    "job_function", 
-    "last_name", 
-    "sex", 
-    "shift", 
+    "client",
+    "external_id",
+    "first_name",
+    "group_id",
+    "harness_provided",
+    "hire_date",
+    "job_function",
+    "last_name",
+    "sex",
+    "shift",
     "trained",
-    "warehouse"
-    )
+    "warehouse",
+)
 
 INVALID_IA_HEIGHT_UNIT_MESSAGE = "Invalid height unit: Should be one of INCH or CM."
 
