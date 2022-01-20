@@ -358,6 +358,21 @@ VALID_IA_WEIGHT_UNITS = ("LBS", "KG")
 
 VALID_PACKAGE_UNITS = ("LBS", "KG")
 
+VALID_ATHLETES_FILTER = (
+    "client",
+    "external_id",
+    "first_name",
+    "group_id",
+    "harness_provided",
+    "hire_date",
+    "job_function",
+    "last_name",
+    "sex",
+    "shift",
+    "trained",
+    "warehouse",
+)
+
 INVALID_IA_HEIGHT_UNIT_MESSAGE = "Invalid height unit: Should be one of INCH or CM."
 
 INVALID_IA_WEIGHT_UNIT_MESSAGE = "Invalid weight unit: Should be one of LBS or KG."
@@ -377,6 +392,8 @@ VALID_NOTIFICATION_TYPE = ["update", "news", "warning", "event"]
 INVALID_CREATED_BY_MESSAGE = "Invalid Created_by id"
 
 INVALID_IS_ACTIVE_MESSAGE = "Invlaid is_active"
+
+INVALID_PARAM_FILTERBY_MESSAGE = "Invalid filterBy key"
 
 
 VALID_TIMEZONES = valid_timezones.TIMEZONES
