@@ -21,8 +21,8 @@ def upgrade():
         """
         INSERT INTO pipeline.casbin_rule (ptype, v0, v1, v2)
         VALUES
-            ('p', 'superuser', 'analytics_heatStress', 'get'),
-            ('p', 'admin', 'analytics_heatStress', 'get')
+            ('p', 'superuser', 'analytics_heatstress', 'get'),
+            ('p', 'admin', 'analytics_heatstress', 'get')
     """
     )
 
@@ -31,6 +31,6 @@ def downgrade():
     op.execute(
         """
         DELETE FROM pipeline.casbin_rule
-        WHERE v1 = 'analytics_heatStress' AND (v0 = 'superuser' OR v0 = 'admin')
+        WHERE v1 = 'analytics_heatstress' AND (v0 = 'superuser' OR v0 = 'admin')
     """
     )
