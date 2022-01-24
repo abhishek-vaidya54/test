@@ -249,6 +249,7 @@ RBAC_VALID_ROLES = (
     "looker_prox",
     "data_analytics",
     "shift_manager",
+    "analytics_heatstress",
 )
 
 CREATE_VALID_ROLES = (
@@ -259,6 +260,7 @@ CREATE_VALID_ROLES = (
     "looker_prox",
     "data_analytics",
     "shift_manager",
+    "analytics_heatstress",
 )
 
 RBAC_VALID_RESOURCES = (
@@ -278,6 +280,7 @@ RBAC_VALID_RESOURCES = (
     "looker_prox",
     "data_analytics",
     "shift_manager",
+    "analytics_heatstress",
 )
 
 RBAC_VALID_ACTIONS = ("read", "write", "update", "delete")
@@ -312,6 +315,7 @@ POLICY_LOOKER_PROX_OBJ = "looker_prox"
 POLICY_LOOKER_ERGO_OBJ = "looker_ergo"
 POLICY_DATA_ANALYTICS = "data_analytics"
 POLICY_SHIFT_MANAGER = "shift_manager"
+POLICY_ANALYTICS_HEATSTRESS = "analytics_heatstress"
 
 # warehouse
 INVALID_LAT_LONG_DIRECTION_MESSAGE = 'should be one of ("N", "S", "E", "W")'
@@ -395,5 +399,6 @@ INVALID_IS_ACTIVE_MESSAGE = "Invlaid is_active"
 
 INVALID_PARAM_FILTERBY_MESSAGE = "Invalid filterBy key"
 
+INVALID_NOTIFICATION_ID = "invalid"
 
 VALID_TIMEZONES = valid_timezones.TIMEZONES
