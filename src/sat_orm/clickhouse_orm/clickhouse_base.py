@@ -31,6 +31,7 @@ def get_client():
     except Exception as exception:
         print("exception: ", exception)
         LOGGER.exception(exception)
-        raise exception  # Allow exception to terminate execution of the lambda handler
+
+        raise exception  # If exception isn't raised again, response is 200
     finally:
         client.disconnect()
