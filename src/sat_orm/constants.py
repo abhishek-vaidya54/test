@@ -280,6 +280,9 @@ RBAC_VALID_RESOURCES = (
     "looker_prox",
     "data_analytics",
     "shift_manager",
+    "firmwares",
+    "firmware_groups",
+    "notifications",
     "analytics_heatstress",
 )
 
@@ -292,7 +295,8 @@ RBAC_ACTION_VALUES = {
     "delete": "delete",
 }
 
-RBAC_ACTION_KEYS = {"get": "read", "post": "write", "put": "update", "delete": "delete"}
+RBAC_ACTION_KEYS = {"get": "read", "post": "write",
+                    "put": "update", "delete": "delete"}
 
 METHOD_GET = "get"
 METHOD_POST = "post"
