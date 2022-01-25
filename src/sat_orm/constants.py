@@ -295,8 +295,7 @@ RBAC_ACTION_VALUES = {
     "delete": "delete",
 }
 
-RBAC_ACTION_KEYS = {"get": "read", "post": "write",
-                    "put": "update", "delete": "delete"}
+RBAC_ACTION_KEYS = {"get": "read", "post": "write", "put": "update", "delete": "delete"}
 
 METHOD_GET = "get"
 METHOD_POST = "post"
