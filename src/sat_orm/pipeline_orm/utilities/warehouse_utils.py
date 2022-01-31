@@ -1,3 +1,4 @@
+import time
 from sat_orm.pipeline_orm.utilities import utils
 from sat_orm.pipeline_orm.queries import warehouse_queries
 from sat_orm import constants
@@ -63,3 +64,25 @@ def is_valid_warehouse_name(connection, name, id=None):
         return True, None
 
     return False, constants.DUPLICATE_WAREHOUSE_NAME_MESSAGE
+
+
+def is_valid_week_start(value):
+    """
+    Helper method to check if input is a valid week_start
+    Return True if it is a valid week_start
+    Returns False if it is not valid
+    """
+    return value in constants.VALID_WEEK_START
+
+
+def is_valid_utc_op_day_start(value):
+    """
+    Helper method to check if input is a valid utc_op_day_start
+    Return True if it is a valid utc_op_day_start
+    Returns False if it is not valid
+    """
+    try:
+        time.strptime(value, "%H:%M")
+        return True
+    except ValueError:
+        return False
