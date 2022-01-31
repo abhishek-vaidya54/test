@@ -52,7 +52,8 @@ class Warehouse(Base):
     client_id = Column(Integer, ForeignKey("client.id"), nullable=False)
     name = Column(String(255), nullable=False)
     location = Column(String(500), nullable=True)
-    db_created_at = Column(DateTime, default=datetime.datetime.utcnow, nullable=False)
+    db_created_at = Column(
+        DateTime, default=datetime.datetime.utcnow, nullable=False)
     db_modified_at = Column(
         DateTime,
         default=datetime.datetime.utcnow,
@@ -63,7 +64,8 @@ class Warehouse(Base):
         TIME(),
         nullable=True,
     )
-    prefered_timezone = Column(String(100), server_default="UTC", nullable=False)
+    prefered_timezone = Column(
+        String(100), server_default="UTC", nullable=False)
     algo_version = Column(Integer, nullable=True)
     display_names = Column(Boolean, nullable=False)
     utc_op_day_start = Column(String(45), nullable=False)
@@ -99,7 +101,8 @@ class Warehouse(Base):
 
     # Table relationships
     client = relationship("Client", back_populates="warehouses", uselist=False)
-    industrial_athletes = relationship("IndustrialAthlete", back_populates="warehouse")
+    industrial_athletes = relationship(
+        "IndustrialAthlete", back_populates="warehouse")
     job_functions = relationship("JobFunction", back_populates="warehouse")
     shifts = relationship("Shifts", back_populates="warehouse")
 
@@ -137,6 +140,20 @@ class Warehouse(Base):
             raise Exception("update_engagement cannot be Null")
         else:
             return update_engagement
+
+    @validates("week_start")
+    def validate_week_start(self, key, week_start):
+        if week_start == None:
+            raise Exception("week_start cannot be Null")
+        else:
+            return week_start
+
+    @validates("utc_op_day_start")
+    def validate_utc_op_day_start(self, key, utc_op_day_start):
+        if utc_op_day_start == None:
+            raise Exception("utc_op_day_start cannot be Null")
+        else:
+            return utc_op_day_start
 
     def as_dict(self):
         return {
@@ -182,13 +199,16 @@ def validate_before_insert(mapper, connection, target):
     errors = []
 
     client_id = params_input.get("client_id", "")
+    week_start = params_input.get("week_start", "").upper()
+    utc_op_day_start = params_input.get("utc_op_day_start", "")
     name = params_input.get("name", "")
     number_of_user_allocated = (
         target.number_of_user_allocated if target.number_of_user_allocated else ""
     )
     industry = target.industry if target.industry else ""
 
-    is_valid, message = warehouse_utils.is_valid_warehouse_name(connection, name)
+    is_valid, message = warehouse_utils.is_valid_warehouse_name(
+        connection, name)
     if not is_valid:
         errors.append(utils.build_error("name", message))
 
@@ -202,10 +222,21 @@ def validate_before_insert(mapper, connection, target):
     if not is_valid:
         errors.append(utils.build_error("industry", message))
 
+    is_valid = warehouse_utils.is_valid_week_start(week_start)
+    if not is_valid:
+        errors.append(utils.build_error(
+            "week_start", constants.INVALID_WEEK_START_MESSAGE))
+
+    is_valid = warehouse_utils.is_valid_utc_op_day_start(utc_op_day_start)
+    if not is_valid:
+        errors.append(utils.build_error(
+            "utc_op_day_start", constants.INVALID_UTC_OP_DAY_START))
+
     if number_of_user_allocated:
         is_valid, message = utils.is_valid_int(number_of_user_allocated)
         if not is_valid:
-            errors.append(utils.build_error("number_of_user_allocated", message))
+            errors.append(utils.build_error(
+                "number_of_user_allocated", message))
 
     for key in ["city", "state", "country"]:
         if getattr(target, key, None) is not "":
@@ -215,10 +246,12 @@ def validate_before_insert(mapper, connection, target):
 
     for key in ["latitude", "longitude"]:
         if getattr(target, key, None) is not None:
-            is_valid = warehouse_utils.is_valid_lat_long(key, getattr(target, key, ""))
+            is_valid = warehouse_utils.is_valid_lat_long(
+                key, getattr(target, key, ""))
             if not is_valid:
                 errors.append(
-                    utils.build_error(key, constants.INVALID_LAT_LONG_MESSAGE[key])
+                    utils.build_error(
+                        key, constants.INVALID_LAT_LONG_MESSAGE[key])
                 )
 
     for key in ["lat_direction", "long_direction"]:
@@ -235,7 +268,8 @@ def validate_before_insert(mapper, connection, target):
 
     is_valid = params_input.get("timezone", "") in constants.VALID_TIMEZONES
     if not is_valid:
-        errors.append(utils.build_error("timezone", constants.INVALID_TIMEZONE_MESSAGE))
+        errors.append(utils.build_error(
+            "timezone", constants.INVALID_TIMEZONE_MESSAGE))
 
     utils.check_errors_and_return(errors)
 
@@ -252,6 +286,8 @@ def validate_before_update(mapper, connection, target):
         if value is not None:
             params_input[key] = value
     errors = []
+    week_start = params_input.get("week_start", "").upper()
+    utc_op_day_start = params_input.get("utc_op_day_start", "")
 
     is_valid = warehouse_utils.is_valid_warehouse_id(
         connection, params_input.get("id", "")
@@ -261,7 +297,8 @@ def validate_before_update(mapper, connection, target):
 
     if "name" in params_input:
         is_valid, message = warehouse_utils.is_valid_warehouse_name(
-            connection, params_input.get("name", ""), params_input.get("id", "")
+            connection, params_input.get(
+                "name", ""), params_input.get("id", "")
         )
         if not is_valid:
             errors.append(utils.build_error("name", message))
@@ -272,8 +309,21 @@ def validate_before_update(mapper, connection, target):
         )
         if not is_valid:
             errors.append(
-                utils.build_error("client_id", constants.INVALID_CLIENT_ID_MESSAGE)
+                utils.build_error(
+                    "client_id", constants.INVALID_CLIENT_ID_MESSAGE)
             )
+
+    if "week_start" in params_input:
+        is_valid = warehouse_utils.is_valid_week_start(week_start)
+        if not is_valid:
+            errors.append(utils.build_error(
+                "week_start", constants.INVALID_WEEK_START_MESSAGE))
+
+    if "utc_op_day_start" in params_input:
+        is_valid = warehouse_utils.is_valid_utc_op_day_start(utc_op_day_start)
+        if not is_valid:
+            errors.append(utils.build_error(
+                "utc_op_day_start", constants.INVALID_UTC_OP_DAY_START))
 
     if getattr(target, "industry", ""):
         is_valid, message = utils.is_valid_string(getattr(target, "industry"))
@@ -285,7 +335,8 @@ def validate_before_update(mapper, connection, target):
             params_input.get("number_of_user_allocated", "")
         )
         if not is_valid:
-            errors.append(utils.build_error("number_of_user_allocated", message))
+            errors.append(utils.build_error(
+                "number_of_user_allocated", message))
 
     for key in ["country"]:
         if getattr(target, key, None) is not None:
@@ -295,10 +346,12 @@ def validate_before_update(mapper, connection, target):
 
     for key in ["latitude", "longitude"]:
         if getattr(target, key, None) is not None:
-            is_valid = warehouse_utils.is_valid_lat_long(key, getattr(target, key, ""))
+            is_valid = warehouse_utils.is_valid_lat_long(
+                key, getattr(target, key, ""))
             if not is_valid:
                 errors.append(
-                    utils.build_error(key, constants.INVALID_LAT_LONG_MESSAGE[key])
+                    utils.build_error(
+                        key, constants.INVALID_LAT_LONG_MESSAGE[key])
                 )
 
     for key in ["lat_direction", "long_direction"]:
@@ -314,10 +367,12 @@ def validate_before_update(mapper, connection, target):
                 )
 
     if "timezone" in params_input:
-        is_valid = params_input.get("timezone", "") in constants.VALID_TIMEZONES
+        is_valid = params_input.get(
+            "timezone", "") in constants.VALID_TIMEZONES
         if not is_valid:
             errors.append(
-                utils.build_error("timezone", constants.INVALID_TIMEZONE_MESSAGE)
+                utils.build_error(
+                    "timezone", constants.INVALID_TIMEZONE_MESSAGE)
             )
 
     utils.check_errors_and_return(errors)

@@ -1,3 +1,4 @@
+from calendar import FRIDAY, SATURDAY, SUNDAY, THURSDAY
 from sat_orm import valid_timezones
 
 
@@ -295,7 +296,8 @@ RBAC_ACTION_VALUES = {
     "delete": "delete",
 }
 
-RBAC_ACTION_KEYS = {"get": "read", "post": "write", "put": "update", "delete": "delete"}
+RBAC_ACTION_KEYS = {"get": "read", "post": "write",
+                    "put": "update", "delete": "delete"}
 
 METHOD_GET = "get"
 METHOD_POST = "post"
@@ -363,6 +365,9 @@ VALID_IA_HEIGHT_UNITS = ("INCH", "CM")
 
 VALID_IA_WEIGHT_UNITS = ("LBS", "KG")
 
+VALID_WEEK_START = ("MONDAY", "TUESDAY", "WEDNESDAY",
+                    "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY")
+
 VALID_PACKAGE_UNITS = ("LBS", "KG")
 
 VALID_ATHLETES_FILTER = (
@@ -385,6 +390,10 @@ INVALID_IA_HEIGHT_UNIT_MESSAGE = "Invalid height unit: Should be one of INCH or 
 INVALID_IA_WEIGHT_UNIT_MESSAGE = "Invalid weight unit: Should be one of LBS or KG."
 
 INVALID_PACKAGE_UNIT_MESSAGE = "Invalid weight unit: Should be one of LBS or KG."
+
+INVALID_WEEK_START_MESSAGE = "Invalid week start: Should be one of('MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY', 'SUNDAY')"
+
+INVALID_UTC_OP_DAY_START = "Invalid utc_op_day_start format: Should be in time format of '%H:%M'"
 
 INVALID_DEVICE_TYPE_MESSAGE = "Invalid Device Type Id"
 
