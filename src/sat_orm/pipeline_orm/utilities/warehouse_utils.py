@@ -44,8 +44,7 @@ def is_valid_warehouse(connection, warehouse_id, client_id):
     Returns False if it is not
     """
     try:
-        warehouse = warehouse_queries.get_warehouse(
-            connection, warehouse_id, client_id)
+        warehouse = warehouse_queries.get_warehouse(connection, warehouse_id, client_id)
         return bool(warehouse)
     except Exception as error:
         return False
@@ -83,7 +82,7 @@ def is_valid_utc_op_day_start(value):
     Returns False if it is not valid
     """
     try:
-        time.strptime(value, '%H:%M')
+        time.strptime(value, "%H:%M")
         return True
     except ValueError:
         return False
