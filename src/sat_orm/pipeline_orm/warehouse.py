@@ -138,6 +138,20 @@ class Warehouse(Base):
         else:
             return update_engagement
 
+    @validates("week_start")
+    def validate_week_start(self, key, week_start):
+        if week_start == None:
+            raise Exception("week_start cannot be Null")
+        else:
+            return week_start
+
+    @validates("utc_op_day_start")
+    def validate_utc_op_day_start(self, key, utc_op_day_start):
+        if utc_op_day_start == None:
+            raise Exception("utc_op_day_start cannot be Null")
+        else:
+            return utc_op_day_start
+
     def as_dict(self):
         return {
             "id": self.id,
@@ -182,6 +196,8 @@ def validate_before_insert(mapper, connection, target):
     errors = []
 
     client_id = params_input.get("client_id", "")
+    week_start = params_input.get("week_start", "").upper()
+    utc_op_day_start = params_input.get("utc_op_day_start", "")
     name = params_input.get("name", "")
     number_of_user_allocated = (
         target.number_of_user_allocated if target.number_of_user_allocated else ""
@@ -201,6 +217,18 @@ def validate_before_insert(mapper, connection, target):
     is_valid, message = utils.is_valid_string(industry)
     if not is_valid:
         errors.append(utils.build_error("industry", message))
+
+    is_valid = warehouse_utils.is_valid_week_start(week_start)
+    if not is_valid:
+        errors.append(
+            utils.build_error("week_start", constants.INVALID_WEEK_START_MESSAGE)
+        )
+
+    is_valid = warehouse_utils.is_valid_utc_op_day_start(utc_op_day_start)
+    if not is_valid:
+        errors.append(
+            utils.build_error("utc_op_day_start", constants.INVALID_UTC_OP_DAY_START)
+        )
 
     if number_of_user_allocated:
         is_valid, message = utils.is_valid_int(number_of_user_allocated)
@@ -252,6 +280,8 @@ def validate_before_update(mapper, connection, target):
         if value is not None:
             params_input[key] = value
     errors = []
+    week_start = params_input.get("week_start", "").upper()
+    utc_op_day_start = params_input.get("utc_op_day_start", "")
 
     is_valid = warehouse_utils.is_valid_warehouse_id(
         connection, params_input.get("id", "")
@@ -273,6 +303,22 @@ def validate_before_update(mapper, connection, target):
         if not is_valid:
             errors.append(
                 utils.build_error("client_id", constants.INVALID_CLIENT_ID_MESSAGE)
+            )
+
+    if "week_start" in params_input:
+        is_valid = warehouse_utils.is_valid_week_start(week_start)
+        if not is_valid:
+            errors.append(
+                utils.build_error("week_start", constants.INVALID_WEEK_START_MESSAGE)
+            )
+
+    if "utc_op_day_start" in params_input:
+        is_valid = warehouse_utils.is_valid_utc_op_day_start(utc_op_day_start)
+        if not is_valid:
+            errors.append(
+                utils.build_error(
+                    "utc_op_day_start", constants.INVALID_UTC_OP_DAY_START
+                )
             )
 
     if getattr(target, "industry", ""):

@@ -159,14 +159,14 @@ def validate_before_update(mapper, connection, target):
     #         errors.append(build_error(
     #             "url", constants.EMPTY_STRING_ERROR_MESSAGE))
 
-    if "created_by" in params_input:
-        is_valid = nu.is_valid_created_by(
-            connection, params_input.get("created_by", "")
-        )
-        if not is_valid:
-            errors.append(
-                build_error("created_by", constants.INVALID_CREATED_BY_MESSAGE)
-            )
+    # if "created_by" in params_input:
+    #     is_valid = nu.is_valid_created_by(
+    #         connection, params_input.get("created_by", "")
+    #     )
+    #     if not is_valid:
+    #         errors.append(
+    #             build_error("created_by", constants.INVALID_CREATED_BY_MESSAGE)
+    #         )
 
     if "is_active" in params_input:
         is_valid = nu.is_valid_is_active(params_input.get("is_active", ""))

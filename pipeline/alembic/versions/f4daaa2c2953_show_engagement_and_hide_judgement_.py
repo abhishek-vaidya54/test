@@ -74,21 +74,21 @@ def upgrade():
     session = orm.Session(bind=bind)
 
     default_value = {
-        u"athleteEnabled": False,
-        u"enagementEnabled": False,
-        u"eulaVersion": None,
-        u"hapticBendNumber": 0,
-        u"hapticBendPercentile": 0,
-        u"hapticEnabled": False,
-        u"hapticFeedbackGap": 0,
-        u"hapticFeedbackWindow": 0,
-        u"hapticSagAngleThreshold": 0,
-        u"hapticSingleBendWindow": 0,
-        u"showBaselineModal": False,
-        u"showEngagement": True,
-        u"showHapticModal": False,
-        u"showSafetyJudgement": True,
-        u"showSafetyScoreModal": False,
+        "athleteEnabled": False,
+        "enagementEnabled": False,
+        "eulaVersion": None,
+        "hapticBendNumber": 0,
+        "hapticBendPercentile": 0,
+        "hapticEnabled": False,
+        "hapticFeedbackGap": 0,
+        "hapticFeedbackWindow": 0,
+        "hapticSagAngleThreshold": 0,
+        "hapticSingleBendWindow": 0,
+        "showBaselineModal": False,
+        "showEngagement": True,
+        "showHapticModal": False,
+        "showSafetyJudgement": True,
+        "showSafetyScoreModal": False,
     }
 
     def convert_value_from_string(value, defaults=default_value):
@@ -96,9 +96,9 @@ def upgrade():
         for key in copyValue:
             v = copyValue[key]
             if type(v) == unicode:
-                if v.lower() == u"true":
+                if v.lower() == "true":
                     copyValue[key] = True
-                elif v.lower() == u"false":
+                elif v.lower() == "false":
                     copyValue[key] = False
                 else:
                     try:
@@ -167,8 +167,8 @@ def upgrade():
             value = setting.value
         else:
             value = default_value
-        value[u"showEngagement"] = show_engagement
-        value[u"showSafetyJudgement"] = show_safety_judgement
+        value["showEngagement"] = show_engagement
+        value["showSafetyJudgement"] = show_safety_judgement
         value = convert_value_from_string(value)
         new_settings_entries.append(
             Settings(target_type="group", target_id=group.id, value=value)
@@ -188,8 +188,8 @@ def upgrade():
                 .one_or_none()
             )
             if warehouse:
-                value[u"showEngagement"] = warehouse.show_engagement == 1
-                value[u"showSafetyJudgement"] = warehouse.hide_judgement == 0
+                value["showEngagement"] = warehouse.show_engagement == 1
+                value["showSafetyJudgement"] = warehouse.hide_judgement == 0
                 value = convert_value_from_string(value)
                 athlete_settings = Settings(
                     target_type="industrial_athlete", target_id=athlete.id, value=value
@@ -212,8 +212,8 @@ def upgrade():
             value = setting.value
         else:
             value = default_value
-        value[u"showEngagement"] = warehouse.show_engagement == 1
-        value[u"showSafetyJudgement"] = warehouse.hide_judgement == 0
+        value["showEngagement"] = warehouse.show_engagement == 1
+        value["showSafetyJudgement"] = warehouse.hide_judgement == 0
         value = convert_value_from_string(value)
         new_settings_entries.append(
             Settings(target_type="warehouse", target_id=warehouse.id, value=value)
@@ -246,9 +246,9 @@ def downgrade():
         )
         if setting:
             value = setting.value
-            warehouse.show_engagement = 1 if value.get(u"showEngagement", False) else 0
+            warehouse.show_engagement = 1 if value.get("showEngagement", False) else 0
             warehouse.hide_judgement = (
-                0 if value.get(u"showSafetyJudgement", True) else 1
+                0 if value.get("showSafetyJudgement", True) else 1
             )
 
     session.commit()
