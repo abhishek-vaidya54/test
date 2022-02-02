@@ -1,3 +1,4 @@
+from calendar import FRIDAY, SATURDAY, SUNDAY, THURSDAY
 from sat_orm import valid_timezones
 
 
@@ -249,6 +250,7 @@ RBAC_VALID_ROLES = (
     "looker_prox",
     "data_analytics",
     "shift_manager",
+    "analytics_heatstress",
 )
 
 CREATE_VALID_ROLES = (
@@ -259,6 +261,7 @@ CREATE_VALID_ROLES = (
     "looker_prox",
     "data_analytics",
     "shift_manager",
+    "analytics_heatstress",
 )
 
 RBAC_VALID_RESOURCES = (
@@ -278,6 +281,10 @@ RBAC_VALID_RESOURCES = (
     "looker_prox",
     "data_analytics",
     "shift_manager",
+    "firmwares",
+    "firmware_groups",
+    "notifications",
+    "analytics_heatstress",
 )
 
 RBAC_VALID_ACTIONS = ("read", "write", "update", "delete")
@@ -312,6 +319,7 @@ POLICY_LOOKER_PROX_OBJ = "looker_prox"
 POLICY_LOOKER_ERGO_OBJ = "looker_ergo"
 POLICY_DATA_ANALYTICS = "data_analytics"
 POLICY_SHIFT_MANAGER = "shift_manager"
+POLICY_ANALYTICS_HEATSTRESS = "analytics_heatstress"
 
 # warehouse
 INVALID_LAT_LONG_DIRECTION_MESSAGE = 'should be one of ("N", "S", "E", "W")'
@@ -356,13 +364,44 @@ VALID_IA_HEIGHT_UNITS = ("INCH", "CM")
 
 VALID_IA_WEIGHT_UNITS = ("LBS", "KG")
 
+VALID_WEEK_START = (
+    "MONDAY",
+    "TUESDAY",
+    "WEDNESDAY",
+    "THURSDAY",
+    "FRIDAY",
+    "SATURDAY",
+    "SUNDAY",
+)
+
 VALID_PACKAGE_UNITS = ("LBS", "KG")
+
+VALID_ATHLETES_FILTER = (
+    "client",
+    "external_id",
+    "first_name",
+    "group_id",
+    "harness_provided",
+    "hire_date",
+    "job_function",
+    "last_name",
+    "sex",
+    "shift",
+    "trained",
+    "warehouse",
+)
 
 INVALID_IA_HEIGHT_UNIT_MESSAGE = "Invalid height unit: Should be one of INCH or CM."
 
 INVALID_IA_WEIGHT_UNIT_MESSAGE = "Invalid weight unit: Should be one of LBS or KG."
 
 INVALID_PACKAGE_UNIT_MESSAGE = "Invalid weight unit: Should be one of LBS or KG."
+
+INVALID_WEEK_START_MESSAGE = "Invalid week start: Should be one of('MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY', 'SUNDAY')"
+
+INVALID_UTC_OP_DAY_START = (
+    "Invalid utc_op_day_start format: Should be in time format of '%H:%M'"
+)
 
 INVALID_DEVICE_TYPE_MESSAGE = "Invalid Device Type Id"
 
@@ -378,5 +417,8 @@ INVALID_CREATED_BY_MESSAGE = "Invalid Created_by id"
 
 INVALID_IS_ACTIVE_MESSAGE = "Invlaid is_active"
 
+INVALID_PARAM_FILTERBY_MESSAGE = "Invalid filterBy key"
+
+INVALID_NOTIFICATION_ID = "invalid"
 
 VALID_TIMEZONES = valid_timezones.TIMEZONES

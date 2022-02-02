@@ -143,6 +143,9 @@ class IndustrialAthleteSchema(SQLAlchemyAutoSchema):
 
     firstName = fields.Function(lambda obj: obj.first_name)
     lastName = fields.Function(lambda obj: obj.last_name)
+    shift_per_week = fields.Function(lambda obj: obj.shift_per_week)
+    trained = fields.Function(lambda obj: obj.trained)
+    harness_provided = fields.Function(lambda obj: obj.harness_provided)
     externalId = fields.Function(lambda obj: obj.external_id)
     sex = fields.Function(lambda obj: obj.gender)
     clientId = fields.Function(lambda obj: obj.client.id)
