@@ -1,0 +1,7 @@
+[MASTER]
+load-plugins=pylint_django
+init-hook='import os; import sys'
+[MESSAGES CONTROL]
+disable=C0114,W0703
+[VARIABLES]
+ignored-argument-names=context
