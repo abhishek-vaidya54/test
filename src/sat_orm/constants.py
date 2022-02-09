@@ -385,7 +385,7 @@ VALID_ATHLETES_FILTER = (
     "hire_date",
     "job_function",
     "last_name",
-    "sex",
+    "shift_per_week",
     "shift",
     "trained",
     "warehouse",
