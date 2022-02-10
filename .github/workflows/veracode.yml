@@ -1,0 +1,24 @@
+name: Veracode
+on: workflow_dispatch
+    
+jobs:
+  static_analysis:
+    name: Static Analysis
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Check out main branch
+        uses: actions/checkout@v2
+
+      - name: Zip all Python files for examination
+        run: find . -type f -name \*.py | zip -r@ Veracode.zip
+        shell: bash
+
+      - name: Veracode
+        uses: veracode/veracode-uploadandscan-action@0.2.1
+        with:
+          appname: 'Database_Models'
+          createprofile: false
+          filepath: 'Veracode.zip'
+          vid: '${{ secrets.Veracode_API_ID }}'
+          vkey: '${{ secrets.Veracode_API_KEY }}'
