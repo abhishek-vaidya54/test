@@ -1,3 +1,4 @@
 alembic==1.0.0
 PyMySQL==0.9.2
 SQLAlchemy==1.2.10
+clickhouse-driver==0.2.1
