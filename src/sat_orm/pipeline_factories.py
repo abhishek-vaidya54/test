@@ -67,6 +67,7 @@ class ClientFactory(factory.alchemy.SQLAlchemyModelFactory):
         model = Client
         sqlalchemy_session_persistence = "commit"
 
+
 class ExternalAdminUserFactory(factory.alchemy.SQLAlchemyModelFactory):
     id = factory.Sequence(lambda n: n)
     email = "email-{0}@email.com".format(random_str())
@@ -78,6 +79,7 @@ class ExternalAdminUserFactory(factory.alchemy.SQLAlchemyModelFactory):
     class Meta:
         model = ExternalAdminUser
         sqlalchemy_session_persistence = "commit"
+
 
 class WarehouseFactory(factory.alchemy.SQLAlchemyModelFactory):
     """Warehouse Factory: creates a fake warehouse with its relationships if the relationships are not None"""
@@ -166,30 +168,30 @@ class SettingsFactory(factory.alchemy.SQLAlchemyModelFactory):
     target_type = "warehouse"
     target_id = 53
     value = {
-        "handsFree": True, 
-        "eulaVersion": None, 
-        "enableMotion": False, 
-        "hapticEnabled": False, 
-        "athleteEnabled": True, 
-        "showEngagement": True, 
-        "enableProximity": False, 
-        "showHapticModal": False, 
-        "enagementEnabled": True, 
-        "hapticBendNumber": 3, 
-        "enableTemperature": True, 
-        "exposureRSSILimit": -48, 
-        "hapticFeedbackGap": 0, 
-        "showBaselineModal": False, 
-        "showSafetyJudgement": True, 
-        "hapticBendPercentile": 50, 
-        "hapticFeedbackWindow": 600000, 
-        "showSafetyScoreModal": False, 
-        "exposureHapticEnabled": True, 
-        "exposureHapticRepeatMS": 10000, 
-        "hapticSingleBendWindow": 600, 
-        "hapticSagAngleThreshold": 65, 
-        "exposureHapticSuppressMS": 30000
-        }
+        "handsFree": True,
+        "eulaVersion": None,
+        "enableMotion": False,
+        "hapticEnabled": False,
+        "athleteEnabled": True,
+        "showEngagement": True,
+        "enableProximity": False,
+        "showHapticModal": False,
+        "enagementEnabled": True,
+        "hapticBendNumber": 3,
+        "enableTemperature": True,
+        "exposureRSSILimit": -48,
+        "hapticFeedbackGap": 0,
+        "showBaselineModal": False,
+        "showSafetyJudgement": True,
+        "hapticBendPercentile": 50,
+        "hapticFeedbackWindow": 600000,
+        "showSafetyScoreModal": False,
+        "exposureHapticEnabled": True,
+        "exposureHapticRepeatMS": 10000,
+        "hapticSingleBendWindow": 600,
+        "hapticSagAngleThreshold": 65,
+        "exposureHapticSuppressMS": 30000,
+    }
     db_created_at = datetime.datetime.now()
     external_admin_user = factory.SubFactory(ExternalAdminUserFactory)
 
@@ -242,9 +244,6 @@ class IndustrialAthleteFactory(factory.alchemy.SQLAlchemyModelFactory):
         custom_client_id = None
 
 
-
-
-
 class UserWarehouseAssociationFactory(factory.alchemy.SQLAlchemyModelFactory):
     external_admin_user = factory.SubFactory(ExternalAdminUserFactory)
     warehouse = factory.SubFactory(WarehouseFactory)
@@ -261,6 +260,7 @@ class UserRoleAssociationFactory(factory.alchemy.SQLAlchemyModelFactory):
     class Meta:
         model = UserRoleAssociation
         sqlalchemy_session_persistence = "commit"
+
 
 class UserClientAssociationFactory(factory.alchemy.SQLAlchemyModelFactory):
     external_admin_user = factory.SubFactory(ExternalAdminUserFactory)
