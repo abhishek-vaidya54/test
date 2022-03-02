@@ -5,6 +5,7 @@ backports.functools-lru-cache==1.5
 certifi==2018.8.24
 cffi==1.14
 chardet==3.0.4
+clickhouse-driver==0.2.1
 configparser==3.5.0
 cryptography==2.2.2
 enum34==1.1.6
