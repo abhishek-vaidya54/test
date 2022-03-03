@@ -11,5 +11,6 @@ setup(
         "pytest==6.2.4",
         "factory-boy==3.2.0",
         "smalluuid==1.1.0",
+        "clickhouse-driver==0.2.1",
     ],
 )
