@@ -77,6 +77,7 @@ class Client(Base):
     )
     show_ex_id_in_app = Column(Boolean, nullable=True, default=False)
     sso_provider = Column(String(45), nullable=True)
+    salesforce_id = Column(String(255), nullable=True)
 
     # Table Constraints
     PrimaryKeyConstraint("id")
@@ -144,6 +145,7 @@ class Client(Base):
             "ia_height_unit": self.ia_height_unit,
             "ia_weight_unit": self.ia_weight_unit,
             "sso_provider": self.sso_provider,
+            "salesforce_id": self.salesforce_id,
             "db_created_at": self.db_created_at,
             "db_modified_at": self.db_modified_at,
         }
