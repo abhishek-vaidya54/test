@@ -72,8 +72,6 @@ class ExternalAdminUserFactory(factory.alchemy.SQLAlchemyModelFactory):
     id = factory.Sequence(lambda n: n)
     email = "email-{0}@email.com".format(random_str())
     username = str(uuid.uuid4())
-    # client_id = ClientFactory.id
-    # client = factory.SubFactory(ClientFactory)
     client = factory.RelatedFactory(ClientFactory)
 
     class Meta:
@@ -155,8 +153,6 @@ class ShiftsFactory(factory.alchemy.SQLAlchemyModelFactory):
     description = factory.Faker("sentence")
     override_settings = 0
     external_admin_user = factory.SubFactory(ExternalAdminUserFactory)
-    # group_administrator = factory.Faker("email")
-    # timezone = factory.fuzzy.FuzzyChoice(["US Eastern Time", "US Central Time"])
 
     class Meta:
         model = Shifts
@@ -210,7 +206,6 @@ class JobFunctionFactory(factory.alchemy.SQLAlchemyModelFactory):
     color = "Null"
     avg_package_weight = 0
     description = factory.Faker("sentence")
-    # group_administrator = factory.Faker("email")
     override_settings = 0
     lbd_indicence = 0
     lbd_indicence_rate = 0
