@@ -31,6 +31,7 @@ from sat_orm.pipeline import (
     Groups,
     UserWarehouseAssociation,
     UserRoleAssociation,
+    UserClientAssociation,
 )
 
 
@@ -67,6 +68,19 @@ class ClientFactory(factory.alchemy.SQLAlchemyModelFactory):
         sqlalchemy_session_persistence = "commit"
 
 
+class ExternalAdminUserFactory(factory.alchemy.SQLAlchemyModelFactory):
+    id = factory.Sequence(lambda n: n)
+    email = "email-{0}@email.com".format(random_str())
+    username = str(uuid.uuid4())
+    # client_id = ClientFactory.id
+    # client = factory.SubFactory(ClientFactory)
+    client = factory.RelatedFactory(ClientFactory)
+
+    class Meta:
+        model = ExternalAdminUser
+        sqlalchemy_session_persistence = "commit"
+
+
 class WarehouseFactory(factory.alchemy.SQLAlchemyModelFactory):
     """Warehouse Factory: creates a fake warehouse with its relationships if the relationships are not None"""
 
@@ -78,7 +92,7 @@ class WarehouseFactory(factory.alchemy.SQLAlchemyModelFactory):
     db_modified_at = datetime.datetime.now()
     prefered_timezone = "US/Eastern"
     display_names = factory.Sequence(lambda n: n % 2)
-    utc_op_day_start = "00:00:00"
+    utc_op_day_start = "07:00"
     week_start = factory.fuzzy.FuzzyChoice(
         ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
     )
@@ -139,8 +153,10 @@ class ShiftsFactory(factory.alchemy.SQLAlchemyModelFactory):
     db_modified_at = datetime.datetime.now()
     color = None
     description = factory.Faker("sentence")
-    group_administrator = factory.Faker("email")
-    timezone = factory.fuzzy.FuzzyChoice(["US Eastern Time", "US Central Time"])
+    override_settings = 0
+    external_admin_user = factory.SubFactory(ExternalAdminUserFactory)
+    # group_administrator = factory.Faker("email")
+    # timezone = factory.fuzzy.FuzzyChoice(["US Eastern Time", "US Central Time"])
 
     class Meta:
         model = Shifts
@@ -150,25 +166,34 @@ class ShiftsFactory(factory.alchemy.SQLAlchemyModelFactory):
 class SettingsFactory(factory.alchemy.SQLAlchemyModelFactory):
     id = factory.Sequence(lambda n: n)
     target_type = "warehouse"
-    target_id = 1
+    target_id = 53
     value = {
-        "hapticEnabled": True,
+        "handsFree": True,
+        "eulaVersion": None,
+        "enableMotion": False,
+        "hapticEnabled": False,
         "athleteEnabled": True,
         "showEngagement": True,
-        "hapticBendNumber": 100,
-        "hapticFeedbackGap": 100,
-        "hapticBendPercentile": 100,
-        "hapticFeedbackWindow": 100,
-        "hapticSingleBendWindow": 100,
-        "hapticSagAngleThreshold": 100,
-        "showHapticModal": True,
-        "showBaselineModal": True,
-        "showSafetyScoreModal": True,
-        "handsFree": True,
-        "showSafetyJudgement": True,
-        "eulaVersion": 100,
+        "enableProximity": False,
+        "showHapticModal": False,
         "enagementEnabled": True,
+        "hapticBendNumber": 3,
+        "enableTemperature": True,
+        "exposureRSSILimit": -48,
+        "hapticFeedbackGap": 0,
+        "showBaselineModal": False,
+        "showSafetyJudgement": True,
+        "hapticBendPercentile": 50,
+        "hapticFeedbackWindow": 600000,
+        "showSafetyScoreModal": False,
+        "exposureHapticEnabled": True,
+        "exposureHapticRepeatMS": 10000,
+        "hapticSingleBendWindow": 600,
+        "hapticSagAngleThreshold": 65,
+        "exposureHapticSuppressMS": 30000,
     }
+    db_created_at = datetime.datetime.now()
+    external_admin_user = factory.SubFactory(ExternalAdminUserFactory)
 
     class Meta:
         model = Setting
@@ -185,7 +210,8 @@ class JobFunctionFactory(factory.alchemy.SQLAlchemyModelFactory):
     color = "Null"
     avg_package_weight = 0
     description = factory.Faker("sentence")
-    group_administrator = factory.Faker("email")
+    # group_administrator = factory.Faker("email")
+    override_settings = 0
     lbd_indicence = 0
     lbd_indicence_rate = 0
     max_package_weight = 0
@@ -218,18 +244,6 @@ class IndustrialAthleteFactory(factory.alchemy.SQLAlchemyModelFactory):
         custom_client_id = None
 
 
-class ExternalAdminUserFactory(factory.alchemy.SQLAlchemyModelFactory):
-    id = factory.Sequence(lambda n: n)
-    email = "email-{0}@email.com".format(random_str())
-    username = str(uuid.uuid4())
-    client_id = ClientFactory.id
-    client = factory.SubFactory(ClientFactory)
-
-    class Meta:
-        model = ExternalAdminUser
-        sqlalchemy_session_persistence = "commit"
-
-
 class UserWarehouseAssociationFactory(factory.alchemy.SQLAlchemyModelFactory):
     external_admin_user = factory.SubFactory(ExternalAdminUserFactory)
     warehouse = factory.SubFactory(WarehouseFactory)
@@ -245,6 +259,15 @@ class UserRoleAssociationFactory(factory.alchemy.SQLAlchemyModelFactory):
 
     class Meta:
         model = UserRoleAssociation
+        sqlalchemy_session_persistence = "commit"
+
+
+class UserClientAssociationFactory(factory.alchemy.SQLAlchemyModelFactory):
+    external_admin_user = factory.SubFactory(ExternalAdminUserFactory)
+    client = factory.SubFactory(ClientFactory)
+
+    class Meta:
+        model = UserClientAssociation
         sqlalchemy_session_persistence = "commit"
 
 
