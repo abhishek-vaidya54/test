@@ -1,3 +1,4 @@
+from sat_orm.pipeline_orm.pipeline_base import Base
 import datetime
 import json
 import logging
@@ -12,7 +13,6 @@ from sqlalchemy import ForeignKey, Column, String, Integer, DateTime, desc
 from sqlalchemy.orm import relationship, validates
 
 logger = logging.getLogger(__name__)
-from sat_orm.pipeline_orm.pipeline_base import Base
 
 
 class AthleteUploadStatus(Base):
@@ -21,10 +21,12 @@ class AthleteUploadStatus(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     username = Column(String(255), nullable=False)
     processed = Column(Integer, nullable=False)
+    batch = Column(Integer, nullable=False)
     total = Column(Integer, nullable=False)
     client_id = Column(Integer, nullable=False)
     connection_id = Column(String(30), nullable=True)
-    db_created_at = Column(DateTime, default=datetime.datetime.utcnow, nullable=False)
+    db_created_at = Column(
+        DateTime, default=datetime.datetime.utcnow, nullable=False)
     db_updated_at = Column(
         DateTime,
         default=datetime.datetime.utcnow,
@@ -37,6 +39,7 @@ class AthleteUploadStatus(Base):
             "id": getattr(self, "id"),
             "username": getattr(self, "username"),
             "processed": getattr(self, "processed"),
+            "batch": getattr(self, "batch"),
             "total": getattr(self, "total"),
             "client_id": getattr(self, "client_id"),
             "connection_id": getattr(self, "connection_id"),
