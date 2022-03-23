@@ -118,6 +118,8 @@ class IndustrialAthlete(Base):
     def validate_shift_per_week(self, key, shift_per_week):
         if shift_per_week == None:
             raise Exception("shift_per_week cannot be Null")
+        elif shift_per_week < 0:
+            raise Exception("shift_per_week cannot be negative")
         else:
             return shift_per_week
 
