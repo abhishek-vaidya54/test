@@ -37,6 +37,7 @@ import sat_orm.constants as constants
 from sat_orm.pipeline_orm.utilities import utils
 from sat_orm.pipeline_orm.utilities import ia_utils, client_utils
 from sat_orm.pipeline_orm.utilities.utils import build_error, check_errors_and_return
+from utilities.common import utils
 
 
 class IndustrialAthlete(Base):
@@ -117,7 +118,9 @@ class IndustrialAthlete(Base):
     @validates("shift_per_week")
     def validate_shift_per_week(self, key, shift_per_week):
         if shift_per_week == None:
-            raise Exception("shift_per_week cannot be Null")
+            utils.return_error_response("shift_per_week cannot be Null")
+        elif shift_per_week < 0:
+            utils.return_error_response("shift_per_week cannot be negative")
         else:
             return shift_per_week
 
