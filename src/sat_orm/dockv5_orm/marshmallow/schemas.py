@@ -4,6 +4,7 @@ from datetime import datetime
 
 from sat_orm.dockv5_orm.dock_phase import DockPhase, Config
 from sat_orm.dockv5_orm.firmware_group import FirmwareGroup
+from sat_orm.dockv5_orm.firmware import Firmware
 
 
 def convert_date(date_input):
@@ -20,6 +21,13 @@ class DockPhaseSchema(SQLAlchemyAutoSchema):
 class FirmwareGroupSchema(SQLAlchemyAutoSchema):
     class Meta:
         model = FirmwareGroup
+        include_fk = True
+        load_instance = True
+
+
+class FirmwareSchema(SQLAlchemyAutoSchema):
+    class Meta:
+        model = Firmware
         include_fk = True
         load_instance = True
 
