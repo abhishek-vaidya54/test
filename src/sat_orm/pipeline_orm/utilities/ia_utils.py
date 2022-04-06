@@ -61,10 +61,6 @@ def is_valid_external_id(
         # check if comparing against same IA
         if str(existing_ia_id) == str(existing_ia.id):
             return True, None
-        if existing_ia.termination_date:
-            return False, duplicate_external_id_with_termination_date(
-                existing_ia.termination_date
-            )
         else:
             return False, constants.DUPLICATE_EXTERNAL_ID_MESSAGE
 
@@ -91,7 +87,8 @@ def is_valid_warehouse(connection, warehouse_id, client_id=None):
     Returns True if it is a valid warehouse
     Returns False if it is not
     """
-    warehouse = warehouse_queries.get_warehouse(connection, warehouse_id, client_id)
+    warehouse = warehouse_queries.get_warehouse(
+        connection, warehouse_id, client_id)
     return bool(warehouse)
 
 
