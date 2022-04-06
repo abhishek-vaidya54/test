@@ -87,8 +87,7 @@ def is_valid_warehouse(connection, warehouse_id, client_id=None):
     Returns True if it is a valid warehouse
     Returns False if it is not
     """
-    warehouse = warehouse_queries.get_warehouse(
-        connection, warehouse_id, client_id)
+    warehouse = warehouse_queries.get_warehouse(connection, warehouse_id, client_id)
     return bool(warehouse)
 
 
