@@ -148,7 +148,7 @@ class Client(Base):
             "ia_weight_unit": self.ia_weight_unit,
             "sso_provider": self.sso_provider,
             "salesforce_id": self.salesforce_id,
-            "vertical": self.salesforce_id,
+            "vertical": self.vertical,
             "sub_pillar": self.sub_pillar,
             "db_created_at": self.db_created_at,
             "db_modified_at": self.db_modified_at,
