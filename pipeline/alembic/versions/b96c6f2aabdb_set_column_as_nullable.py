@@ -17,8 +17,12 @@ depends_on = None
 
 
 def upgrade():
-    op.alter_column("client", "salesforce_id", nullable=True)
+    op.alter_column(
+        "client", "salesforce_id", existing_type=sa.String(length=45), nullable=True
+    )
 
 
 def downgrade():
-    op.alter_column("client", "salesforce_id", nullable=False)
+    op.alter_column(
+        "client", "salesforce_id", existing_type=sa.String(length=45), nullable=False
+    )
