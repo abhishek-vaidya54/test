@@ -254,6 +254,7 @@ class NotificationSchema(SQLAlchemyAutoSchema):
         # include_relationships = True
         load_instance = True
 
+
 class ReportSubscribeSchema(SQLAlchemyAutoSchema):
     class Meta:
         model = ReportSubscribe

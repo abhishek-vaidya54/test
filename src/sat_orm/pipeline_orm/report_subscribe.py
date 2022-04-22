@@ -9,7 +9,6 @@ from sqlalchemy import (
     UnicodeText,
     PrimaryKeyConstraint,
     Enum,
-
 )
 from sqlalchemy.orm import relationship
 
@@ -24,16 +23,19 @@ class ReportSubscribe(Base):
     subscription_type = Column(
         Enum("Daily", "Weekly", "Monthly"),
         nullable=False,
-        default="Daily",)
-    subscribed_by = Column(Integer, ForeignKey("external_admin_user.id"), nullable=False)
+        default="Daily",
+    )
+    subscribed_by = Column(
+        Integer, ForeignKey("external_admin_user.id"), nullable=False
+    )
     db_created_at = Column(
         DateTime,
-        default=datetime.datetime.utcnow, 
+        default=datetime.datetime.utcnow,
         nullable=False,
     )
     db_modified_at = Column(
         DateTime,
-        default=datetime.datetime.utcnow, 
+        default=datetime.datetime.utcnow,
         onupdate=datetime.datetime.utcnow,
         nullable=False,
     )
@@ -51,5 +53,3 @@ class ReportSubscribe(Base):
             "db_created_at": self.db_created_at,
             "db_modified_at": self.db_modified_at,
         }
-
-
