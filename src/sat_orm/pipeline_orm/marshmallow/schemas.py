@@ -15,6 +15,7 @@ from sat_orm.pipeline_orm.user_warehouse_association import UserWarehouseAssocia
 from sat_orm.pipeline_orm.user_role_association import UserRoleAssociation
 from sat_orm.pipeline_orm.user_client_association import UserClientAssociation
 from sat_orm.pipeline_orm.notification import Notification
+from sat_orm.pipeline_orm.report_subscribe import ReportSubscribe
 
 
 def convert_date(date_input):
@@ -251,4 +252,11 @@ class NotificationSchema(SQLAlchemyAutoSchema):
         model = Notification
         include_fk = True
         # include_relationships = True
+        load_instance = True
+
+
+class ReportSubscribeSchema(SQLAlchemyAutoSchema):
+    class Meta:
+        model = ReportSubscribe
+        include_fk = True
         load_instance = True
