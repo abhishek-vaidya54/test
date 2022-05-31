@@ -55,6 +55,18 @@ class ReportSubscribe(Base):
     # Table Constraints
     PrimaryKeyConstraint("id")
 
+    # Relationships
+
+    warehouse = relationship(
+        "ReportSubscribeWarehouseAssociation", back_populates="report_subscribe"
+    )
+    job_function = relationship(
+        "ReportSubscribeJobFunctionAssociation", back_populates="report_subscribe"
+    )
+    shift = relationship(
+        "ReportSubscribeShiftAssociation", back_populates="report_subscribe"
+    )
+
     def as_dict(self):
         return {
             "id": self.id,

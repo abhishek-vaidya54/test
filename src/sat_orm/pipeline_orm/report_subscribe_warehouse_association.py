@@ -1,4 +1,4 @@
-from sat_orm.dockv5_orm.dockv5_base import Base
+from sat_orm.pipeline_orm.pipeline_base import Base
 import datetime
 from sqlalchemy import Column, Integer, DateTime, ForeignKey
 from sqlalchemy.orm import relationship
@@ -18,7 +18,4 @@ class ReportSubscribeWarehouseAssociation(Base):
 
     # Relationships
 
-    report_subscribe = relationship(
-        "ReportSubscribe", back_populates="report_subscribe"
-    )
-    warehouse = relationship("Warehouse", back_populates="warehouse")
+    report_subscribe = relationship("ReportSubscribe", back_populates="warehouse")

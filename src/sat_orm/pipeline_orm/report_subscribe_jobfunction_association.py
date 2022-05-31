@@ -1,4 +1,4 @@
-from sat_orm.dockv5_orm.dockv5_base import Base
+from sat_orm.pipeline_orm.pipeline_base import Base
 import datetime
 from sqlalchemy import Column, Integer, DateTime, ForeignKey
 from sqlalchemy.orm import relationship
@@ -17,8 +17,4 @@ class ReportSubscribeJobFunctionAssociation(Base):
     db_modified_at = Column(DateTime, default=datetime.datetime.utcnow, nullable=False)
 
     # Relationships
-
-    report_subscribe = relationship(
-        "ReportSubscribe", back_populates="report_subscribe"
-    )
-    job_function = relationship("JobFunction", back_populates="job_function")
+    report_subscribe = relationship("ReportSubscribe", back_populates="job_function")
