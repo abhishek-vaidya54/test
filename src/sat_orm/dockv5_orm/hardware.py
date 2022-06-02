@@ -8,6 +8,7 @@ class Hardware(Base):
     __tablename__ = "hardware"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
+    name = Column(String(255), nullable=False)
     version = Column(String(255), nullable=False)
     db_created_at = Column(DateTime, default=datetime.datetime.utcnow, nullable=False)
 
@@ -15,4 +16,8 @@ class Hardware(Base):
     firmwares = relationship("Firmware", back_populates="hardware")
 
     def as_dict(self):
-        return {"id": getattr(self, "id"), "version": getattr(self, "version")}
+        return {
+            "id": getattr(self, "id"),
+            "name": getattr(self, "name"),
+            "version": getattr(self, "version"),
+        }
