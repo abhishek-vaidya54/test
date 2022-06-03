@@ -17,4 +17,6 @@ class ReportSubscribeJobFunctionAssociation(Base):
     db_modified_at = Column(DateTime, default=datetime.datetime.utcnow, nullable=False)
 
     # Relationships
-    report_subscribe = relationship("ReportSubscribe", back_populates="job_function")
+    report_subscribe = relationship("ReportSubscribe", back_populates="job_functions")
+
+    job_function = relationship("JobFunction", backref="report_subscribe")

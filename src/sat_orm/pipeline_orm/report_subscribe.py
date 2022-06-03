@@ -57,14 +57,17 @@ class ReportSubscribe(Base):
 
     # Relationships
 
-    warehouse = relationship(
-        "ReportSubscribeWarehouseAssociation", back_populates="report_subscribe"
+    warehouses = relationship(
+        "ReportSubscribeWarehouseAssociation",
+        back_populates="report_subscribe",
     )
-    job_function = relationship(
-        "ReportSubscribeJobFunctionAssociation", back_populates="report_subscribe"
+    job_functions = relationship(
+        "ReportSubscribeJobFunctionAssociation",
+        back_populates="report_subscribe",
     )
-    shift = relationship(
-        "ReportSubscribeShiftAssociation", back_populates="report_subscribe"
+    shifts = relationship(
+        "ReportSubscribeShiftAssociation",
+        back_populates="report_subscribe",
     )
 
     def as_dict(self):

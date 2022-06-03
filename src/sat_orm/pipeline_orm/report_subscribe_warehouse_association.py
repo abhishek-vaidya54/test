@@ -18,4 +18,6 @@ class ReportSubscribeWarehouseAssociation(Base):
 
     # Relationships
 
-    report_subscribe = relationship("ReportSubscribe", back_populates="warehouse")
+    report_subscribe = relationship("ReportSubscribe", back_populates="warehouses")
+
+    warehouse = relationship("Warehouse", backref="report_subscribe")

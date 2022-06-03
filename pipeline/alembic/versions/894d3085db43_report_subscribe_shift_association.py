@@ -41,11 +41,13 @@ def upgrade():
             ["report_subscribe_id"],
             ["report_subscribe.id"],
             name="fk_report_subscribe_shift_assoc_report_subscribe",
+            ondelete="CASCADE",
         ),
         sa.ForeignKeyConstraint(
             ["shift_id"],
             ["shifts.id"],
             name="fk_report_subscribe_shift_assoc_shift",
+            ondelete="CASCADE",
         ),
     )
 

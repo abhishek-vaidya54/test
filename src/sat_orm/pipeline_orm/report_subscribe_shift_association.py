@@ -18,4 +18,6 @@ class ReportSubscribeShiftAssociation(Base):
 
     # Relationships
 
-    report_subscribe = relationship("ReportSubscribe", back_populates="shift")
+    report_subscribe = relationship("ReportSubscribe", back_populates="shifts")
+
+    shift = relationship("Shifts", backref="report_subscribe")
