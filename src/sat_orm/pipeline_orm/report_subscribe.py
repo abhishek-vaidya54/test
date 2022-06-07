@@ -5,6 +5,7 @@ from sqlalchemy import (
     Column,
     Integer,
     DateTime,
+    Time,
     Unicode,
     UnicodeText,
     PrimaryKeyConstraint,
@@ -28,6 +29,17 @@ class ReportSubscribe(Base):
     subscribed_by = Column(
         Integer, ForeignKey("external_admin_user.id"), nullable=False
     )
+    day_of_delivery = Column(
+        Enum(
+            "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"
+        ),
+        nullable=True,
+    )
+    time_of_delivery = Column(
+        Time,
+        default=datetime.time(),
+        nullable=False,
+    )
     db_created_at = Column(
         DateTime,
         default=datetime.datetime.utcnow,
@@ -43,6 +55,21 @@ class ReportSubscribe(Base):
     # Table Constraints
     PrimaryKeyConstraint("id")
 
+    # Relationships
+
+    warehouses = relationship(
+        "ReportSubscribeWarehouseAssociation",
+        back_populates="report_subscribe",
+    )
+    job_functions = relationship(
+        "ReportSubscribeJobFunctionAssociation",
+        back_populates="report_subscribe",
+    )
+    shifts = relationship(
+        "ReportSubscribeShiftAssociation",
+        back_populates="report_subscribe",
+    )
+
     def as_dict(self):
         return {
             "id": self.id,
@@ -52,4 +79,6 @@ class ReportSubscribe(Base):
             "subscribed_by": self.subscribed_by,
             "db_created_at": self.db_created_at,
             "db_modified_at": self.db_modified_at,
+            "time_of_delivery": self.time_of_delivery,
+            "day_of_delivery": self.day_of_delivery,
         }

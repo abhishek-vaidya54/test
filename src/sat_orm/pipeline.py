@@ -26,6 +26,15 @@ from sat_orm.pipeline_orm.user_role_association import UserRoleAssociation
 from sat_orm.pipeline_orm.user_client_association import UserClientAssociation
 from sat_orm.pipeline_orm.notification import Notification
 from sat_orm.pipeline_orm.report_subscribe import ReportSubscribe
+from sat_orm.pipeline_orm.report_subscribe_warehouse_association import (
+    ReportSubscribeWarehouseAssociation,
+)
+from sat_orm.pipeline_orm.report_subscribe_jobfunction_association import (
+    ReportSubscribeJobFunctionAssociation,
+)
+from sat_orm.pipeline_orm.report_subscribe_shift_association import (
+    ReportSubscribeShiftAssociation,
+)
 
 from sat_orm.pipeline_orm.marshmallow import schemas as Schemas
 
