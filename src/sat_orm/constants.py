@@ -98,6 +98,8 @@ INVALID_DOCK_FIRMWARE_VERSION_MESSAGE = "Invalid dock firmware version."
 
 EMPTY_STRING_ERROR_MESSAGE = "Param is empty or invalid."
 
+S3_EMPTY_STRING_ERROR_MESSAGE = "S3_URL is empty or invalid."
+
 INVALID_GROUP_ADMIN_MESSAGE = "Invalid group administrator."
 
 NO_PERMISSION_MESSAGE = "You don't have the required permissions."

@@ -14,6 +14,8 @@ class FirmwareGroup(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String(255), nullable=False)
     description = Column(String(255), nullable=False)
+    status = Column(String(255), nullable=False, server_default="active")
+    deleted_at = Column(DateTime, nullable=True)
     db_created_at = Column(DateTime, default=datetime.datetime.utcnow, nullable=False)
 
     # Relationships

@@ -12,7 +12,7 @@ class DeviceType(Base):
     db_created_at = Column(DateTime, default=datetime.datetime.utcnow, nullable=False)
 
     # Relationships
-    firmwares = relationship("Firmware", back_populates="device_type")
+    hardwares = relationship("Hardware", back_populates="device_type")
 
     def as_dict(self):
         return {"id": getattr(self, "id"), "name": getattr(self, "name")}
