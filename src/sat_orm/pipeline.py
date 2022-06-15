@@ -25,6 +25,7 @@ from sat_orm.pipeline_orm.user_warehouse_association import UserWarehouseAssocia
 from sat_orm.pipeline_orm.user_role_association import UserRoleAssociation
 from sat_orm.pipeline_orm.user_client_association import UserClientAssociation
 from sat_orm.pipeline_orm.notification import Notification
+from sat_orm.pipeline_orm.email_logs import EmailLogs
 from sat_orm.pipeline_orm.report_subscribe import ReportSubscribe
 from sat_orm.pipeline_orm.report_subscribe_warehouse_association import (
     ReportSubscribeWarehouseAssociation,
