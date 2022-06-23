@@ -19,7 +19,7 @@ depends_on = None
 def upgrade():
     op.add_column(
         "firmware_group",
-        sa.Column("status", sa.String(length=90), server_default="true"),
+        sa.Column("status", sa.String(length=90), server_default="active"),
     )
     op.add_column(
         "firmware_group",
