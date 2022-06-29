@@ -1,4 +1,4 @@
-import datetime
+import datetime, uuid
 
 from sqlalchemy import (
     ForeignKey,
@@ -17,7 +17,7 @@ class ResetPassword(Base):
     __tablename__ = "reset_password"
     id = Column(Integer, primary_key=True, autoincrement=True)
     user_id = Column(Integer, ForeignKey("external_admin_user.id"), nullable=False)
-    ott = Column(UnicodeText, nullable=False)
+    ott = Column(UnicodeText, nullable=False, default=str(uuid.uuid4))
     db_created_at = Column(
         DateTime,
         default=datetime.datetime.utcnow,

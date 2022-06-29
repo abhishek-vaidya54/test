@@ -7,7 +7,7 @@ Create Date: 2022-06-29 17:34:31.446332
 """
 from alembic import op
 import sqlalchemy as sa
-import datetime
+import datetime, uuid
 
 
 # revision identifiers, used by Alembic.
@@ -27,7 +27,7 @@ def upgrade():
             sa.ForeignKey("external_admin_user.id"),
             nullable=False,
         ),
-        sa.Column("ott", sa.UnicodeText(), nullable=False),
+        sa.Column("ott", sa.UnicodeText(), nullable=False, default=str(uuid.uuid4)),
         sa.Column(
             "db_created_at",
             sa.DateTime,
