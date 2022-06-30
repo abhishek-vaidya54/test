@@ -36,6 +36,7 @@ from sat_orm.pipeline_orm.report_subscribe_jobfunction_association import (
 from sat_orm.pipeline_orm.report_subscribe_shift_association import (
     ReportSubscribeShiftAssociation,
 )
+from sat_orm.pipeline_orm.reset_password import ResetPassword
 
 from sat_orm.pipeline_orm.marshmallow import schemas as Schemas
 

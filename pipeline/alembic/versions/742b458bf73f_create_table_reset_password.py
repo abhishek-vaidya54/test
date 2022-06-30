@@ -27,7 +27,7 @@ def upgrade():
             sa.ForeignKey("external_admin_user.id"),
             nullable=False,
         ),
-        sa.Column("ott", sa.UnicodeText(), nullable=False, default=str(uuid.uuid4)),
+        sa.Column("ott", sa.UnicodeText(), nullable=False, default=uuid.uuid4),
         sa.Column(
             "db_created_at",
             sa.DateTime,
