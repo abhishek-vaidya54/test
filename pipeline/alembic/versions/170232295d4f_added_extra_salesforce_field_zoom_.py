@@ -10,10 +10,11 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '170232295d4f'
-down_revision = '742b458bf73f'
+revision = "170232295d4f"
+down_revision = "742b458bf73f"
 branch_labels = None
 depends_on = None
+
 
 def upgrade():
     op.add_column(
@@ -22,11 +23,11 @@ def upgrade():
             "zoom_info_industry",
             sa.String(length=255),
             nullable=True,
-        ))
+        ),
+    )
     op.alter_column(
         "client", "sub_pillar", existing_type=sa.String(length=255), nullable=True
     )
-
 
 
 def downgrade():
@@ -34,5 +35,3 @@ def downgrade():
     op.alter_column(
         "client", "sub_pillar", existing_type=sa.String(length=45), nullable=True
     )
-
-

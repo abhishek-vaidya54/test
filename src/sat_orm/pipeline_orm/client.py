@@ -151,7 +151,7 @@ class Client(Base):
             "salesforce_id": self.salesforce_id,
             "vertical": self.vertical,
             "sub_pillar": self.sub_pillar,
-            "zoom_info_industry":self.zoom_info_industry,
+            "zoom_info_industry": self.zoom_info_industry,
             "db_created_at": self.db_created_at,
             "db_modified_at": self.db_modified_at,
         }
