@@ -80,6 +80,7 @@ class Client(Base):
     salesforce_id = Column(String(255), nullable=True)
     vertical = Column(String(255), nullable=True)
     sub_pillar = Column(String(255), nullable=True)
+    zoom_info_industry = Column(String(255), nullable=True)
 
     # Table Constraints
     PrimaryKeyConstraint("id")
@@ -150,6 +151,7 @@ class Client(Base):
             "salesforce_id": self.salesforce_id,
             "vertical": self.vertical,
             "sub_pillar": self.sub_pillar,
+            "zoom_info_industry": self.zoom_info_industry,
             "db_created_at": self.db_created_at,
             "db_modified_at": self.db_modified_at,
         }
