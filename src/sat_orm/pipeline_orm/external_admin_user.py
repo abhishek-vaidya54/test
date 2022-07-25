@@ -2,7 +2,16 @@
 import datetime
 
 # Third Party Imports
-from sqlalchemy import ForeignKey, Column, String, Integer, DateTime, desc, event
+from sqlalchemy import (
+    ForeignKey,
+    Column,
+    String,
+    Integer,
+    DateTime,
+    desc,
+    event,
+    Boolean,
+)
 from sqlalchemy.orm import relationship, validates
 
 # Local Application Imports
@@ -11,6 +20,7 @@ from sat_orm.pipeline_orm.client import Client
 from sat_orm.pipeline_orm.user_warehouse_association import UserWarehouseAssociation
 from sat_orm.pipeline_orm.user_role_association import UserRoleAssociation
 from sat_orm.pipeline_orm.shifts import Shifts
+from sat_orm.pipeline_orm.industrial_athlete import IndustrialAthlete
 from sat_orm.pipeline_orm.user_client_association import UserClientAssociation
 from sat_orm.pipeline_orm.pipeline_base import Base
 import sat_orm.constants as constants
@@ -27,9 +37,12 @@ class ExternalAdminUser(Base):
     __tablename__ = "external_admin_user"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-
     email = Column(String(255), nullable=False)
     username = Column(String(255), nullable=False)
+    first_name = Column(String(255), nullable=False)
+    last_name = Column(String(255), nullable=False)
+    is_supervisor = Column(Boolean, nullable=True, default=False)
+
     account_status = Column(String(255), nullable=False, server_default="inactive")
 
     #  Table relationships
@@ -37,6 +50,7 @@ class ExternalAdminUser(Base):
     warehouses = relationship(UserWarehouseAssociation, back_populates=__tablename__)
     roles = relationship(UserRoleAssociation, back_populates=__tablename__)
     shifts = relationship(Shifts, back_populates=__tablename__)
+    supervisors = relationship(IndustrialAthlete, back_populates="supervisors")
 
     deleted_at = Column(DateTime, nullable=True)
     db_created_at = Column(DateTime, default=datetime.datetime.utcnow, nullable=False)
@@ -66,6 +80,9 @@ class ExternalAdminUser(Base):
             "id": self.id,
             "email": self.email,
             "username": self.username,
+            "first_name": self.first_name,
+            "last_name": self.last_name,
+            "is_supervisor": self.is_supervisor,
             "account_status": self.account_status,
             "deleted_at": self.deleted_at,
             "db_created_at": self.db_created_at,
