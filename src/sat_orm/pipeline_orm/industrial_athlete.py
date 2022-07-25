@@ -58,9 +58,7 @@ class IndustrialAthlete(Base):
     termination_date = Column(DateTime, nullable=True)
     warehouse_id = Column(Integer, ForeignKey("warehouse.id"), nullable=False)
     shift_id = Column(Integer, ForeignKey("shifts.id"), nullable=False)
-    supervisor_id = Column(
-        Integer, ForeignKey("external_admin_user.id"), nullable=False
-    )
+    supervisor_id = Column(Integer, ForeignKey("external_admin_user.id"), nullable=True)
     trained = Column(Boolean, nullable=True, default=False)
     harness_provided = Column(Boolean, nullable=True, default=False)
 
