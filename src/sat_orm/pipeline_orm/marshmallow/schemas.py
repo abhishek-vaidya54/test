@@ -166,6 +166,7 @@ class IndustrialAthleteSchema(SQLAlchemyAutoSchema):
     lastModified = fields.Function(
         lambda obj: convert_date(obj.db_modified_at) if obj.db_modified_at else None
     )
+    supervisorId = fields.Function(lambda obj: obj.supervisor_id)
 
     @post_dump(pass_many=True)
     def add_fields(self, data, many, **kwargs):
