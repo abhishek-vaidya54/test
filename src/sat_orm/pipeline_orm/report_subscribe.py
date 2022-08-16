@@ -42,6 +42,11 @@ class ReportSubscribe(Base):
         nullable=False,
     )
     timezone = Column(String(length=30), nullable=False)
+    utc_time_of_delivery = Column(
+        Time,
+        default=datetime.time(),
+        nullable=False,
+    )
     db_created_at = Column(
         DateTime,
         default=datetime.datetime.utcnow,
