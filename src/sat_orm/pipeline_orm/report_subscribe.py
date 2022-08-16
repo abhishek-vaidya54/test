@@ -10,6 +10,7 @@ from sqlalchemy import (
     UnicodeText,
     PrimaryKeyConstraint,
     Enum,
+    String,
 )
 from sqlalchemy.orm import relationship
 
@@ -36,6 +37,12 @@ class ReportSubscribe(Base):
         nullable=True,
     )
     time_of_delivery = Column(
+        Time,
+        default=datetime.time(),
+        nullable=False,
+    )
+    timezone = Column(String(length=30), nullable=False)
+    utc_time_of_delivery = Column(
         Time,
         default=datetime.time(),
         nullable=False,
