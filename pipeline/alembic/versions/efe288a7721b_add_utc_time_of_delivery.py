@@ -18,7 +18,6 @@ depends_on = None
 
 
 def upgrade():
-    op.drop_column("report_subscribe", "utc_time_of_delivery")
     op.add_column(
         "report_subscribe",
         sa.Column(
