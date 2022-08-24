@@ -136,53 +136,6 @@ class CasbinRuleSchema(SQLAlchemyAutoSchema):
 #     #         raise ValidationError("Pin codes must contain only digits.") from error
 
 
-class IndustrialAthleteSchema(SQLAlchemyAutoSchema):
-    warehouse = fields.Nested(WarehouseSchema(only=("id", "name")))
-    shifts = fields.Nested(ShiftsSchema(only=("id", "name")))
-    job_function = fields.Nested(JobFunctionSchema(only=("id", "name")))
-    client = fields.Nested(ClientSchema(only=("id", "name")))
-
-    firstName = fields.Function(lambda obj: obj.first_name)
-    lastName = fields.Function(lambda obj: obj.last_name)
-    shift_per_week = fields.Function(lambda obj: obj.shift_per_week)
-    trained = fields.Function(lambda obj: obj.trained)
-    harness_provided = fields.Function(lambda obj: obj.harness_provided)
-    externalId = fields.Function(lambda obj: obj.external_id)
-    sex = fields.Function(lambda obj: obj.gender)
-    clientId = fields.Function(lambda obj: obj.client.id)
-    warehouseId = fields.Function(lambda obj: obj.warehouse_id)
-    shiftId = fields.Function(lambda obj: obj.shift_id)
-    shift = fields.Function(lambda obj: obj.shifts.name if obj.shifts else None)
-    jobFunctionId = fields.Function(lambda obj: obj.job_function_id)
-    jobFunction = fields.Function(
-        lambda obj: obj.job_function.name if obj.job_function else None
-    )
-    hireDate = fields.Function(
-        lambda obj: convert_date(obj.hire_date) if obj.hire_date else None
-    )
-    terminationDate = fields.Function(
-        lambda obj: convert_date(obj.termination_date) if obj.termination_date else None
-    )
-    lastModified = fields.Function(
-        lambda obj: convert_date(obj.db_modified_at) if obj.db_modified_at else None
-    )
-    supervisorId = fields.Function(lambda obj: obj.supervisor_id)
-
-    @post_dump(pass_many=True)
-    def add_fields(self, data, many, **kwargs):
-        for key in ("client", "warehouse"):
-            if key in data:
-                data[key] = data[key]["name"] if data.get(key) else None
-
-        return data
-
-    class Meta:
-        model = IndustrialAthlete
-        include_fk = True
-        include_relationships = True
-        load_instance = True
-
-
 class UserWarehouseAssociationSchema(SQLAlchemyAutoSchema):
     warehouse = fields.Nested(WarehouseSchema(only=("id", "name")))
 
@@ -260,4 +213,52 @@ class ReportSubscribeSchema(SQLAlchemyAutoSchema):
     class Meta:
         model = ReportSubscribe
         include_fk = True
+        load_instance = True
+
+
+class IndustrialAthleteSchema(SQLAlchemyAutoSchema):
+    warehouse = fields.Nested(WarehouseSchema(only=("id", "name")))
+    shifts = fields.Nested(ShiftsSchema(only=("id", "name")))
+    job_function = fields.Nested(JobFunctionSchema(only=("id", "name")))
+    client = fields.Nested(ClientSchema(only=("id", "name")))
+    supervisor = fields.Nested(ExternalAdminUserSchema(only=("id", "email")))
+
+    firstName = fields.Function(lambda obj: obj.first_name)
+    lastName = fields.Function(lambda obj: obj.last_name)
+    shift_per_week = fields.Function(lambda obj: obj.shift_per_week)
+    trained = fields.Function(lambda obj: obj.trained)
+    harness_provided = fields.Function(lambda obj: obj.harness_provided)
+    externalId = fields.Function(lambda obj: obj.external_id)
+    sex = fields.Function(lambda obj: obj.gender)
+    clientId = fields.Function(lambda obj: obj.client.id)
+    warehouseId = fields.Function(lambda obj: obj.warehouse_id)
+    shiftId = fields.Function(lambda obj: obj.shift_id)
+    shift = fields.Function(lambda obj: obj.shifts.name if obj.shifts else None)
+    jobFunctionId = fields.Function(lambda obj: obj.job_function_id)
+    jobFunction = fields.Function(
+        lambda obj: obj.job_function.name if obj.job_function else None
+    )
+    hireDate = fields.Function(
+        lambda obj: convert_date(obj.hire_date) if obj.hire_date else None
+    )
+    terminationDate = fields.Function(
+        lambda obj: convert_date(obj.termination_date) if obj.termination_date else None
+    )
+    lastModified = fields.Function(
+        lambda obj: convert_date(obj.db_modified_at) if obj.db_modified_at else None
+    )
+    supervisorId = fields.Function(lambda obj: obj.supervisor_id)
+
+    @post_dump(pass_many=True)
+    def add_fields(self, data, many, **kwargs):
+        for key in ("client", "warehouse"):
+            if key in data:
+                data[key] = data[key]["name"] if data.get(key) else None
+
+        return data
+
+    class Meta:
+        model = IndustrialAthlete
+        include_fk = True
+        include_relationships = True
         load_instance = True
