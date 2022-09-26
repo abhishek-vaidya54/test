@@ -1,6 +1,6 @@
 import os
 import pytest
-from sqlalchemy import create_engine, func
+from sqlalchemy import func
 from sqlalchemy.orm import sessionmaker
 from sat_orm.dockv5_factories import DockPhaseFactory, ConfigFactory
 from sat_orm.test.test_database.test_database_setup import create_test_db

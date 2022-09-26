@@ -69,3 +69,4 @@ def session(engine):
     session.close()
     transaction.rollback()
     connection.close()
+    engine.dispose()

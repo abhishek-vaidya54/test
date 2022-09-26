@@ -5,7 +5,7 @@ import uuid
 
 # Third Party Import
 import pytest
-from sqlalchemy import create_engine, func
+from sqlalchemy import func
 from sqlalchemy.orm import sessionmaker
 import time
 import copy

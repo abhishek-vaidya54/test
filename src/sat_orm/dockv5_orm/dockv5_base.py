@@ -51,6 +51,7 @@ def get_session():
     yield db_session
     db_session.remove()
     connection.close()
+    engine.dispose()
 
 
 Base = declarative_base()
