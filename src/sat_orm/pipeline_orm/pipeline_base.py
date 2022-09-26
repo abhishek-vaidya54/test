@@ -70,6 +70,7 @@ def get_session():
     # finally:
     db_session.remove()
     connection.close()
+    engine.dispose()
 
 
 Base = declarative_base()

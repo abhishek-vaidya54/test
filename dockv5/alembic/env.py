@@ -83,6 +83,8 @@ def run_migrations_online():
 
         with context.begin_transaction():
             context.run_migrations()
+        connection.close()
+    connectable.dispose()
 
 
 if context.is_offline_mode():
