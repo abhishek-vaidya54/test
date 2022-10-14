@@ -221,7 +221,7 @@ class IndustrialAthleteSchema(SQLAlchemyAutoSchema):
     shifts = fields.Nested(ShiftsSchema(only=("id", "name")))
     job_function = fields.Nested(JobFunctionSchema(only=("id", "name")))
     client = fields.Nested(ClientSchema(only=("id", "name")))
-    supervisors = fields.Nested(ExternalAdminUserSchema(only=("id", "email")))
+    supervisor = fields.Nested(ExternalAdminUserSchema(only=("id", "email")))
 
     firstName = fields.Function(lambda obj: obj.first_name)
     lastName = fields.Function(lambda obj: obj.last_name)
@@ -246,9 +246,6 @@ class IndustrialAthleteSchema(SQLAlchemyAutoSchema):
     )
     lastModified = fields.Function(
         lambda obj: convert_date(obj.db_modified_at) if obj.db_modified_at else None
-    )
-    supervisor = fields.Function(
-        lambda obj: obj.external_admin_user.email if obj.external_admin_user else None
     )
     supervisorId = fields.Function(lambda obj: obj.supervisor_id)
 
