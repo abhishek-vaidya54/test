@@ -41,8 +41,6 @@ class ExternalAdminUser(Base):
     username = Column(String(255), nullable=False)
     first_name = Column(String(255), nullable=False)
     last_name = Column(String(255), nullable=False)
-    is_supervisor = Column(Boolean, nullable=True, default=False)
-
     account_status = Column(String(255), nullable=False, server_default="inactive")
 
     #  Table relationships
@@ -50,7 +48,6 @@ class ExternalAdminUser(Base):
     warehouses = relationship(UserWarehouseAssociation, back_populates=__tablename__)
     roles = relationship(UserRoleAssociation, back_populates=__tablename__)
     shifts = relationship(Shifts, back_populates=__tablename__)
-    supervisors = relationship(IndustrialAthlete, back_populates="supervisors")
 
     deleted_at = Column(DateTime, nullable=True)
     db_created_at = Column(DateTime, default=datetime.datetime.utcnow, nullable=False)
@@ -82,7 +79,6 @@ class ExternalAdminUser(Base):
             "username": self.username,
             "first_name": self.first_name,
             "last_name": self.last_name,
-            "is_supervisor": self.is_supervisor,
             "account_status": self.account_status,
             "deleted_at": self.deleted_at,
             "db_created_at": self.db_created_at,

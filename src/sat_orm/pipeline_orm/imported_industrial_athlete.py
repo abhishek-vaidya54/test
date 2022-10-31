@@ -50,8 +50,6 @@ class ImportedIndustrialAthlete(Base):
     warehouse_id = Column(Integer, nullable=True)
     shift_id = Column(Integer, nullable=True)
     job_function_id = Column(Integer, nullable=True)
-    supervisor_id = Column(Integer, nullable=True)
-
     trained = Column(Boolean, nullable=True, default=False)
     harness_provided = Column(Boolean, nullable=True, default=False)
 
