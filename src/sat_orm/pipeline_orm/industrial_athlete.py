@@ -58,7 +58,6 @@ class IndustrialAthlete(Base):
     termination_date = Column(DateTime, nullable=True)
     warehouse_id = Column(Integer, ForeignKey("warehouse.id"), nullable=False)
     shift_id = Column(Integer, ForeignKey("shifts.id"), nullable=False)
-    supervisor_id = Column(Integer, ForeignKey("external_admin_user.id"), nullable=True)
     trained = Column(Boolean, nullable=True, default=False)
     harness_provided = Column(Boolean, nullable=True, default=False)
 
@@ -86,10 +85,6 @@ class IndustrialAthlete(Base):
         "JobFunction", back_populates="industrial_athletes", uselist=False
     )
     groups = relationship("Groups", back_populates="industrial_athletes", uselist=False)
-
-    supervisors = relationship(
-        "ExternalAdminUser", back_populates="supervisors", uselist=False
-    )
 
     @validates("client_id")
     def validate_client_id(self, key, client_id):

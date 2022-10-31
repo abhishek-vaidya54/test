@@ -221,8 +221,6 @@ class IndustrialAthleteSchema(SQLAlchemyAutoSchema):
     shifts = fields.Nested(ShiftsSchema(only=("id", "name")))
     job_function = fields.Nested(JobFunctionSchema(only=("id", "name")))
     client = fields.Nested(ClientSchema(only=("id", "name")))
-    supervisor = fields.Nested(ExternalAdminUserSchema(only=("id", "email")))
-
     firstName = fields.Function(lambda obj: obj.first_name)
     lastName = fields.Function(lambda obj: obj.last_name)
     shift_per_week = fields.Function(lambda obj: obj.shift_per_week)
@@ -247,7 +245,6 @@ class IndustrialAthleteSchema(SQLAlchemyAutoSchema):
     lastModified = fields.Function(
         lambda obj: convert_date(obj.db_modified_at) if obj.db_modified_at else None
     )
-    supervisorId = fields.Function(lambda obj: obj.supervisor_id)
 
     @post_dump(pass_many=True)
     def add_fields(self, data, many, **kwargs):
