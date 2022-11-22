@@ -1,7 +1,7 @@
 """dash_3222_notifications_permissions
 
 Revision ID: 6ac61d0d43db
-Revises: 8be9b364cbda
+Revises: 6bdad663e8ef
 Create Date: 2022-10-26 08:15:13.938466
 
 """
@@ -11,7 +11,7 @@ from sqlalchemy import orm
 
 # revision identifiers, used by Alembic.
 revision = "6ac61d0d43db"
-down_revision = "8be9b364cbda"
+down_revision = "6bdad663e8ef"
 branch_labels = None
 depends_on = None
 
