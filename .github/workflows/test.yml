@@ -4,7 +4,7 @@ on:
   push:
     branches: [ "gcp-dev-test" ]
   pull_request:
-              [ "gcp-dev-test" ]
+    branches: [ "gcp-dev-test" ]
 
 jobs:
   run-python:
