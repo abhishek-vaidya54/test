@@ -17,7 +17,9 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v1
         with:
+          cli_config_credentials_token: ${{ secrets.MY_KEY}}
           python-version: 3.9
+          
 
       # Install your twine here
       - name: Install twine
