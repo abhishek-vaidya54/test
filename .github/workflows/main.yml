@@ -1,0 +1,34 @@
+name: main
+
+on:
+  push:
+    branches: [ "gcp-dev-test" ]
+  pull_request:
+
+jobs:
+  run-python:
+    name: Run python
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v1
+        with:
+          python-version: 3.9
+
+      # Install your twine here
+      - name: Install twine
+        run: pip install twine
+        
+      # Build wheel file
+      - name: Build wheel
+        run: python setup.py bdist_wheel
+        
+      # Upload artifact to Artifact Registry
+      - name: Upload to Artifact Registry
+        run: python3 -m twine upload --repository-url https://us-east4-python.pkg.dev/sat-app-dev/test/ dist/* -auto-approve -input=false
+        env:
+             GOOGLE_CREDENTIALS: ${{ secrets.MY_KEY }}
