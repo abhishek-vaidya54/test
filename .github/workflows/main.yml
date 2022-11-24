@@ -32,3 +32,4 @@ jobs:
         run: python3 -m twine upload --repository-url https://us-east4-python.pkg.dev/sat-app-dev/test/ dist/* -auto-approve -input=false
         env:
              GOOGLE_CREDENTIALS: ${{ secrets.MY_KEY }}
+             
