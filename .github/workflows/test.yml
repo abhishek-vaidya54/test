@@ -2,9 +2,9 @@ name: test
 
 on:
   push:
-    branches: [ "gcp-dev-test" ]
+    branches: [ "main" ]
   pull_request:
-    branches: [ "gcp-dev-test" ]
+    branches: [ "main" ]
 
 jobs:
   run-python:
