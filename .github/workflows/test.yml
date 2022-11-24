@@ -34,6 +34,4 @@ jobs:
         
       # Upload artifact to Artifact Registry
       - name: Upload to Artifact Registry
-        run: twine upload --repository-url https://us-east4-python.pkg.dev/sat-app-dev/test/ dist/*
-        env:
-             GOOGLE_CREDENTIALS: ${{ secrets.MY_KEY }}
+        run: python3 -m twine upload --repository-url https://us-east4-python.pkg.dev/sat-app-dev/test/ dist/*
