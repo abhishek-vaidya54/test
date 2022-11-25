@@ -32,7 +32,10 @@ jobs:
       - name: Install twine
         run: pip install twine
         
+       # Gcloud Auth
+       - name: Gcloud Authentication
+         run: gcloud auth application-default login
+        
       # Upload artifact to Artifact Registry
       - name: Upload to Artifact Registry
-        run: gcloud auth application-default login
         run: python3 -m twine upload --repository-url https://us-east4-python.pkg.dev/sat-app-dev/test/ dist/*
