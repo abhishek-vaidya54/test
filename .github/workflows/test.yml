@@ -1,10 +1,10 @@
-name: test
+name: 'Artifact Upload Job'
 
 on:
   push:
     branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+  #pull_request:
+    #branches: [ "main" ]
 
 jobs:
   run-python:
@@ -31,6 +31,14 @@ jobs:
        # Install your twine here
       - name: Install twine
         run: pip install twine
+        
+       # Google Authetication
+      - id: 'auth'
+        uses: 'google-github-actions/auth@v0'
+        with:
+          workload_identity_provider: 'projects/18063471885/locations/global/workloadIdentityPools/github-auth-pool/providers/github-auth'
+          service_account: 'artifact-test@sat-app-dev.iam.gserviceaccount.com'
+
         
       # Upload artifact to Artifact Registry
       - name: Upload to Artifact Registry
