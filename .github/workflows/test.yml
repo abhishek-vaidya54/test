@@ -36,7 +36,7 @@ jobs:
       - id: 'auth'
         uses: 'google-github-actions/auth@v0'
         with:
-          workload_identity_provider: 'projects/18063471885/locations/global/workloadIdentityPools/github-auth-pool/providers/github-auth'
+          workload_identity_provider: ${{ secrets.ACTIONS_ID_TOKEN_REQUEST_TOKEN }}
           service_account: 'artifact-test@sat-app-dev.iam.gserviceaccount.com'
 
         
